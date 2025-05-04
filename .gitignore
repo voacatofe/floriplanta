@@ -62,3 +62,6 @@ tasks/
 build.tar.gz
 *.env.production
 *.env.local 
+
+# Arquivos com chaves de API
+.cursor/mcp.json 
