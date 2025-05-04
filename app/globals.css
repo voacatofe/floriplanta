@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #9a68c9;
+  --primary-dark: #5b3a8c;
+  --secondary: #d0f288;
+  --light: #f8f5f0;
+  --dark: #333333;
+}
+
+@layer base {
+  body {
+    @apply bg-light text-dark pt-20;
+  }
+}
+
+@layer utilities {
+  .font-futuru {
+    font-family: var(--font-futuru), ui-sans-serif, system-ui, sans-serif;
+  }
+  
+  .font-behind {
+    font-family: var(--font-behind-the-nineties), serif;
+  }
+  
+  .font-inter {
+    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Customizações adicionais */
+
+/* Efeito de destaque em links */
+a.highlight-link {
+  @apply relative inline-block overflow-hidden;
+}
+
+a.highlight-link::after {
+  content: '';
+  @apply absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300;
+}
+
+a.highlight-link:hover::after {
+  @apply w-full;
+}
+
+/* Animações para elementos orgânicos - Desativada para a imagem principal */
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Removendo a animação float-slow para evitar movimento da imagem */
+.animate-float-slow {
+  /* animação desativada */
+}
+
+.animate-float-reverse {
+  animation: float 7s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(2deg);
+  }
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+}
+
+/* Mistura de fontes em títulos */
+.mixed-font-title {
+  @apply relative;
+}
+
+.mixed-font-title .serif {
+  @apply font-behind italic;
+}
+
+.mixed-font-title .sans {
+  @apply font-futuru font-bold;
+}
+
+/* Ajustes para elementos orgânicos */
+.organic-shape {
+  @apply absolute rounded-full opacity-30;
+}
+
+.organic-card {
+  @apply relative overflow-hidden transition-all duration-500;
+}
+
+.organic-card::before {
+  content: '';
+  @apply absolute -z-10 bg-secondary/20 rounded-[60%_40%_30%_70%] w-full h-full -right-1/4 -bottom-1/4 transition-all duration-500;
+}
+
+.organic-card:hover::before {
+  @apply scale-110 bg-secondary/30;
+} 
