@@ -1,0 +1,59 @@
+name: Deploy para VPS Hostgator
+
+on:
+  push:
+    branches:
+      - main  # Ou master, dependendo do nome da sua branch principal
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Configurar SSH
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
+
+      - name: Deploy para Easypanel
+        env:
+          EASYPANEL_TOKEN: ${{ secrets.EASYPANEL_TOKEN }}
+          EASYPANEL_PROJECT_ID: ${{ secrets.EASYPANEL_PROJECT_ID }}
+          EASYPANEL_URL: ${{ secrets.EASYPANEL_URL }}
+        run: |
+          # Compactar os arquivos de build
+          tar -czf build.tar.gz .next public
+
+          # Enviar para o servidor
+          scp -o StrictHostKeyChecking=no build.tar.gz ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/
+
+          # Executar comandos de deploy no servidor
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            # Navegar até o diretório do projeto no Easypanel
+            cd /opt/easypanel/projects/${{ secrets.EASYPANEL_PROJECT_ID }}/app
+
+            # Extrair arquivos
+            tar -xzf ~/build.tar.gz
+
+            # Remover arquivo temporário
+            rm ~/build.tar.gz
+
+            # Reiniciar o aplicativo (se necessário)
+            curl -X POST "${{ secrets.EASYPANEL_URL }}/api/projects/${{ secrets.EASYPANEL_PROJECT_ID }}/restart" \
+              -H "Authorization: Bearer ${{ secrets.EASYPANEL_TOKEN }}"
+          EOF 
