@@ -1,0 +1,25 @@
+{
+  "name": "floriplanta",
+  "type": "next",
+  "domain": "floriplanta.com.br",
+  "port": 3000,
+  "env": {
+    "NODE_ENV": "production",
+    "NEXT_PUBLIC_BASE_URL": "https://floriplanta.com.br"
+  },
+  "resources": {
+    "cpu": 1,
+    "memory": 1
+  },
+  "volumes": [
+    {
+      "host": "/data/floriplanta-uploads",
+      "container": "/app/public/uploads"
+    }
+  ],
+  "restart": "always",
+  "healthCheck": {
+    "path": "/",
+    "port": 3000
+  }
+} 

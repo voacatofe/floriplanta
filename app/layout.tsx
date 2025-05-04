@@ -13,7 +13,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" className={`${futuru.variable} ${behindTheNineties.variable} ${inter.variable}`}>
+    <html 
+      lang="pt-BR" 
+      className={`${futuru.variable} ${behindTheNineties.variable} ${inter.variable}`}
+      suppressHydrationWarning={true}
+    >
       <body className="font-futuru">
         {children}
       </body>

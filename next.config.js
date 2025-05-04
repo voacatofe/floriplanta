@@ -1,11 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Comentado durante desenvolvimento
-  // output: 'export',
-  // distDir: 'out',
+  // Configuração para produção
+  output: 'standalone',
+  // Mantém imagens não otimizadas para compatibilidade
   images: {
     unoptimized: true
   }
 }
 
-module.exports = nextConfig 
+export default nextConfig; 

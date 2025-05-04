@@ -69,4 +69,56 @@ Para contribuir com o projeto, siga os seguintes passos:
 
 ## Licença
 
-Este projeto está licenciado sob a licença [inserir licença]. 
+Este projeto está licenciado sob a licença [inserir licença].
+
+## Deploy
+
+### Deploy via GitHub Actions para VPS (Hostgator + Easypanel)
+
+O projeto está configurado para deploy automático usando GitHub Actions quando há um push para a branch principal.
+
+#### Pré-requisitos
+
+1. Acesso SSH à VPS no Hostgator
+2. Easypanel configurado no servidor
+3. Projeto criado no Easypanel
+
+#### Configuração de Secrets no GitHub
+
+Configure os seguintes secrets no seu repositório GitHub em Settings > Secrets and Variables > Actions:
+
+- `SSH_PRIVATE_KEY`: Chave SSH privada para acesso ao servidor
+- `SSH_KNOWN_HOSTS`: Resultado do comando `ssh-keyscan <endereço_do_servidor>`
+- `SSH_HOST`: Endereço IP ou hostname da VPS
+- `SSH_USER`: Nome de usuário SSH
+- `EASYPANEL_TOKEN`: Token de API do Easypanel (obtido no painel de administração)
+- `EASYPANEL_PROJECT_ID`: ID do projeto no Easypanel
+- `EASYPANEL_URL`: URL do seu painel Easypanel (geralmente https://painel.seudominio.com)
+
+#### Arquivos de Configuração
+
+- `.github/workflows/deploy.yml`: Configuração do GitHub Actions
+- `Dockerfile`: Configuração para build em container
+- `easypanel.config.json`: Configuração do projeto no Easypanel
+
+#### Deploy Manual
+
+Caso precise fazer um deploy manual:
+
+```bash
+# Build do projeto
+npm run build
+
+# Compactar arquivos
+tar -czf build.tar.gz .next public
+
+# Enviar para o servidor
+scp build.tar.gz usuario@servidor:~/
+
+# No servidor
+cd /opt/easypanel/projects/seu-projeto-id/app
+tar -xzf ~/build.tar.gz
+rm ~/build.tar.gz
+```
+
+Depois, reinicie o projeto no painel do Easypanel. 
