@@ -1,0 +1,166 @@
+<context>
+# Overview  
+O site institucional da Floriplanta é uma plataforma digital para uma associação canábica dedicada à educação, pesquisa e acesso à cannabis medicinal em Santa Catarina. O objetivo é fornecer informações confiáveis, facilitar o acesso de pacientes à cannabis medicinal e construir uma comunidade de apoio.
+
+# Core Features  
+1. Páginas Informativas
+   - Homepage com seções sobre a associação, valores, benefícios e destaques
+   - Página "Sobre Nós" apresentando história, missão, visão, valores e equipe
+   - Centro de Informação sobre Cannabis Medicinal com conteúdo educacional
+   - Página "Nossos Óleos" detalhando produtos disponíveis para associados
+
+2. Processos de Associação e Acesso
+   - Página "Associe-se" com formulário e informações sobre como se tornar membro
+   - Integração com sistema de gerenciamento de associados
+   - Processo de solicitação de produtos mediante receita médica
+
+3. Blog e Conteúdo Educativo
+   - Sistema de publicação e categorização de artigos
+   - Destaques de notícias recentes na homepage
+   - Conteúdo sobre legislação, pesquisas e aplicações medicinais
+
+4. Comunicação e Interação
+   - Formulário de contato
+   - Newsletter para atualizações
+   - Integração com redes sociais
+
+# User Experience  
+- Pacientes e Interessados: Buscam informações confiáveis sobre cannabis medicinal e como acessar tratamento
+- Profissionais de Saúde: Procuram dados científicos, pesquisas e informações para prescrição
+- Associados: Desejam acessar área restrita, solicitar produtos e acompanhar atividades
+- Apoiadores: Querem conhecer o trabalho da associação e como contribuir
+
+Interface deve ser acessível, informativa e transmitir confiança, alinhada à identidade visual da marca (cores roxo, verde limão, tipografia Futuru e Behind-The-Nineties).
+</context>
+
+<PRD>
+# Technical Architecture  
+## Frontend Framework e Design
+- Next.js 14 com App Router (já implementado parcialmente)
+- React 18 para interface de usuário
+- TypeScript para tipagem estática e melhor manutenção de código
+- Tailwind CSS para estilização responsiva e consistente
+- Componentes reutilizáveis para manter consistência na UI
+
+## Sistema de Páginas e Rotas
+- Homepage (`/`) com seções modulares conforme documentação
+- Página Sobre Nós (`/sobre`) com história, missão, valores e equipe
+- Centro de Informação (`/cannabis`) com subpáginas educativas
+- Página de Óleos (`/oleos`) com descrições detalhadas de produtos
+- Página Associe-se (`/associar`) com processo e benefícios
+- Área para médicos (`/medicos`) com recursos especializados
+- Blog (`/blog`) com sistema de artigos categorizados
+- Contato (`/contato`) com formulário e informações
+
+## Sistema de Autenticação e Área Restrita
+- Autenticação segura para área de associados (`/associado`)
+- Dashboard personalizado com perfil e status
+- Sistema de upload de documentos (receitas médicas)
+- Histórico de solicitações e interações
+- Gerenciamento de dados pessoais
+
+## CMS e Gestão de Conteúdo
+- Sistema para publicação e manutenção do blog
+- Gerenciamento de depoimentos e testimoniais
+- Atualização de conteúdo educacional
+- Manutenção de informações sobre produtos
+
+## Integrações
+- Formulário de newsletter com serviço de email marketing
+- Compartilhamento em redes sociais
+- Integração com Google Analytics
+- API de mapas para localização na página de contato
+
+# Development Roadmap  
+## Fase 1: Finalizar Páginas Informativas Principais
+- Implementação completa da Homepage conforme documento de conteúdo
+- Desenvolvimento da página "Sobre Nós" com todas as seções descritas
+- Criação do Centro de Informação sobre Cannabis Medicinal com subseções educativas
+- Implementação da página "Nossos Óleos" detalhando os produtos Terral, Swell e Maré
+
+## Fase 2: Desenvolvimento do Sistema de Associação e Blog
+- Criação da página "Associe-se" com processo detalhado e formulário
+- Implementação da página para médicos e profissionais de saúde
+- Desenvolvimento do Blog com categorias e sistema de artigos
+- Implementação da página de Contato com formulário funcional
+
+## Fase 3: Área do Associado e Funcionalidades Avançadas
+- Sistema de autenticação seguro para área restrita
+- Dashboard do associado com perfil e funcionalidades personalizadas
+- Sistema de upload de documentos (receitas médicas)
+- Implementação de requisição de produtos para associados
+
+## Fase 4: Otimizações e Refinamentos
+- SEO e metadados para todas as páginas
+- Otimização de performance e carregamento
+- Testes de acessibilidade e correções
+- Implementação de analytics e monitoramento
+
+# Logical Dependency Chain
+1. Componentes Base e Design System
+   - Finalização de componentes reutilizáveis (Header, Footer, etc.)
+   - Implementação completa da identidade visual (cores, tipografia)
+   - Sistema responsivo para todos os dispositivos
+
+2. Páginas Informativas Essenciais
+   - Homepage completa com todas as seções definidas no documento
+   - Sobre Nós com história, missão, valores e equipe
+   - Centro de Informação sobre Cannabis Medicinal
+   - Nossos Óleos com informações detalhadas sobre os produtos
+
+3. Sistema de Blog e Conteúdo Dinâmico
+   - Estrutura do blog com categorias e tags
+   - Sistema de comentários (se aplicável)
+   - Compartilhamento em redes sociais
+   - Destaque de artigos recentes na homepage
+
+4. Associação e Interação
+   - Página "Associe-se" com processo e formulário
+   - Página de contato com formulário funcional
+   - Newsletter e captura de leads
+   - Página para médicos e profissionais
+
+5. Sistema de Autenticação e Área Restrita
+   - Login e registro seguro
+   - Dashboard do associado
+   - Sistema de upload e requisição
+   - Gerenciamento de perfil e dados
+
+# Risks and Mitigations  
+## Segurança de Dados Sensíveis
+- **Risco**: Vazamento de dados pessoais e informações médicas
+- **Mitigação**: Implementar criptografia, HTTPS, validação de formulários e políticas de privacidade claras
+
+## Conformidade Legal
+- **Risco**: Informações sobre cannabis medicinal precisam estar em conformidade com a legislação
+- **Mitigação**: Revisão jurídica de conteúdo, disclaimers claros, fontes científicas referenciadas
+
+## Performance com Conteúdo Rico
+- **Risco**: Tempo de carregamento afetado por imagens e conteúdo extenso
+- **Mitigação**: Otimização de imagens, lazy loading, estratégias de caching e CDN
+
+## Manutenção de Conteúdo
+- **Risco**: Dificuldade em manter conteúdo educacional atualizado
+- **Mitigação**: Implementar CMS eficiente, documentação clara e treinamento para equipe de conteúdo
+
+# Appendix  
+## Requisitos Específicos de Conteúdo
+- A implementação deve seguir fielmente os documentos de conteúdo fornecidos para:
+  - Homepage da Floriplanta
+  - Página "Associe-se"
+  - Página "Nossos Óleos"
+  - Página "Sobre Nós"
+  - Centro de Informação sobre Cannabis Medicinal
+
+## Identidade Visual
+- Cores institucionais: roxo (#9a68c9, #b39ccb) e verde limão (#d0f288, #d1d376)
+- Tipografia: Fontes Futuru para textos e Behind-The-Nineties para títulos
+- Design responsivo prioritário para mobile e desktop
+- Acessibilidade seguindo padrões WCAG
+
+## Integrações Técnicas
+- Hospedagem via Easypanel em VPS (Hostgator)
+- Deploy automatizado via GitHub Actions
+- Sistema de gestão de associados (fase posterior)
+- Serviço de newsletter e marketing por email
+</PRD> 
