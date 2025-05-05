@@ -9,10 +9,10 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
   
   return (
-    <footer className="bg-brand-purple text-white pt-16 pb-8 relative overflow-hidden">
+    <footer className="bg-brand-purple dark:bg-[#2d1e46] text-white pt-16 pb-8 relative overflow-hidden">
       {/* Formas orgânicas decorativas - Ajuste de opacidade e posicionamento */}
-      <div className="absolute top-0 right-0 w-[60vw] h-[60vw] md:w-[40vw] md:h-[40vw] bg-brand-hover-purple/10 rounded-full translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
-      <div className="absolute bottom-0 left-0 w-[50vw] h-[50vw] md:w-[35vw] md:h-[35vw] bg-brand-light-green/5 rounded-full -translate-x-1/4 translate-y-1/4 pointer-events-none"></div>
+      <div className="absolute top-0 right-0 w-[60vw] h-[60vw] md:w-[40vw] md:h-[40vw] bg-brand-hover-purple/10 dark:bg-dark-brand-purple/15 rounded-full translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-[50vw] h-[50vw] md:w-[35vw] md:h-[35vw] bg-brand-light-green/5 dark:bg-dark-brand-green/10 rounded-full -translate-x-1/4 translate-y-1/4 pointer-events-none"></div>
       
       <div className="container mx-auto px-4 relative z-10">
         {/* Ajuste no gap para melhor espaçamento em telas menores */}
@@ -37,15 +37,15 @@ export default function Footer() {
             {/* Ícones sociais com melhor espaçamento e transição */}
             <div className="flex gap-3">
               <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram da Floriplanta"
-                className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center text-white hover:bg-white/25 hover:scale-110 transition-all duration-200">
+                className="w-9 h-9 rounded-full bg-white/15 dark:bg-white/20 flex items-center justify-center text-white hover:bg-white/25 dark:hover:bg-white/30 hover:scale-110 transition-all duration-200">
                 <Instagram size={18} />
               </Link>
               <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook da Floriplanta"
-                className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center text-white hover:bg-white/25 hover:scale-110 transition-all duration-200">
+                className="w-9 h-9 rounded-full bg-white/15 dark:bg-white/20 flex items-center justify-center text-white hover:bg-white/25 dark:hover:bg-white/30 hover:scale-110 transition-all duration-200">
                 <Facebook size={18} />
               </Link>
               <Link href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="Youtube da Floriplanta"
-                className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center text-white hover:bg-white/25 hover:scale-110 transition-all duration-200">
+                className="w-9 h-9 rounded-full bg-white/15 dark:bg-white/20 flex items-center justify-center text-white hover:bg-white/25 dark:hover:bg-white/30 hover:scale-110 transition-all duration-200">
                 <Youtube size={18} />
               </Link>
             </div>
@@ -81,18 +81,18 @@ export default function Footer() {
             <h3 className="font-futuru font-bold text-white text-lg mb-5">Contato</h3>
             <div className="flex flex-col gap-4">
               <div className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-brand-light-green mt-0.5 flex-shrink-0" />
+                <MapPin className="w-5 h-5 text-brand-light-green dark:text-dark-brand-green mt-0.5 flex-shrink-0" />
                 <p className="font-inter text-white/90 text-sm">
                   Rua Exemplo, 123, Bairro<br />
                   Florianópolis, SC - 88000-000
                 </p>
               </div>
               <div className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-brand-light-green flex-shrink-0" />
+                <Phone className="w-5 h-5 text-brand-light-green dark:text-dark-brand-green flex-shrink-0" />
                 <a href="tel:+5548999999999" className="font-inter text-white/90 hover:text-white transition-colors duration-200 text-sm">(48) 99999-9999</a>
               </div>
               <div className="flex items-center gap-3">
-                <Mail className="w-5 h-5 text-brand-light-green flex-shrink-0" />
+                <Mail className="w-5 h-5 text-brand-light-green dark:text-dark-brand-green flex-shrink-0" />
                 <a href="mailto:contato@floriplanta.org" className="font-inter text-white/90 hover:text-white transition-colors duration-200 text-sm">contato@floriplanta.org</a>
               </div>
             </div>
@@ -129,11 +129,11 @@ export default function Footer() {
                   type="email" 
                   placeholder="Seu melhor email" 
                   required
-                  className="px-3 py-2 rounded-lg text-sm bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-brand-light-green focus:border-transparent text-white placeholder-white/60 font-inter flex-grow"
+                  className="px-3 py-2 rounded-lg text-sm bg-white/10 dark:bg-white/15 border border-white/20 dark:border-white/25 focus:outline-none focus:ring-2 focus:ring-brand-light-green dark:focus:ring-dark-brand-green focus:border-transparent text-white placeholder-white/60 font-inter flex-grow"
                 />
                 <button 
                   type="submit"
-                  className="bg-brand-light-green text-brand-purple px-4 py-2 rounded-lg font-inter font-semibold text-sm hover:bg-[#c0e86e] transition-colors duration-200 transform hover:scale-105 active:scale-95"
+                  className="bg-brand-light-green dark:bg-dark-brand-green text-brand-purple dark:text-dark-bg px-4 py-2 rounded-lg font-inter font-semibold text-sm hover:bg-[#c0e86e] dark:hover:bg-opacity-90 transition-colors duration-200 transform hover:scale-105 active:scale-95"
                 >
                   Inscrever
                 </button>
@@ -143,7 +143,7 @@ export default function Footer() {
         </div>
         
         {/* Linha divisória e links inferiores */}
-        <div className="border-t border-white/15 mt-12 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="border-t border-white/15 dark:border-white/20 mt-12 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="font-inter text-white/80 text-xs text-center md:text-left">
             © {currentYear} Floriplanta. Todos os direitos reservados.
           </p>

@@ -6,6 +6,7 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -14,6 +15,10 @@ module.exports = {
         'brand-light-green': '#eaf4d8',
         'brand-hover-purple': '#9a68c9',
         'brand-hover-green': '#6a9b33',
+        'dark-bg': '#1a1a1a',
+        'dark-text': '#e0e0e0',
+        'dark-brand-purple': '#8a56c6',
+        'dark-brand-green': '#98d455',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
