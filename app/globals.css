@@ -16,22 +16,9 @@
   --dark: #333333;
 }
 
-.dark {
-  --primary: #8a56c6;
-  --primary-dark: #9a68c9;
-  --secondary: #98d455;
-  --secondary-rgb: 152, 212, 85;
-  --light: #1a1a1a;
-  --dark: #e0e0e0;
-}
-
 @layer base {
   body {
-    @apply bg-[#f8f5f0] text-[#333333] pt-20 transition-colors duration-300;
-  }
-  
-  .dark body {
-    @apply bg-dark-bg text-dark-text;
+    @apply bg-[#f8f5f0] text-[#333333] pt-20;
   }
 }
 

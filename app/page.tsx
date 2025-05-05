@@ -13,7 +13,7 @@ import CtaNewsletterSection from './components/CtaNewsletterSection';
 
 export default function Home() {
   return (
-    <main className="bg-[#f8f5f0] dark:bg-dark-bg overflow-x-hidden">
+    <main className="bg-[#f8f5f0] overflow-x-hidden">
       <Header />
       
       {/* Hero Section */}
@@ -22,14 +22,14 @@ export default function Home() {
       </div>
 
       {/* Introdução à Associação */}
-      <section className="py-16 lg:py-20 bg-[#f8f5f0] dark:bg-dark-bg">
+      <section className="py-16 lg:py-20 bg-[#f8f5f0]">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="font-futuru font-bold text-brand-purple dark:text-dark-brand-purple text-3xl lg:text-4xl mb-4">Bem-vindo à Floriplanta</h2>
-            <p className="font-inter text-brand-purple/80 dark:text-dark-text text-base lg:text-lg leading-relaxed mb-6">
+            <h2 className="font-futuru font-bold text-brand-purple text-3xl lg:text-4xl mb-4">Bem-vindo à Floriplanta</h2>
+            <p className="font-inter text-brand-purple/80 text-base lg:text-lg leading-relaxed mb-6">
               Somos uma associação sem fins lucrativos dedicada a transformar vidas através do acesso seguro, consciente e responsável à cannabis medicinal. Nossa missão é construir uma comunidade sólida em Santa Catarina, democratizando o acesso à informação de qualidade e ao tratamento, lutando por políticas públicas mais justas e inclusivas. Acreditamos no poder da união, da educação e da empatia para cultivar saúde e semear esperança.
             </p>
-            <Link href="/sobre" className="font-inter font-medium text-brand-purple dark:text-dark-brand-purple hover:text-brand-hover-purple dark:hover:text-white underline transition-colors duration-300">
+            <Link href="/sobre" className="font-inter font-medium text-brand-purple hover:text-brand-hover-purple underline transition-colors duration-300">
               Saiba mais sobre nossa história e missão
             </Link>
           </div>

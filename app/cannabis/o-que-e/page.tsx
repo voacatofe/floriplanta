@@ -182,11 +182,11 @@ export default function OQueEPage() {
           <div className="flex flex-col items-center justify-center text-center mb-6">
              <div className="w-20 h-20 rounded-full bg-brand-light-green/30 flex items-center justify-center mb-4">
                <BookOpen className="w-10 h-10 text-brand-purple" />
-             </div>
+          </div>
              <h1 className="font-futuru font-bold text-brand-purple text-3xl lg:text-4xl mb-4">O que é Cannabis Medicinal?</h1>
              <p className="font-inter text-brand-purple/85 text-center text-base lg:text-lg leading-relaxed max-w-3xl">
-              Desvendando a planta, seus compostos ativos e a interação com o nosso organismo através do Sistema Endocanabinoide.
-            </p>
+            Desvendando a planta, seus compostos ativos e a interação com o nosso organismo através do Sistema Endocanabinoide.
+          </p>
           </div>
         </div>
       </section>
@@ -201,8 +201,8 @@ export default function OQueEPage() {
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8 mb-10">
               <h2 className="font-futuru font-bold text-brand-purple text-2xl mb-4">O que é Cannabis Medicinal?</h2>
               <p className="font-inter text-brand-purple/85 text-lg leading-relaxed mb-6">
-                A <em>Cannabis Sativa L.</em> é uma planta utilizada há milênios por suas propriedades medicinais. O termo "Cannabis Medicinal" refere-se ao uso terapêutico da planta e de seus compostos ativos, conhecidos como canabinoides, para tratar ou aliviar sintomas de diversas condições de saúde.
-              </p>
+              A <em>Cannabis Sativa L.</em> é uma planta utilizada há milênios por suas propriedades medicinais. O termo "Cannabis Medicinal" refere-se ao uso terapêutico da planta e de seus compostos ativos, conhecidos como canabinoides, para tratar ou aliviar sintomas de diversas condições de saúde.
+            </p>
               <InfoBox>
                 A cannabis medicinal é utilizada para diversos fins terapêuticos, incluindo controle de dor, redução de náuseas, estímulo de apetite, controle de convulsões, entre muitos outros. Seu status legal varia entre países e regiões.
               </InfoBox>
@@ -324,8 +324,8 @@ export default function OQueEPage() {
                 <div className="md:w-2/3 text-center md:text-left md:pl-6">
                   <h3 className="font-futuru font-semibold text-brand-purple text-xl mb-2">A importância da sinergia</h3>
                   <p className="font-inter text-brand-purple/85 leading-relaxed">
-                    Acredita-se que a ação conjunta de diversos canabinoides e terpenos presentes na planta (produtos "full spectrum" ou "broad spectrum") pode ser mais eficaz do que o uso de canabinoides isolados, devido à sinergia entre os compostos.
-                  </p>
+              Acredita-se que a ação conjunta de diversos canabinoides e terpenos presentes na planta (produtos "full spectrum" ou "broad spectrum") pode ser mais eficaz do que o uso de canabinoides isolados, devido à sinergia entre os compostos.
+            </p>
                 </div>
               </div>
               
