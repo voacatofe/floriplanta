@@ -1,5 +1,6 @@
+/* Exemplo de conteúdo para tailwind.config.js - substitua pelo conteúdo real se necessário */
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -8,38 +9,23 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: {
-          DEFAULT: '#9a68c9',
-          dark: '#5b3a8c',
-        },
-        secondary: '#d0f288',
-        light: '#f8f5f0',
-        dark: '#333333',
+        'brand-purple': '#5b3a8c',
+        'brand-green': '#86c540',
+        'brand-light-green': '#eaf4d8',
+        'brand-hover-purple': '#9a68c9',
+        'brand-hover-green': '#6a9b33',
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic':
+          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
       fontFamily: {
-        futuru: ['var(--font-futuru)'],
-        behind: ['var(--font-behind-the-nineties)'],
-        sans: ['var(--font-futuru)', 'Montserrat', 'Work Sans', 'sans-serif'],
-        serif: ['var(--font-behind-the-nineties)', 'Playfair Display', 'DM Serif Display', 'serif'],
-        display: ['DM Serif Display', 'serif'],
-        nineties: ['Montserrat', 'sans-serif'],
-      },
-      borderRadius: {
-        'organic-1': '60% 40% 30% 70% / 60% 30% 70% 40%',
-        'organic-2': '40% 60% 70% 30% / 30% 40% 70% 60%',
-        'organic-3': '70% 30% 50% 50% / 50% 50% 70% 30%',
-      },
-      animation: {
-        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'float': 'float 6s ease-in-out infinite',
-      },
-      keyframes: {
-        float: {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-10px)' },
-        }
+         futuru: ['Futuru', 'sans-serif'],
+         behindnineties: ['BehindTheNineties', 'sans-serif'],
       },
     },
   },
   plugins: [],
-}; 
+}
+
