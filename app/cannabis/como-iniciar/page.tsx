@@ -2,9 +2,35 @@ import React from 'react';
 import Link from 'next/link';
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import { PlayCircle, Stethoscope, FileText, Truck, Users, Pill, Droplet, Cloud, Hand, TrendingUp, ListChecks, AlertTriangle, ShieldCheck } from 'lucide-react'; // Example icons
+import { PlayCircle, Stethoscope, FileText, Truck, Users, Pill, Droplet, Cloud, Hand, TrendingUp, ListChecks, AlertTriangle, ShieldCheck, LucideIcon } from 'lucide-react'; // Adicionado LucideIcon
 
-// Reusable Sidebar Component (assuming it's in a shared location or copied)
+// Definindo interfaces para tipagem correta
+interface SubpointLink {
+  text: string;
+  href: string;
+}
+
+interface Subpoint {
+  title: string;
+  text: string;
+  icon?: LucideIcon;
+  link?: SubpointLink;
+}
+
+interface StepLink {
+  text: string;
+  href: string;
+}
+
+interface Step {
+  icon: LucideIcon;
+  title: string;
+  text: string;
+  subpoints?: Subpoint[];
+  links?: StepLink[];
+}
+
+// Component for sidebar navigation
 const CannabisSidebarNav = () => {
   const navItems = [
     { title: "Visão Geral", href: "/cannabis" },
@@ -39,7 +65,7 @@ const CannabisSidebarNav = () => {
   );
 };
 
-const steps = [
+const steps: Step[] = [
   {
     icon: Stethoscope,
     title: "Consulte um Médico Prescritor",
