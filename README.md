@@ -73,52 +73,46 @@ Este projeto está licenciado sob a licença [inserir licença].
 
 ## Deploy
 
-### Deploy via GitHub Actions para VPS (Hostgator + Easypanel)
+### Auto-Deploy do Easypanel
 
-O projeto está configurado para deploy automático usando GitHub Actions quando há um push para a branch principal.
+O projeto está configurado para deploy automático usando o recurso de Auto-Deploy do Easypanel.
 
 #### Pré-requisitos
 
 1. Acesso SSH à VPS no Hostgator
 2. Easypanel configurado no servidor
-3. Projeto criado no Easypanel
+3. GitHub Personal Access Token
 
-#### Configuração de Secrets no GitHub
+#### Configuração do Auto-Deploy
 
-Configure os seguintes secrets no seu repositório GitHub em Settings > Secrets and Variables > Actions:
+1. **Gerar um Personal Access Token no GitHub**
+   - Acesse Settings → Developer settings → Tokens e gere um token classic ou fine-grained com ao menos os escopos `repo` e `admin:repo_hook`
+   - Copie o valor; ele não será exibido novamente.
 
-- `SSH_PRIVATE_KEY`: Chave SSH privada para acesso ao servidor
-- `SSH_KNOWN_HOSTS`: Resultado do comando `ssh-keyscan <endereço_do_servidor>`
-- `SSH_HOST`: Endereço IP ou hostname da VPS
-- `SSH_USER`: Nome de usuário SSH
-- `EASYPANEL_TOKEN`: Token de API do Easypanel (obtido no painel de administração)
-- `EASYPANEL_PROJECT_ID`: ID do projeto no Easypanel
-- `EASYPANEL_URL`: URL do seu painel Easypanel (geralmente https://painel.seudominio.com)
+2. **Adicionar o token no Easypanel**
+   - Dentro do painel vá em Settings → GitHub e cole o token; salve e verifique a mensagem "GitHub token updated"
 
-#### Arquivos de Configuração
+3. **Vincular o repositório ao seu App Service**
+   - Crie (ou abra) o project → service que você já criou.
+   - Em Source selecione GitHub repository, informe owner/repo e a branch main
+   - Se existir Dockerfile, ele usará; se não, o Easypanel detecta a stack com Buildpacks
 
-- `.github/workflows/deploy.yml`: Configuração do GitHub Actions
-- `Dockerfile`: Configuração para build em container
-- `easypanel.config.json`: Configuração do projeto no Easypanel
+4. **Deploy inicial**
+   - Clique Deploy para garantir que a imagem constrói e sobe sem erros
+   - Configure porta, domínio e variáveis .env conforme necessário
 
-#### Deploy Manual
+5. **Ativar Auto Deploy**
+   - No topo da página do serviço, habilite Auto Deploy
+   - O Easypanel cria automaticamente um webhook no repositório
+   - Cada push na branch configurada aciona novo build e rolling update
 
-Caso precise fazer um deploy manual:
+6. **Testar**
+   - Faça um commit trivial e git push
+   - No Easypanel, aba Deployments, você verá o build rodando em segundos
+   - Ao final, o container é trocado sem downtime
 
-```bash
-# Build do projeto
-npm run build
+#### Vantagens
 
-# Compactar arquivos
-tar -czf build.tar.gz .next public
-
-# Enviar para o servidor
-scp build.tar.gz usuario@servidor:~/
-
-# No servidor
-cd /opt/easypanel/projects/seu-projeto-id/app
-tar -xzf ~/build.tar.gz
-rm ~/build.tar.gz
-```
-
-Depois, reinicie o projeto no painel do Easypanel. 
+- Zero YAML: você não escreve nenhum workflow
+- Rollback rápido: cada build vira um release listado na interface
+- Menos sobrecarga de VPS: tudo roda em containers isolados gerenciados pelo painel 

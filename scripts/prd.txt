@@ -1,0 +1,140 @@
+# PRD: Site Institucional Floriplanta
+
+## Visão Geral
+A Floriplanta é uma associação canábica dedicada à educação, pesquisa e acesso à cannabis medicinal. Este projeto visa desenvolver um site institucional que atenda aos seguintes objetivos:
+- Aumentar o número de associados
+- Tornar-se referência em informação sobre cannabis medicinal
+- Facilitar o acesso a médicos prescritores
+- Promover a marca Floriplanta
+
+## Tecnologias
+- Next.js 14
+- React 18
+- TypeScript
+- Tailwind CSS
+- Responsivo para dispositivos móveis e tablets
+- Acessível seguindo diretrizes WCAG
+
+## Descrição do Produto
+Um site institucional completo, informativo e funcional, com design moderno alinhado à identidade visual da Floriplanta (cores verde limão #d1d376 e roxo #b39ccb, fontes Futuru e Behind-The-Nineties).
+
+## Fases do Projeto
+
+### Fase 1: Site Informativo Principal
+Nesta fase inicial, o foco será na criação do site informativo com todo o conteúdo educacional, apresentação da associação e formulários básicos de contato.
+
+### Fase 2: E-commerce e Portal de Membros
+A segunda fase do projeto incluirá a implementação da loja para produtos institucionais e o portal de membros com autenticação e funcionalidades específicas para associados.
+
+## Requisitos Funcionais
+
+### Fase 1: Site Informativo Principal
+
+#### 1. Homepage (Página Inicial)
+- Banner principal com slogan e imagem representativa
+- Breve introdução sobre a associação e sua missão
+- Seções de destaque com links para áreas principais
+- Seção "Nossos Valores"
+- Depoimentos de associados
+- Últimas notícias/posts do Blog
+- CTAs claros para "Associe-se" e assinatura de Newsletter
+- Rodapé completo com links rápidos e informações de contato
+
+#### 2. Sobre Nós
+- Nossa História
+- Missão, Visão e Valores
+- Nossa Equipe/Diretoria
+- Transparência (estatuto social, relatórios)
+- Parceiros
+
+#### 3. Cannabis Medicinal (Centro de Informação)
+- O que é Cannabis Medicinal
+- Benefícios e Indicações (por condição médica)
+- Como Iniciar o Tratamento
+- Pesquisas Científicas
+- Mitos e Verdades
+- Legislação no Brasil
+
+#### 4. Nossos Óleos (Informativo)
+- Página introdutória explicativa
+- Páginas individuais para cada óleo com:
+  - Composição detalhada
+  - Processo de cultivo e extração
+  - Perfil de canabinoides e terpenos
+  - Laudos técnicos
+- Informações sobre o processo de aquisição (sem venda direta online)
+
+#### 5. Associe-se (Informativo)
+- Por que se associar (benefícios claros)
+- Como se Associar (passo a passo)
+- Planos de Associação
+- Formulário de contato para interessados
+- FAQ da Associação
+- Programa de Apoio/Solidariedade
+- Depoimentos
+
+#### 6. Para Médicos e Profissionais de Saúde
+- Recursos Científicos
+- Informações sobre prescrição
+- Guia para pacientes encontrarem médicos prescritores
+- Cursos e eventos para profissionais
+- Formulário de contato específico
+
+#### 7. Blog / Notícias
+- Sistema de posts categorizado
+- Filtros e pesquisa
+- Compartilhamento em redes sociais
+- Comentários (opcional)
+
+#### 8. Contato
+- Formulário de contato
+- Informações de contato (telefone, email)
+- Endereço com mapa interativo
+- Horário de atendimento
+
+### Fase 2: E-commerce e Portal de Membros
+
+#### 9. Loja (Merchandising)
+- Produtos institucionais (camisetas, acessórios)
+- Funcionalidade de e-commerce básica
+- Carrinho e checkout seguro
+
+#### 10. Área do Sócio (Acesso Restrito)
+- Sistema de login/senha
+- Painel do Associado
+- Processo de Solicitação de Óleos
+- Histórico de Pedidos
+- Conteúdo Exclusivo
+- Gerenciamento de Pagamentos/Assinatura
+
+## Requisitos Não-Funcionais
+- SEO: Otimização com palavras-chave relevantes
+- Performático: Carregamento rápido das páginas
+- Segurança: Proteção de dados dos associados
+- Escalabilidade: Permitir crescimento do conteúdo e número de usuários
+- Manutenibilidade: Código limpo e documentado
+
+## Integrações
+- Google Analytics
+- Redes sociais
+- (Fase 2) CRM para gestão de associados
+- (Fase 2) Plataforma de e-mail marketing
+- (Fase 2) Gateway de pagamento
+
+## Cronograma
+1. Fase 1.1: Setup do projeto, Layout Base, Homepage
+2. Fase 1.2: Sobre Nós, Contato
+3. Fase 1.3: Cannabis Medicinal, Nossos Óleos (informativo)
+4. Fase 1.4: Associe-se (informativo), Para Médicos, Blog
+5. Fase 1.5: SEO, Acessibilidade, Testes e Otimizações
+6. Fase 2.1: Loja (E-commerce)
+7. Fase 2.2: Área do Sócio (Portal de Membros)
+8. Fase 2.3: Integrações avançadas (CRM, Gateway de pagamento)
+
+## Métricas de Sucesso
+- Aumento do número de associados
+- Taxa de conversão de visitantes para contatos/interessados
+- Tempo médio no site
+- Páginas visitadas por sessão
+- Compartilhamentos em redes sociais
+- Novos médicos prescritores através do site 
