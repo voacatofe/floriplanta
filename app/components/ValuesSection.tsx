@@ -22,8 +22,8 @@ export default function ValuesSection() {
               <div className="w-20 h-1 bg-brand-light-green rounded-full mt-4"></div>
             </div>
             <p className="font-inter text-brand-purple/80 text-base lg:text-lg mt-6 max-w-3xl mx-auto leading-relaxed">
-              Nossos valores fundamentais que orientam cada uma de nossas ações
-              e decisões, sempre com foco no bem-estar e dignidade dos pacientes.
+              Nossos valores são a bússola que guia cada passo da Floriplanta, 
+              refletindo nosso compromisso com a saúde, a dignidade e a justiça social.
             </p>
           </div>
           

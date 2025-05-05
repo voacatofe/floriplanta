@@ -65,12 +65,12 @@ export default function HeroSection() {
               {/* Subtítulo e Botões - Movidos para baixo da imagem em telas menores, mas aqui ficam sob o texto */}
               <div className="mt-6 lg:mt-8 max-w-xl mx-auto lg:ml-0 lg:mr-0 text-center lg:text-left">
                 <p className="font-inter text-base lg:text-lg text-brand-purple/90 leading-relaxed mb-6">
-                  Associação que promove educação sobre cannabis medicinal, defende direitos de usuários e fomenta pesquisa científica.
+                  A Floriplanta é a sua associação de apoio ao tratamento com cannabis medicinal em Santa Catarina. Promovemos educação, acesso seguro e acolhimento para pacientes e suas famílias.
                 </p>
                 
                 {/* Botões com transições e efeitos */}
                 <div className="flex flex-wrap justify-center lg:justify-start gap-3">
-                  <Link href="/associado" 
+                  <Link href="/associar" 
                     className="bg-brand-purple text-white px-5 py-2.5 rounded-lg font-inter font-medium inline-flex items-center gap-2 hover:bg-brand-hover-purple transition-all duration-300 transform hover:scale-105 active:scale-95">
                     Torne-se Associado
                     <ArrowRight className="w-4 h-4" />
