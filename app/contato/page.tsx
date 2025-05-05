@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 import { Send, Mail, Phone, Clock, MapPin, Instagram, Facebook, Linkedin, Youtube, HelpCircle } from 'lucide-react'; // Icons
 
 export default function ContatoPage() {
@@ -194,12 +194,10 @@ export default function ContatoPage() {
                  </div>
               </div>
 
-              {/* Optional Map */}
-              {/* 
+              {/* Optional Map - Commented out for now 
               <div className="mt-10 pt-6 border-t border-gray-200">
                  <h2 className="font-futuru font-bold text-brand-purple text-2xl lg:text-3xl mb-4">Onde Estamos</h2>
                  <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden">
-                   {/* Embed Google Map Here */}
                    <iframe 
                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3535.809543160853!2d-48.5189686849398!3d-27.5998709828368!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95273800f7f5e6b1%3A0x8b3e4a6a1f7b8c5d!2sFlorian%C3%B3polis%2C%20SC!5e0!3m2!1sen!2sbr!4v1678886400000!5m2!1sen!2sbr" 
                      width="100%" 
