@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
-import Header from '../../../../components/Header';
-import Footer from '../../../../components/Footer';
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
 import { PlayCircle, Stethoscope, FileText, Truck, Users, Pill, Droplet, Cloud, Hand, TrendingUp, ListChecks, AlertTriangle, ShieldCheck } from 'lucide-react'; // Example icons
 
 // Reusable Sidebar Component (assuming it's in a shared location or copied)

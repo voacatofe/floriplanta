@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import Header from '../../../../components/Header';
+import Header from "../../components/Header";r';
 import Footer from '../../../../components/Footer';
 import { FlaskConical, BookOpen, Search, Database, Link as LinkIcon } from 'lucide-react'; // Example icons
 
