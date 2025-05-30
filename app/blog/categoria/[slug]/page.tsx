@@ -4,9 +4,9 @@ import BlogPage from '@/app/blog/page';
 import { createSupabaseServerClient } from '@/app/lib/supabase/server';
 
 interface CategoryPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 // Buscar categoria pelo slug
@@ -27,7 +27,8 @@ async function getCategoryBySlug(slug: string) {
 }
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
-  const category = await getCategoryBySlug(params.slug);
+  const { slug } = await params;
+  const category = await getCategoryBySlug(slug);
   
   if (!category) {
     return {
@@ -42,12 +43,13 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
-  const category = await getCategoryBySlug(params.slug);
+  const { slug } = await params;
+  const category = await getCategoryBySlug(slug);
   
   if (!category) {
     notFound();
   }
   
   // Reutilizar a página de blog passando o filtro de categoria via searchParams
-  return <BlogPage searchParams={{ categoria: params.slug }} />;
+  return <BlogPage searchParams={{ categoria: slug }} />;
 } 

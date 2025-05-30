@@ -4,9 +4,9 @@ import BlogPage from '@/app/blog/page';
 import { createSupabaseServerClient } from '@/app/lib/supabase/server';
 
 interface TagPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 // Buscar tag pelo slug
@@ -27,7 +27,8 @@ async function getTagBySlug(slug: string) {
 }
 
 export async function generateMetadata({ params }: TagPageProps): Promise<Metadata> {
-  const tag = await getTagBySlug(params.slug);
+  const { slug } = await params;
+  const tag = await getTagBySlug(slug);
   
   if (!tag) {
     return {
@@ -42,7 +43,8 @@ export async function generateMetadata({ params }: TagPageProps): Promise<Metada
 }
 
 export default async function TagPage({ params }: TagPageProps) {
-  const tag = await getTagBySlug(params.slug);
+  const { slug } = await params;
+  const tag = await getTagBySlug(slug);
   
   if (!tag) {
     notFound();

@@ -14,14 +14,14 @@ import CommentSection from '@/app/components/blog/CommentSection';
 
 export const revalidate = 3600;
 
-interface PostPageProps {
-  params: {
-    slug: string;
-  };
-}
+// Tipos atualizados para Next.js 15
+type PageProps = {
+  params: Promise<{ slug: string }>;
+};
 
-export async function generateMetadata({ params }: PostPageProps) {
-  const post = await getPostBySlug(params.slug);
+export async function generateMetadata({ params }: PageProps) {
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
   if (!post) {
     return { title: 'Post Não Encontrado' };
   }
@@ -45,8 +45,9 @@ export async function generateMetadata({ params }: PostPageProps) {
   };
 }
 
-export default async function PostPage({ params }: PostPageProps) {
-  const post = await getPostBySlug(params.slug);
+export default async function PostPage({ params }: PageProps) {
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     notFound();
