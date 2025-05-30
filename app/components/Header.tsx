@@ -5,31 +5,42 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Menu, X, ShoppingBag, User } from 'lucide-react';
 
-export default function Header() {
+interface HeaderProps {
+  forceBackground?: boolean;
+}
+
+export default function Header({ forceBackground = false }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       const offset = window.scrollY;
-      // Aumentar o offset para a transição ocorrer um pouco mais tarde
-      if (offset > 80) { 
+      // Se forceBackground for true, considera sempre como scrolled
+      if (forceBackground || offset > 20) { // Reduzido de 80 para 20 para transição mais rápida
         setScrolled(true);
       } else {
         setScrolled(false);
       }
     };
 
+    // Se forceBackground for true, seta scrolled como true imediatamente
+    if (forceBackground) {
+      setScrolled(true);
+    } else {
+      handleScroll(); // Chama uma vez para definir o estado inicial
+    }
+
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [forceBackground]);
 
   return (
     <header 
       className={`fixed top-0 w-full z-50 h-[80px] transition-all duration-300 ease-in-out ${
-        scrolled ? 'bg-white shadow-md' : 'bg-transparent'
+        scrolled || forceBackground ? 'bg-white shadow-md' : 'bg-transparent'
       }`}
     >
       <div className="container mx-auto px-4 h-full">

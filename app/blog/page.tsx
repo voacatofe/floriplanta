@@ -4,6 +4,9 @@ import Image from 'next/image';
 import Header from '../components/Header';
 import Footer from "../components/Footer";
 import { Rss, Search, Tag, Calendar, Mail } from 'lucide-react'; // Icons
+import { getPublishedPosts, getAllCategories } from '@/app/lib/blog-data';
+import PostCard from '@/app/components/blog/PostCard';
+import InfiniteScrollPosts from '@/app/components/blog/InfiniteScrollPosts';
 
 // Placeholder data for blog posts - Replace with actual data fetching later
 const featuredPosts = [
@@ -56,7 +59,26 @@ const categories = [
   { name: "Guias e Tutoriais", slug: "guias-tutoriais" },
 ];
 
-export default function BlogPage() {
+export const revalidate = 3600;
+
+interface BlogPageProps {
+  searchParams: {
+    page?: string;
+    categoria?: string;
+  };
+}
+
+export default async function BlogPage({ searchParams }: BlogPageProps) {
+  const currentPage = Number(searchParams.page) || 1;
+  const categorySlug = searchParams.categoria;
+
+  const { posts, totalCount } = await getPublishedPosts({ 
+    page: currentPage,
+    // categorySlug: categorySlug // Adicionar quando a função de filtro for aprimorada
+  });
+  
+  const allCategories = await getAllCategories();
+
   return (
     <main className="bg-[#f8f5f0] overflow-x-hidden">
       <Header />
@@ -115,39 +137,14 @@ export default function BlogPage() {
               </div>
             )}
 
-            {/* Recent Posts Feed */}
+            {/* Recent Posts Feed with Infinite Scroll */}
             <div>
               <h2 className="font-futuru font-bold text-brand-purple text-2xl lg:text-3xl mb-6 border-b-2 border-brand-light-green pb-2">Últimas Publicações</h2>
-              <div className="grid grid-cols-1 gap-8">
-                {recentPosts.map((post) => (
-                  <article key={post.slug} className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 flex flex-col sm:flex-row">
-                    <div className="sm:w-1/3 relative aspect-video sm:aspect-auto">
-                      <Image 
-                        src={post.image} 
-                        alt={post.title} 
-                        layout="fill" 
-                        objectFit="cover" 
-                      />
-                    </div>
-                    <div className="sm:w-2/3 p-5 flex flex-col">
-                      <span className="text-xs font-medium text-brand-hover-purple mb-1 uppercase tracking-wider">{post.category}</span>
-                      <h3 className="font-futuru font-bold text-brand-purple text-lg mb-1">
-                        <Link href={`/blog/${post.slug}`} className="hover:text-brand-hover-purple transition-colors">
-                          {post.title}
-                        </Link>
-                      </h3>
-                      <p className="font-inter text-brand-purple/80 text-sm leading-relaxed flex-grow mb-2">
-                        {post.excerpt}
-                      </p>
-                      <div className="flex justify-between items-center text-xs text-brand-purple/60 mt-auto">
-                        <span>{post.date}</span>
-                        <Link href={`/blog/${post.slug}`} className="font-medium text-brand-hover-purple hover:underline">Ler Mais &rarr;</Link>
-                      </div>
-                    </div>
-                  </article>
-                ))}
-              </div>
-              {/* Add Pagination if needed */}
+              <InfiniteScrollPosts 
+                initialPosts={posts} 
+                totalCount={totalCount}
+                categorySlug={categorySlug}
+              />
             </div>
           </div>
 
@@ -171,13 +168,23 @@ export default function BlogPage() {
               <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-100">
                 <h3 className="font-futuru font-bold text-brand-purple mb-3 text-lg flex items-center"><Tag className="w-5 h-5 mr-2"/>Categorias</h3>
                 <ul className="space-y-1">
-                  {categories.map((cat) => (
-                    <li key={cat.slug}>
+                  <li>
+                    <Link href="/blog" 
+                       className={`block py-1 px-2 rounded font-inter text-sm text-brand-purple hover:bg-brand-light-green/50 transition-colors duration-200 ${
+                        !categorySlug ? 'bg-brand-light-green text-brand-green' : 'text-gray-700 dark:text-gray-300'
+                      }`}>
+                        Todas
+                    </Link>
+                  </li>
+                  {allCategories.map(category => (
+                    <li key={category.id}>
                       <Link 
-                        href={`/blog/categoria/${cat.slug}`} 
-                        className="block py-1 px-2 rounded font-inter text-sm text-brand-purple hover:bg-brand-light-green/50 transition-colors duration-200"
+                        href={`/blog?categoria=${category.slug}`}
+                        className={`block py-1 px-2 rounded font-inter text-sm text-brand-purple hover:bg-brand-light-green/50 transition-colors duration-200 ${
+                          categorySlug === category.slug ? 'bg-brand-light-green text-brand-green' : 'text-gray-700 dark:text-gray-300'
+                        }`}
                       >
-                        {cat.name}
+                        {category.name}
                       </Link>
                     </li>
                   ))}
