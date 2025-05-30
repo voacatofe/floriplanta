@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import Image from 'next/image'; // If needed for infographics
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 import { BookOpen, Brain, Atom, Thermometer, Dna, Zap, Leaf, Info, Bomb, Droplet, Flower, LucideIcon } from 'lucide-react'; // Example icons
 
 // Component for the sidebar navigation within the cannabis section

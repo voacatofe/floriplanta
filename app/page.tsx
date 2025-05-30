@@ -1,15 +1,15 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import HeroSection from './components/HeroSection';
-import FeaturedSections from './components/FeaturedSections';
-import ValuesSection from './components/ValuesSection';
-import MissionSection from './components/MissionSection';
-import BenefitsSection from './components/BenefitsSection';
-import TestimonialsSection from './components/TestimonialsSection';
-import BlogHighlightSection from './components/BlogHighlightSection';
-import CtaNewsletterSection from './components/CtaNewsletterSection';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
+import HeroSection from '@/components/sections/HeroSection';
+import FeaturedSections from '@/components/sections/FeaturedSections';
+import ValuesSection from '@/components/sections/ValuesSection';
+import MissionSection from '@/components/sections/MissionSection';
+import BenefitsSection from '@/components/sections/BenefitsSection';
+import TestimonialsSection from '@/components/sections/TestimonialsSection';
+import BlogHighlightSection from '@/components/sections/BlogHighlightSection';
+import CtaNewsletterSection from '@/components/sections/CtaNewsletterSection';
 
 export default function Home() {
   return (

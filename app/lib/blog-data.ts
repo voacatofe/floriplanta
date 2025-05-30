@@ -18,17 +18,17 @@ export type Tag = Database['public']['Tables']['tags']['Row']
 
 const POSTS_PER_PAGE = 10;
 
-export async function getPublishedPosts(
+export async function getPosts(
   options: {
     page?: number;
     categorySlug?: string;
+    status?: 'published' | 'draft' | 'archived' | 'all';
     // tagSlug?: string;    // Removido por enquanto
   } = {}
-): Promise<{ posts: Post[]; totalCount: number }> { 
+): Promise<{ posts: Post[]; totalCount: number }> {
   const supabase = await createSupabaseServerClient();
-  const { page = 1, categorySlug } = options;
+  const { page = 1, categorySlug, status = 'published' } = options;
 
-  // Se houver filtro de categoria, primeiro buscar o ID da categoria
   let categoryId: number | null = null;
   if (categorySlug) {
     const { data: categoryData } = await supabase
@@ -47,15 +47,15 @@ export async function getPublishedPosts(
     tags!post_tags (id, name, slug)
   `;
 
-  // Query base
   let queryPosts = supabase
     .from('posts')
-    .select(selectString)
-    .eq('status', 'published' as const);
+    .select(selectString);
 
-  // Se houver categoria, fazer um join manual
+  if (status !== 'all') {
+    queryPosts = queryPosts.eq('status', status);
+  }
+
   if (categoryId) {
-    // Primeiro buscar os IDs dos posts dessa categoria
     const { data: postIds } = await supabase
       .from('post_categories')
       .select('post_id')
@@ -65,21 +65,21 @@ export async function getPublishedPosts(
       const ids = postIds.map((p: { post_id: number }) => p.post_id);
       queryPosts = queryPosts.in('id', ids);
     } else {
-      // Se não há posts nessa categoria, retornar vazio
       return { posts: [], totalCount: 0 };
     }
   }
 
-  // Ordenação e paginação
   queryPosts = queryPosts
     .order('published_at', { ascending: false })
     .range((page - 1) * POSTS_PER_PAGE, page * POSTS_PER_PAGE - 1);
 
-  // Query para contar total
   let countQueryBuilder = supabase
     .from('posts')
-    .select('id', { count: 'exact', head: true })
-    .eq('status', 'published' as const);
+    .select('id', { count: 'exact', head: true });
+
+  if (status !== 'all') {
+    countQueryBuilder = countQueryBuilder.eq('status', status);
+  }
 
   if (categoryId) {
     const { data: postIds } = await supabase
@@ -104,8 +104,8 @@ export async function getPublishedPosts(
   ]);
 
   if (postsError) {
-    console.error('Error fetching published posts:', postsError);
-    throw new Error('Could not fetch published posts.');
+    console.error('Error fetching posts:', postsError);
+    throw new Error('Could not fetch posts.');
   }
   if (countError) {
     console.error('Error fetching posts count:', countError);
@@ -126,7 +126,7 @@ export async function getPostBySlug(slug: string): Promise<SinglePost | null> {
       tags!post_tags (id, name, slug)
     `)
     .eq('slug', slug)
-    .eq('status', 'published' as const)
+    .eq('status', 'published')
     .single()
 
   if (error) {

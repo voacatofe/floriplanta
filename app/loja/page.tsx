@@ -1,8 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 import { ShoppingBag, Star, Shirt, Coffee, Package, Info, CreditCard, Truck, RotateCcw, HelpCircle } from 'lucide-react'; // Icons
 
 // Placeholder data for products - Replace with actual data later

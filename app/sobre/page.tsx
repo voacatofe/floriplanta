@@ -1,8 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 import { Heart, Book, UserPlus, Scale, Target, Eye, Users, FileText, Handshake } from 'lucide-react'; // Added more icons
 
 // Placeholder data for team and partners - replace with real data

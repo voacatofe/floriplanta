@@ -5,12 +5,12 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
-import Header from '@/app/components/Header';
-import Footer from '@/app/components/Footer';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
 import { ArrowLeft, ArrowRight, Calendar, Clock, User, ChevronRight } from 'lucide-react';
-import ShareButtons from '@/app/components/blog/ShareButtons';
-import TableOfContents from '@/app/components/blog/TableOfContents';
-import CommentSection from '@/app/components/blog/CommentSection';
+import ShareButtons from '@/components/blog/ShareButtons';
+import TableOfContents from '@/components/blog/TableOfContents';
+import CommentSection from '@/components/blog/CommentSection';
 
 export const revalidate = 3600;
 

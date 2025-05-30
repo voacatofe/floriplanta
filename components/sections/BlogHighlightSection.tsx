@@ -10,21 +10,21 @@ const recentPosts = [
     id: 1,
     title: "Cannabis Medicinal e Ansiedade: Como o CBD Pode Ajudar?",
     excerpt: "Explore como o Canabidiol (CBD), um composto não psicoativo da cannabis, tem mostrado potencial no manejo dos sintomas de ansiedade...",
-    image: "/placeholder-blog-1.jpg", // Replace with actual image path
+    image: "/images/placeholder-blog-1.jpg", // Corrigido
     link: "/blog/cannabis-ansiedade" // Replace with actual blog post link
   },
   {
     id: 2,
     title: "O que é o Sistema Endocanabinoide e Por Que Ele é Importante?",
     excerpt: "Descubra o sistema endocanabinoide (SEC), uma complexa rede de sinalização celular presente em nosso corpo, e seu papel na regulação de diversas funções...",
-    image: "/placeholder-blog-2.jpg", // Replace with actual image path
+    image: "/images/placeholder-blog-2.jpg", // Corrigido
     link: "/blog/sistema-endocanabinoide" // Replace with actual blog post link
   },
   {
     id: 3,
     title: "Como Obter Autorização da ANVISA para Uso de Cannabis Medicinal",
     excerpt: "Um guia passo a passo atualizado sobre o processo para solicitar a autorização da ANVISA para importação e uso de produtos à base de cannabis...",
-    image: "/placeholder-blog-3.jpg", // Replace with actual image path
+    image: "/images/placeholder-blog-3.jpg", // Corrigido
     link: "/blog/autorizacao-anvisa" // Replace with actual blog post link
   }
 ];
@@ -54,9 +54,9 @@ export default function BlogHighlightSection() {
                 <Image 
                   src={post.image} 
                   alt={post.title} 
-                  layout="fill" 
-                  objectFit="cover" 
-                  className="transition-transform duration-300 hover:scale-105"
+                  fill={true} // Atualizado
+                  className="object-cover transition-transform duration-300 hover:scale-105" // object-cover adicionado via className
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" // Adicionar prop sizes para otimização
                 />
               </Link>
               <div className="p-6 flex flex-col flex-grow">

@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 import { Users, HeartHandshake, Droplet, BookOpen, Scale, CalendarDays, Handshake, UserCheck, FileText, Mail, Phone, HelpCircle, CheckCircle, Upload, Clock, Send } from 'lucide-react'; // Icons
 
 const benefits = [

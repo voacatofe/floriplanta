@@ -1,8 +1,13 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { type NextRequest, NextResponse } from 'next/server'
 import { Database } from '@/app/lib/database.types'
+import { User } from '@supabase/supabase-js'
 
-export async function updateSupabaseSession(request: NextRequest) {
+export async function updateSupabaseSession(request: NextRequest): Promise<{
+  response: NextResponse;
+  supabase: ReturnType<typeof createServerClient<Database>>;
+  user: User | null;
+}> {
   let response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -55,10 +60,7 @@ export async function updateSupabaseSession(request: NextRequest) {
     }
   )
 
-  // Refresh session if expired - important for Server Components
-  // Await a session refresh before continuing a request
-  await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
 
-
-  return response
+  return { response, supabase, user }
 } 

@@ -1,8 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 import { Droplet, Leaf, FlaskConical, ShieldCheck, FileText, User, Upload, Clock, Truck, AlertTriangle, ArrowLeft, UserCheck, UserPlus } from 'lucide-react'; // Icons
 
 export default function OleoTerralPage() {

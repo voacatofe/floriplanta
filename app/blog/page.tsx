@@ -1,12 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import Header from '../components/Header';
-import Footer from "../components/Footer";
+import Header from '@/components/layout/Header';
+import Footer from "@/components/layout/Footer";
 import { Rss, Search, Tag, Calendar, Mail } from 'lucide-react'; // Icons
-import { getPublishedPosts, getAllCategories } from '@/app/lib/blog-data';
-import PostCard from '@/app/components/blog/PostCard';
-import InfiniteScrollPosts from '@/app/components/blog/InfiniteScrollPosts';
+import { getPosts, getAllCategories } from '@/app/lib/blog-data';
+import PostCard from '@/components/blog/PostCard';
+import InfiniteScrollPosts from '@/components/blog/InfiniteScrollPosts';
 
 // Placeholder data for blog posts - Replace with actual data fetching later
 const featuredPosts = [
@@ -72,9 +72,10 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const currentPage = Number(searchParams.page) || 1;
   const categorySlug = searchParams.categoria;
 
-  const { posts, totalCount } = await getPublishedPosts({ 
+  const { posts, totalCount } = await getPosts({
     page: currentPage,
-    // categorySlug: categorySlug // Adicionar quando a função de filtro for aprimorada
+    categorySlug: categorySlug,
+    status: 'published'
   });
   
   const allCategories = await getAllCategories();
@@ -113,8 +114,9 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                       <Image 
                         src={post.image} 
                         alt={post.title} 
-                        layout="fill" 
-                        objectFit="cover" 
+                        fill={true}
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 50vw"
                       />
                     </div>
                     <div className="md:w-1/2 p-6 flex flex-col">
