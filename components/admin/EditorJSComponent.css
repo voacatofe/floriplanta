@@ -1,0 +1,150 @@
+/* Remove padding e margens do Editor.js */
+.codex-editor {
+  padding: 0 !important;
+}
+
+.codex-editor__redactor {
+  padding: 0 !important;
+  padding-bottom: 100px !important; /* Espaço para scroll */
+}
+
+.ce-block__content {
+  max-width: 100% !important;
+  margin: 0 !important;
+}
+
+.ce-block {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Ajusta o primeiro bloco */
+.ce-block:first-child {
+  margin-top: 0 !important;
+}
+
+/* Remove margens laterais dos parágrafos */
+.ce-paragraph {
+  padding: 0.5em 0 !important;
+  margin: 0 !important;
+  line-height: 1.6;
+}
+
+/* Ajusta headers */
+.ce-header {
+  padding: 0.5em 0 !important;
+  margin: 0 !important;
+}
+
+.h-header {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Ajusta listas */
+.cdx-list {
+  padding: 0.5em 0 !important;
+  margin: 0 !important;
+}
+
+.cdx-list__item {
+  padding: 0.25em 0 !important;
+}
+
+/* Remove padding do container do editor */
+#editorjs-container {
+  padding: 0 !important;
+}
+
+/* Ajusta a toolbar */
+.ce-toolbar {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.ce-toolbar__content {
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.ce-toolbar__actions {
+  padding-right: 0 !important;
+}
+
+/* Ajusta os blocos de código */
+.ce-code__textarea {
+  padding: 1em !important;
+  margin: 0.5em 0 !important;
+}
+
+/* Ajusta imagens */
+.image-tool {
+  margin: 1em 0 !important;
+}
+
+.image-tool__image {
+  margin: 0 !important;
+}
+
+/* Ajusta quotes */
+.cdx-quote {
+  margin: 1em 0 !important;
+  padding: 1em 1.5em !important;
+}
+
+/* Remove bordas indesejadas */
+.codex-editor--empty .ce-block:first-child .ce-paragraph[data-placeholder]:empty::before {
+  opacity: 0.5;
+}
+
+.ce-paragraph[data-placeholder]:empty::before {
+  left: 0 !important;
+}
+
+/* Ajusta o espaçamento entre blocos */
+.ce-block + .ce-block {
+  margin-top: 0.5em;
+}
+
+/* Garante que o conteúdo está alinhado à esquerda */
+.ce-block__content > * {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Remove qualquer padding lateral dos elementos internos */
+.cdx-block {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Ajusta delimitadores */
+.ce-delimiter {
+  padding: 1em 0 !important;
+}
+
+/* Ajusta tabelas */
+.tc-table {
+  margin: 1em 0 !important;
+}
+
+/* Remove margens do inline toolbar */
+.ce-inline-toolbar {
+  margin: 0 !important;
+}
+
+/* Ajusta embed */
+.embed-tool {
+  margin: 1em 0 !important;
+}
+
+/* Ajusta checklist */
+.cdx-checklist {
+  padding: 0.5em 0 !important;
+  margin: 0 !important;
+}
+
+.cdx-checklist__item {
+  padding: 0.25em 0 !important;
+} 
