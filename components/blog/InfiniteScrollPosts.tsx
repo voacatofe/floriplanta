@@ -4,15 +4,13 @@ import { useState, useEffect, useCallback } from 'react';
 import { useInView } from 'react-intersection-observer';
 import PostCard from './PostCard';
 import type { Post } from '@/app/lib/blog-data';
-import { Loader2 } from 'lucide-react';
+import { Loader2, AlertCircle } from 'lucide-react';
 
 interface InfiniteScrollPostsProps {
   initialPosts: Post[];
   totalCount: number;
   categorySlug?: string;
 }
-
-const POSTS_PER_PAGE = 10;
 
 export default function InfiniteScrollPosts({ 
   initialPosts, 
@@ -22,6 +20,7 @@ export default function InfiniteScrollPosts({
   const [posts, setPosts] = useState<Post[]>(initialPosts);
   const [page, setPage] = useState(2);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(initialPosts.length < totalCount);
   
   const { ref, inView } = useInView({
@@ -33,6 +32,7 @@ export default function InfiniteScrollPosts({
     if (loading || !hasMore) return;
     
     setLoading(true);
+    setError(null);
     
     try {
       const params = new URLSearchParams({
@@ -41,7 +41,16 @@ export default function InfiniteScrollPosts({
       });
       
       const response = await fetch(`/api/blog/posts?${params}`);
+      
+      if (!response.ok) {
+        throw new Error(`Erro ${response.status}: ${response.statusText}`);
+      }
+      
       const data = await response.json();
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
       
       if (data.posts && data.posts.length > 0) {
         setPosts(prev => [...prev, ...data.posts]);
@@ -54,6 +63,7 @@ export default function InfiniteScrollPosts({
       }
     } catch (error) {
       console.error('Erro ao carregar mais posts:', error);
+      setError(error instanceof Error ? error.message : 'Erro desconhecido ao carregar posts');
       setHasMore(false);
     } finally {
       setLoading(false);
@@ -61,10 +71,15 @@ export default function InfiniteScrollPosts({
   }, [page, loading, hasMore, posts.length, totalCount, categorySlug]);
 
   useEffect(() => {
-    if (inView && hasMore && !loading) {
+    if (inView && hasMore && !loading && !error) {
       loadMorePosts();
     }
-  }, [inView, hasMore, loading, loadMorePosts]);
+  }, [inView, hasMore, loading, error, loadMorePosts]);
+
+  const handleRetry = () => {
+    setError(null);
+    loadMorePosts();
+  };
 
   return (
     <>
@@ -82,13 +97,29 @@ export default function InfiniteScrollPosts({
           </div>
         )}
         
-        {!hasMore && posts.length > 0 && (
+        {error && (
+          <div className="flex flex-col items-center gap-3 text-red-600">
+            <div className="flex items-center gap-2">
+              <AlertCircle size={20} />
+              <span>Erro ao carregar posts: {error}</span>
+            </div>
+            <button 
+              onClick={handleRetry}
+              className="px-4 py-2 bg-brand-purple text-white rounded-lg hover:bg-brand-hover-purple transition-colors"
+              disabled={loading}
+            >
+              {loading ? 'Tentando...' : 'Tentar Novamente'}
+            </button>
+          </div>
+        )}
+        
+        {!hasMore && !loading && !error && posts.length > 0 && (
           <p className="text-gray-600">
             Você chegou ao fim! Total de {posts.length} posts.
           </p>
         )}
         
-        {!hasMore && posts.length === 0 && (
+        {!hasMore && !loading && !error && posts.length === 0 && (
           <p className="text-gray-600">
             Nenhum post encontrado.
           </p>

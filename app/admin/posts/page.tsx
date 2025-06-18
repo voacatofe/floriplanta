@@ -11,9 +11,9 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Badge } from '@/components/ui/badge'; // Para exibir o status
-import { PlusCircle, Edit, Trash2, Eye } from 'lucide-react';
-
-const POSTS_PER_PAGE = 10; // Definir aqui também para consistência com blog-data.ts
+import { PlusCircle, Edit, Eye } from 'lucide-react';
+import DeletePostButton from '@/components/admin/DeletePostButton';
+import { POSTS_PER_PAGE } from '@/app/lib/constants';
 
 // Função para formatar data (pode ser movida para utils se usada em mais lugares)
 const formatDate = (dateString: string | null) => {
@@ -101,10 +101,7 @@ export default async function AdminPostsPage({ searchParams }: AdminPostsPagePro
                       <Button variant="ghost" size="sm" asChild title="Editar Post">
                         <Link href={`/admin/posts/editar/${post.id}`}><Edit className="h-4 w-4" /></Link>
                       </Button>
-                      <Button variant="ghost" size="sm" title="Excluir Post" className="text-red-500 hover:text-red-700">
-                        {/* TODO: Implementar exclusão com confirmação */}
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <DeletePostButton postId={post.id} postTitle={post.title} />
                     </TableCell>
                   </TableRow>
                 ))}

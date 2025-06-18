@@ -1,5 +1,6 @@
 import { createSupabaseServerClient } from './supabase/server'
 import { Database } from './database.types'
+import { POSTS_PER_PAGE } from './constants'
 
 export type Post = Database['public']['Tables']['posts']['Row'] & {
   profiles: Pick<Database['public']['Tables']['profiles']['Row'], 'display_name' | 'username'> | null
@@ -16,8 +17,6 @@ export type SinglePost = Database['public']['Tables']['posts']['Row'] & {
 export type Category = Database['public']['Tables']['categories']['Row']
 export type Tag = Database['public']['Tables']['tags']['Row']
 
-const POSTS_PER_PAGE = 10;
-
 export async function getPosts(
   options: {
     page?: number;
@@ -31,13 +30,19 @@ export async function getPosts(
 
   let categoryId: number | null = null;
   if (categorySlug) {
-    const { data: categoryData } = await supabase
+    const { data: categoryData, error: categoryError } = await supabase
       .from('categories')
       .select('id')
       .eq('slug', categorySlug)
       .single();
     
-    categoryId = categoryData?.id || null;
+    if (categoryError || !categoryData) {
+      // Se categorySlug foi fornecido mas a categoria não existe,
+      // retorna lista vazia em vez de ignorar o filtro
+      return { posts: [], totalCount: 0 };
+    }
+    
+    categoryId = categoryData.id;
   }
 
   const selectString = `
@@ -115,7 +120,7 @@ export async function getPosts(
 }
 
 export async function getPostBySlug(slug: string): Promise<SinglePost | null> {
-  console.log(`[getPostBySlug] Buscando post com slug: "${slug}"`);
+  // console.log(`[getPostBySlug] Buscando post com slug: "${slug}"`);
   const supabase = await createSupabaseServerClient()
   const { data, error } = await supabase
     .from('posts')
@@ -139,16 +144,16 @@ export async function getPostBySlug(slug: string): Promise<SinglePost | null> {
     });
 
     if (error.code === 'PGRST116') { 
-      console.log(`[getPostBySlug] Post com slug "${slug}" não encontrado (PGRST116).`);
+      // console.log(`[getPostBySlug] Post com slug "${slug}" não encontrado (PGRST116).`);
       return null;
     }
     throw new Error(`Could not fetch post. Supabase error code: ${error.code}, Message: ${error.message}`);
   }
 
   if (!data) {
-    console.log(`[getPostBySlug] Post com slug "${slug}" não retornou dados, mas sem erro explícito.`);
+    // console.log(`[getPostBySlug] Post com slug "${slug}" não retornou dados, mas sem erro explícito.`);
   } else {
-    console.log(`[getPostBySlug] Post encontrado para slug "${slug}":`, data.title);
+    // console.log(`[getPostBySlug] Post encontrado para slug "${slug}":`, data.title);
   }
   return data as SinglePost | null;
 }
@@ -200,7 +205,7 @@ export async function getCategories() {
 export async function getRelatedPosts(currentPostId: number, categoryId?: number) {
   const supabase = await createSupabaseServerClient();
   
-  let query = supabase
+  const query = supabase
     .from('posts')
     .select(`
       id,

@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { Send, Mail, Phone, Clock, MapPin, Instagram, Facebook, Linkedin, Youtube, HelpCircle } from 'lucide-react'; // Icons
+import { Send, Mail, Phone, Clock, MapPin, Instagram, Facebook, Linkedin, Youtube } from 'lucide-react'; // Icons
+import { toast } from 'sonner';
 
 export default function ContatoPage() {
   const [formData, setFormData] = useState({
@@ -16,7 +17,7 @@ export default function ContatoPage() {
     consent: false,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -32,19 +33,29 @@ export default function ContatoPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!formData.consent) {
-      alert('Você precisa concordar com a Política de Privacidade para enviar a mensagem.');
+      toast.error("Você precisa concordar com os termos para continuar.");
       return;
     }
     setIsSubmitting(true);
-    setSubmitStatus('idle');
-    
-    // Simulate API call
+    setSubmitStatus('loading');
+    // console.log('Form Data Submitted:', formData);
+
     try {
-      // Replace with your actual form submission logic (e.g., API endpoint)
-      await new Promise(resolve => setTimeout(resolve, 1500)); 
-      console.log('Form Data Submitted:', formData);
-      setSubmitStatus('success');
-      setFormData({ name: '', email: '', phone: '', subject: '', message: '', consent: false }); // Reset form
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setSubmitStatus('success');
+        setFormData({ name: '', email: '', phone: '', subject: '', message: '', consent: false }); // Reset form
+      } else {
+        console.error('Form submission error:', response.statusText);
+        setSubmitStatus('error');
+      }
     } catch (error) {
       console.error('Form submission error:', error);
       setSubmitStatus('error');

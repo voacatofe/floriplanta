@@ -2,8 +2,9 @@
 
 import { revalidatePath } from 'next/cache';
 import { cookies } from "next/headers";
-import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { createServerClient } from "@supabase/ssr";
 import { type Category, type Tag, getAllCategories, getAllTags } from "@/app/lib/blog-data";
+import { MAX_TITLE_LENGTH, MAX_SLUG_LENGTH } from "@/app/lib/constants";
 
 export interface PostCreationData {
   title: string;
@@ -48,9 +49,61 @@ export async function createPostAction(data: PostCreationData) {
     return { error: "Usuário não autenticado." };
   }
 
+  // Validações de entrada
+  const trimmedTitle = data.title?.trim();
+  const trimmedSlug = data.slug?.trim();
+  
+  if (!trimmedTitle || trimmedTitle.length === 0) {
+    return { error: "Título é obrigatório." };
+  }
+  
+  if (!trimmedSlug || trimmedSlug.length === 0) {
+    return { error: "Slug é obrigatório." };
+  }
+  
+  if (trimmedTitle.length > MAX_TITLE_LENGTH) {
+    return { error: `Título deve ter no máximo ${MAX_TITLE_LENGTH} caracteres.` };
+  }
+  
+  if (trimmedSlug.length > MAX_SLUG_LENGTH) {
+    return { error: `Slug deve ter no máximo ${MAX_SLUG_LENGTH} caracteres.` };
+  }
+  
+  // Validar se o slug contém apenas caracteres permitidos
+  const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+  if (!slugRegex.test(trimmedSlug)) {
+    return { error: "Slug deve conter apenas letras minúsculas, números e hífens." };
+  }
+  
+  // Verificar se o slug já existe
+  const { data: existingPost, error: slugCheckError } = await supabase
+    .from("posts")
+    .select("id")
+    .eq("slug", trimmedSlug)
+    .single();
+    
+  if (slugCheckError && slugCheckError.code !== 'PGRST116') {
+    console.error("Erro ao verificar slug existente:", slugCheckError);
+    return { error: "Erro ao verificar disponibilidade do slug." };
+  }
+  
+  if (existingPost) {
+    return { error: "Este slug já está em uso. Escolha outro." };
+  }
+  
+  // Validar status
+  if (!['draft', 'published', 'archived'].includes(data.status)) {
+    return { error: "Status inválido." };
+  }
+
   const author_id = user.id;
 
-  const { title, slug, excerpt, body, cover_image_url, status, category_ids, tag_ids, published_at } = data;
+  const { title, slug, excerpt, body, cover_image_url, status, category_ids, tag_ids, published_at } = {
+    ...data,
+    title: trimmedTitle,
+    slug: trimmedSlug,
+    excerpt: data.excerpt?.trim() || null
+  };
 
   const { data: postData, error: postError } = await supabase
     .from("posts")
@@ -123,6 +176,116 @@ export async function getTagsForAdmin(): Promise<Tag[]> {
     console.error('Error fetching tags for admin:', error);
     return [];
   }
+}
+
+export async function deletePostAction(postId: number) {
+  // Validações de entrada
+  if (!postId || !Number.isInteger(postId) || postId <= 0) {
+    return { error: "ID do post inválido." };
+  }
+
+  const cookieStore = await cookies();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            );
+          } catch {
+            // The `setAll` method was called from a Server Component.
+            // This can be ignored if you have middleware refreshing
+            // user sessions.
+          }
+        },
+      },
+    }
+  );
+
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    return { error: "Usuário não autenticado." };
+  }
+
+  // Primeiro, buscar o post para verificar se existe e obter o slug
+  const { data: postData, error: fetchError } = await supabase
+    .from("posts")
+    .select("id, slug, title")
+    .eq("id", postId)
+    .single();
+
+  if (fetchError || !postData) {
+    return { error: "Post não encontrado." };
+  }
+
+  // Remover associações de categorias
+  const { error: categoriesError } = await supabase
+    .from("post_categories")
+    .delete()
+    .eq("post_id", postId);
+
+  if (categoriesError) {
+    console.error("Erro ao remover categorias do post:", categoriesError);
+    return { error: `Erro ao remover categorias: ${categoriesError.message}` };
+  }
+
+  // Remover associações de tags
+  const { error: tagsError } = await supabase
+    .from("post_tags")
+    .delete()
+    .eq("post_id", postId);
+
+  if (tagsError) {
+    console.error("Erro ao remover tags do post:", tagsError);
+    return { error: `Erro ao remover tags: ${tagsError.message}` };
+  }
+
+  // Remover comentários anônimos associados
+  const { error: anonymousCommentsError } = await supabase
+    .from("anonymous_comments")
+    .delete()
+    .eq("post_id", postId);
+
+  if (anonymousCommentsError) {
+    console.error("Erro ao remover comentários anônimos:", anonymousCommentsError);
+    return { error: `Erro ao remover comentários: ${anonymousCommentsError.message}` };
+  }
+
+  // Remover comentários de usuários autenticados
+  const { error: commentsError } = await supabase
+    .from("comments")
+    .delete()
+    .eq("post_id", postId);
+
+  if (commentsError) {
+    console.error("Erro ao remover comentários:", commentsError);
+    return { error: `Erro ao remover comentários: ${commentsError.message}` };
+  }
+
+  // Finalmente, remover o post
+  const { error: deleteError } = await supabase
+    .from("posts")
+    .delete()
+    .eq("id", postId);
+
+  if (deleteError) {
+    console.error("Erro ao excluir post:", deleteError);
+    return { error: deleteError.message };
+  }
+
+  // Revalidar as páginas relevantes
+  revalidatePath("/admin/posts");
+  revalidatePath("/blog");
+  revalidatePath(`/blog/${postData.slug}`);
+
+  return { error: null, data: { deletedPost: postData } };
 }
 
 // Você pode precisar adicionar outras actions aqui, como updatePostAction, deletePostAction, etc. 

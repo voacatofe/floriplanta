@@ -3,27 +3,20 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Mail } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function CtaNewsletterSection() {
   const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    setMessage('Processando...');
-
-    // Placeholder for actual newsletter subscription logic
-    // Replace with your API call (e.g., to Mailchimp, SendGrid, or a custom backend)
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000)); 
-      console.log('Subscribing email:', email);
-      setMessage('Obrigado por se inscrever!');
-      setEmail(''); // Clear input after successful subscription
-    } catch (error) {
-      console.error('Subscription error:', error);
-      setMessage('Ocorreu um erro. Tente novamente.');
+    if (!email) {
+      toast.error("Por favor, insira seu e-mail.");
+      return;
     }
+    // console.log('Subscribing email:', email);
+    toast.success(`Obrigado por se inscrever, ${email}!`);
+    setEmail("");
   };
 
   return (
@@ -71,7 +64,6 @@ export default function CtaNewsletterSection() {
                 Inscrever
               </button>
             </form>
-            {message && <p className="text-sm mt-3 text-brand-light-green/90">{message}</p>}
             <p className="text-xs opacity-70 mt-3">
               Respeitamos sua privacidade. Não enviamos spam.
             </p>

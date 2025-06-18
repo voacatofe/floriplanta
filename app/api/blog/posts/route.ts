@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getPosts } from '@/app/lib/blog-data';
+import { POSTS_PER_PAGE } from '@/app/lib/constants';
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,14 +11,14 @@ export async function GET(request: NextRequest) {
     const { posts, totalCount } = await getPosts({
       page,
       status: 'published',
-      // categorySlug // Será implementado quando o filtro por categoria for adicionado
+      categorySlug // Agora habilitado para filtrar por categoria
     });
     
     return NextResponse.json({
       posts,
       totalCount,
       page,
-      hasMore: posts.length === 10 // POSTS_PER_PAGE
+      hasMore: posts.length === POSTS_PER_PAGE
     });
   } catch (error) {
     console.error('Error fetching posts:', error);
