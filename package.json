@@ -68,14 +68,18 @@
     "typescript": "^5.3.3"
   },
   "devDependencies": {
+    "@eslint/js": "^9.29.0",
     "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^20.11.5",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.3.7",
     "autoprefixer": "^10.4.17",
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.1",
     "eslint-config-next": "^15.2.3",
-    "postcss": "^8.4.33"
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^16.2.0",
+    "postcss": "^8.4.33",
+    "typescript-eslint": "^8.34.1"
   },
   "type": "module"
 }

@@ -110,7 +110,7 @@ export default async function AdminPostsPage({ searchParams }: AdminPostsPagePro
               </TableBody>
             </Table>
             
-            {/* Paginação */เจน
+            {/* Paginação */}
             {totalPages > 1 && (
               <div className="flex items-center justify-end space-x-2 py-4">
                 <Button
