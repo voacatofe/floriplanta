@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getPublishedPosts } from '@/app/lib/blog-data';
+import { getPosts } from '@/app/lib/blog-data';
 
 export async function GET(request: NextRequest) {
   try {
@@ -7,8 +7,9 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get('page') || '1');
     const categorySlug = searchParams.get('categoria') || undefined;
     
-    const { posts, totalCount } = await getPublishedPosts({
+    const { posts, totalCount } = await getPosts({
       page,
+      status: 'published',
       // categorySlug // Será implementado quando o filtro por categoria for adicionado
     });
     

@@ -28,8 +28,9 @@ const formatDate = (dateString: string | null) => {
 };
 
 interface AdminPostsPageProps {
-  searchParams?: {
+  searchParams: {
     page?: string;
+    // Adicione outros searchParams esperados aqui, se houver
   };
 }
 
@@ -109,7 +110,7 @@ export default async function AdminPostsPage({ searchParams }: AdminPostsPagePro
               </TableBody>
             </Table>
             
-            {/* Paginação */}เจน
+            {/* Paginação */เจน
             {totalPages > 1 && (
               <div className="flex items-center justify-end space-x-2 py-4">
                 <Button
