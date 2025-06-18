@@ -22,6 +22,7 @@ import { createBrowserClient } from '@supabase/ssr';
 import { toast } from "sonner";
 import { OutputData } from '@editorjs/editorjs';
 import { Textarea } from '@/components/ui/textarea';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 const EditorJSComponent = dynamic(() => import('@/components/admin/EditorJSComponent'), {
   ssr: false,
@@ -45,8 +46,18 @@ export default function NewPostPage() {
   const [uploading, setUploading] = useState(false);
   const [filePreview, setFilePreview] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true); 
+  const [supabase, setSupabase] = useState<SupabaseClient | null>(null);
 
-  const supabase = createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
+  // Inicializar o cliente Supabase no lado do cliente
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const supabaseClient = createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      );
+      setSupabase(supabaseClient);
+    }
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -75,6 +86,13 @@ export default function NewPostPage() {
 
   const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
     if(e) e.preventDefault();
+    
+    // Verificar se o Supabase está inicializado
+    if (!supabase) {
+      toast.error("Cliente Supabase não inicializado. Tente recarregar a página.");
+      return;
+    }
+    
     setIsLoading(true); setUploading(false); setError(null);
     let coverImageUrl = formData.cover_image_url || null;
     if (selectedFile) {
@@ -157,7 +175,13 @@ export default function NewPostPage() {
           {/* Seção do Editor - Ocupa o restante do espaço. A div de max-width agora terá o fundo branco */}
           <div className="flex-grow flex flex-col max-w-3xl mx-auto w-full pb-6 lg:pb-8">
             <div className="bg-white dark:bg-gray-800 rounded-md shadow-sm p-6 lg:p-8 flex-grow">
-              <EditorJSComponent value={editorData} onChange={handleEditorChange} supabaseClient={supabase} />
+              {supabase ? (
+                <EditorJSComponent value={editorData} onChange={handleEditorChange} supabaseClient={supabase} />
+              ) : (
+                <div className="border rounded-md min-h-[400px] flex items-center justify-center bg-gray-100 text-gray-400">
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Carregando Cliente Supabase...
+                </div>
+              )}
             </div>
           </div>
         </main>
