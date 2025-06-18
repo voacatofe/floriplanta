@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Badge } from '@/components/ui/badge'; // Para exibir o status
-import { PlusCircle, Edit, Trash2, Eye, ChevronLeft, ChevronRight } from 'lucide-react';
+import { PlusCircle, Edit, Trash2, Eye } from 'lucide-react';
 
 const POSTS_PER_PAGE = 10; // Definir aqui também para consistência com blog-data.ts
 
@@ -28,14 +28,15 @@ const formatDate = (dateString: string | null) => {
 };
 
 interface AdminPostsPageProps {
-  searchParams: {
+  searchParams: Promise<{
     page?: string;
     // Adicione outros searchParams esperados aqui, se houver
-  };
+  }>;
 }
 
 export default async function AdminPostsPage({ searchParams }: AdminPostsPageProps) {
-  const currentPage = Number(searchParams?.page) || 1;
+  const resolvedSearchParams = await searchParams; // Aguardar a Promise
+  const currentPage = Number(resolvedSearchParams?.page) || 1;
   const { posts, totalCount } = await getPosts({ 
     page: currentPage, 
     status: 'all' // Buscar todos os status para o admin
