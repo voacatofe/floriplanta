@@ -25,8 +25,7 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen">
-      <Card className="w-full max-w-md">
+    <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">Login do Administrador</CardTitle>
           <CardDescription className="text-center">
@@ -69,6 +68,5 @@ export default function AdminLoginPage() {
           </CardFooter>
         </form>
       </Card>
-    </div>
   );
 } 

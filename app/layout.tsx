@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import { inter, futuru, behindTheNineties } from '@/app/styles/fonts'; // Importando as fontes corretas
 import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
-import FloatingPillMenu from '@/components/layout/FloatingPillMenu';
+import ConditionalMenu from '@/components/layout/ConditionalMenu';
 // import { Analytics } from '@vercel/analytics/react';
 // import { SpeedInsights } from "@vercel/speed-insights/next"
 
@@ -115,7 +115,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe>`,
         {/* End Google Tag Manager (noscript) */}
         {children}
         <Toaster />
-        <FloatingPillMenu />
+        {/* Menu condicional - só aparece se não for rota de admin */}
+        <ConditionalMenu />
         {/* <Analytics /> */}
         {/* <SpeedInsights /> */}
       </body>
