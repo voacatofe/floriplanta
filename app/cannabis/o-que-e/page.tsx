@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
-import Image from 'next/image'; // If needed for infographics
-import Header from "@/components/layout/Header";
+
 import Footer from "@/components/layout/Footer";
 import { BookOpen, Brain, Atom, Thermometer, Dna, Zap, Leaf, Info, Bomb, Droplet, Flower, LucideIcon } from 'lucide-react'; // Example icons
 
@@ -174,7 +173,7 @@ export default function OQueEPage() {
 
   return (
     <main className="bg-[#f8f5f0] overflow-x-hidden">
-      <Header />
+      
 
       {/* Page Header */}
       <section className="pt-24 pb-10 lg:pt-32 lg:pb-12 bg-gradient-to-b from-white to-brand-light-green/20">

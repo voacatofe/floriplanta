@@ -1,12 +1,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import Header from "@/components/layout/Header";
+
 import Footer from "@/components/layout/Footer";
 
 export default function Associado() {
   return (
     <main className="min-h-screen bg-[#f8f5f0] overflow-x-hidden">
-      <Header />
+
       
       {/* Hero Section com sobreposições tipográficas */}
       <section className="relative py-24 overflow-hidden">

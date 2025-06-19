@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Landmark, FileText, Scale, Leaf, AlertTriangle } from 'lucide-react'; // Example icons
 
@@ -42,7 +41,7 @@ const CannabisSidebarNav = () => {
 export default function LegislacaoPage() {
   return (
     <main className="bg-[#f8f5f0] overflow-x-hidden">
-      <Header />
+      
 
       {/* Page Header */}
       <section className="pt-24 pb-10 lg:pt-32 lg:pb-12 bg-gradient-to-b from-white to-brand-hover-purple/10">

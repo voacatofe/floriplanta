@@ -1,9 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { Heart, Book, UserPlus, Scale, Target, Eye, Users, FileText, Handshake } from 'lucide-react'; // Added more icons
+import { Users, Heart, BookOpen, Scale, Handshake, Target, Eye, FileText } from 'lucide-react';
 
 // Placeholder data for team and partners - replace with real data
 const teamMembers = [
@@ -22,8 +21,6 @@ const partners = [
 export default function SobreNosPage() {
   return (
     <main className="bg-[#f8f5f0] overflow-x-hidden">
-      <Header />
-
       {/* Page Header */}
       <section className="pt-24 pb-12 lg:pt-32 lg:pb-16 bg-gradient-to-b from-white to-[#f0f9e8]">
         <div className="container mx-auto px-4 text-center">
@@ -90,8 +87,8 @@ export default function SobreNosPage() {
            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
               {[ 
                 { icon: Heart, title: "Empatia", text: "Colocamo-nos no lugar de cada paciente, oferecendo escuta ativa, acolhimento e suporte humanizado.", iconBg: "bg-brand-hover-purple/15" },
-                { icon: Book, title: "Educação", text: "Combatemos a desinformação com conhecimento científico sólido, promovendo a conscientização.", iconBg: "bg-brand-light-green/50" },
-                { icon: UserPlus, title: "Inclusão", text: "Lutamos para que todos que necessitam tenham acesso justo e equitativo ao tratamento.", iconBg: "bg-brand-hover-purple/15" },
+                { icon: BookOpen, title: "Educação", text: "Combatemos a desinformação com conhecimento científico sólido, promovendo a conscientização.", iconBg: "bg-brand-light-green/50" },
+                { icon: Users, title: "Inclusão", text: "Lutamos para que todos que necessitam tenham acesso justo e equitativo ao tratamento.", iconBg: "bg-brand-hover-purple/15" },
                 { icon: Scale, title: "Responsabilidade", text: "Atuamos com ética, transparência e compromisso inabalável com nossos associados e a sociedade.", iconBg: "bg-brand-light-green/50" },
                 { icon: Handshake, title: "Justiça Social", text: "Advogamos por políticas públicas que garantam os direitos dos pacientes e removam barreiras ao acesso.", iconBg: "bg-brand-hover-purple/15" }, // Using Handshake for Justice
               ].map((value, index) => (

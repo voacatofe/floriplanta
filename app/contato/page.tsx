@@ -2,9 +2,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { Send, Mail, Phone, Clock, MapPin, Instagram, Facebook, Linkedin, Youtube } from 'lucide-react'; // Icons
+import { MapPin, Phone, Mail, Clock, Send, Instagram, Facebook, Linkedin, Youtube } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function ContatoPage() {
@@ -66,8 +65,6 @@ export default function ContatoPage() {
 
   return (
     <main className="bg-[#f8f5f0] overflow-x-hidden">
-      <Header />
-
       {/* Page Header */}
       <section className="pt-24 pb-12 lg:pt-32 lg:pb-16 bg-gradient-to-b from-white to-brand-light-green/20">
         <div className="container mx-auto px-4 text-center">

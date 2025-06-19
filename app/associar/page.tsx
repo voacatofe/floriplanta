@@ -1,8 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
-import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { Users, HeartHandshake, Droplet, BookOpen, Scale, CalendarDays, Handshake, UserCheck, FileText, Mail, Phone, HelpCircle, CheckCircle, Upload, Clock, Send } from 'lucide-react'; // Icons
+import { Users, HeartHandshake, Droplet, BookOpen, Scale, CalendarDays, Handshake, FileText, Mail, Phone, HelpCircle, CheckCircle, Upload, Clock, Send } from 'lucide-react'; // Icons
 
 const benefits = [
   {
@@ -86,8 +85,6 @@ const faqs = [
 export default function AssociarPage() {
   return (
     <main className="bg-[#f8f5f0] overflow-x-hidden">
-      <Header />
-
       {/* Page Header */}
       <section className="pt-24 pb-12 lg:pt-32 lg:pb-16 bg-gradient-to-b from-white to-brand-light-green/20">
         <div className="container mx-auto px-4 text-center">

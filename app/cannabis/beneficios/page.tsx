@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link'; // For linking to sources
-import Header from "@/components/layout/Header";
+
 import Footer from "@/components/layout/Footer";
 import { HeartPulse, Brain, Bone, Wind, Smile, Utensils, Activity, Users, ShieldCheck, AlertTriangle, ChevronRight, Award, Heart, Shield, Zap } from 'lucide-react'; // Example icons
 
@@ -96,7 +96,7 @@ const conditions = [
 export default function BeneficiosPage() {
   return (
     <main className="bg-[#f8f5f0] overflow-x-hidden">
-      <Header />
+      
 
       {/* Page Header */}
       <section className="pt-24 pb-10 lg:pt-32 lg:pb-12 bg-gradient-to-b from-white to-brand-hover-purple/10">

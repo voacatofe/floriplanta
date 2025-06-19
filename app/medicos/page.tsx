@@ -1,8 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
-import Header from "@/components/layout/Header";
+
 import Footer from "@/components/layout/Footer";
-import { Stethoscope, Users, Droplet, BookOpen, Network, ShieldCheck, Handshake, FileText, Send, Mail, Phone, HelpCircle, CheckCircle } from 'lucide-react'; // Icons
+import { Stethoscope, Users, Droplet, BookOpen, Network, ShieldCheck, Handshake, FileText, Send, Mail, Phone, HelpCircle } from 'lucide-react'; // Icons
 
 const partnershipBenefits = [
   {
@@ -68,7 +68,7 @@ const faqs = [
 export default function MedicosPage() {
   return (
     <main className="bg-[#f8f5f0] overflow-x-hidden">
-      <Header />
+      
 
       {/* Page Header */}
       <section className="pt-24 pb-12 lg:pt-32 lg:pb-16 bg-gradient-to-b from-white to-brand-hover-purple/10">

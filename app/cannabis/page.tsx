@@ -1,8 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
-import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { BookOpen, HeartPulse, PlayCircle, FlaskConical, HelpCircle, Landmark } from 'lucide-react'; // Icons for sections
+import { Leaf, BookOpen, Users, Scale, Heart, ArrowRight } from 'lucide-react';
 
 const subSections = [
   {
@@ -16,7 +15,7 @@ const subSections = [
   {
     title: "Benefícios e Indicações",
     description: "Explore as condições de saúde onde a cannabis medicinal tem mostrado potencial terapêutico.",
-    icon: HeartPulse,
+    icon: Heart,
     link: "/cannabis/beneficios",
     bgColor: "bg-brand-hover-purple/10",
     iconColor: "text-brand-hover-purple"
@@ -24,7 +23,7 @@ const subSections = [
   {
     title: "Como Iniciar o Tratamento",
     description: "Um guia prático com os passos essenciais para começar seu tratamento com segurança.",
-    icon: PlayCircle,
+    icon: ArrowRight,
     link: "/cannabis/como-iniciar",
     bgColor: "bg-brand-light-green/40",
     iconColor: "text-green-800"
@@ -32,7 +31,7 @@ const subSections = [
   {
     title: "Pesquisas Científicas",
     description: "Acesse estudos e artigos científicos que embasam o uso terapêutico da cannabis.",
-    icon: FlaskConical,
+    icon: Scale,
     link: "/cannabis/pesquisas",
     bgColor: "bg-brand-hover-purple/10",
     iconColor: "text-brand-hover-purple"
@@ -40,7 +39,7 @@ const subSections = [
   {
     title: "Mitos e Verdades",
     description: "Desmistificando informações incorretas e esclarecendo dúvidas comuns.",
-    icon: HelpCircle,
+    icon: Users,
     link: "/cannabis/mitos-e-verdades",
     bgColor: "bg-brand-light-green/40",
     iconColor: "text-green-800"
@@ -48,7 +47,7 @@ const subSections = [
   {
     title: "Legislação no Brasil",
     description: "Entenda o cenário regulatório atual para o uso medicinal da cannabis no país.",
-    icon: Landmark,
+    icon: Leaf,
     link: "/cannabis/legislacao",
     bgColor: "bg-brand-hover-purple/10",
     iconColor: "text-brand-hover-purple"
@@ -58,8 +57,6 @@ const subSections = [
 export default function CannabisInfoCenterPage() {
   return (
     <main className="bg-[#f8f5f0] overflow-x-hidden">
-      <Header />
-
       {/* Page Header */}
       <section className="pt-24 pb-12 lg:pt-32 lg:pb-16 bg-gradient-to-b from-white to-brand-light-green/20">
         <div className="container mx-auto px-4 text-center">

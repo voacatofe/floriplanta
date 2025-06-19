@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import Header from "@/components/layout/Header";
+
 import Footer from "@/components/layout/Footer";
 import { ShoppingBag, Star, Shirt, Coffee, Package, Info, CreditCard, Truck, RotateCcw, HelpCircle } from 'lucide-react'; // Icons
 
@@ -40,7 +40,7 @@ const categories = [
 export default function LojaPage() {
   return (
     <main className="bg-[#f8f5f0] overflow-x-hidden">
-      <Header />
+      
 
       {/* Page Header */}
       <section className="pt-24 pb-12 lg:pt-32 lg:pb-16 bg-gradient-to-b from-white to-brand-light-green/20">

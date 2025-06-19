@@ -1,12 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import Header from '@/components/layout/Header';
-import Footer from "@/components/layout/Footer";
+import Footer from '@/components/layout/Footer';
 import { Rss, Search, Tag, Calendar, Mail } from 'lucide-react'; // Icons
 import { getPosts, getAllCategories } from '@/app/lib/blog-data';
 import PostCard from '@/components/blog/PostCard';
 import InfiniteScrollPosts from '@/components/blog/InfiniteScrollPosts';
+import { ArrowRight, Calendar, User } from 'lucide-react';
 
 // Placeholder data for blog posts - Replace with actual data fetching later
 const featuredPosts = [
@@ -82,8 +82,6 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
   return (
     <main className="bg-[#f8f5f0] overflow-x-hidden">
-      <Header />
-
       {/* Page Header */}
       <section className="pt-24 pb-12 lg:pt-32 lg:pb-16 bg-gradient-to-b from-white to-brand-light-green/20">
         <div className="container mx-auto px-4 text-center">
