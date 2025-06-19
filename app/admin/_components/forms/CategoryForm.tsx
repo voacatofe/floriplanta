@@ -1,60 +1,66 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-
-const categorySchema = z.object({
-  name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
-  slug: z
-    .string()
-    .regex(/^[a-z0-9-]+$/, "Slug deve conter apenas letras minúsculas, números e hífens"),
-  description: z.string().optional(),
-});
-
-type CategoryFormData = z.infer<typeof categorySchema>;
 
 interface CategoryFormProps {
   onSuccess?: () => void;
 }
 
 export function CategoryForm({ onSuccess }: CategoryFormProps) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    watch,
-    setValue,
-    reset,
-  } = useForm<CategoryFormData>({
-    resolver: zodResolver(categorySchema),
+  const [formData, setFormData] = useState({
+    name: "",
+    slug: "",
+    description: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Auto-gerar slug baseado no nome
-  const name = watch("name");
   useEffect(() => {
-    if (name) {
-      const slug = name
+    if (formData.name) {
+      const slug = formData.name
         .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-+|-+$/g, "");
-      setValue("slug", slug);
+      setFormData(prev => ({ ...prev, slug }));
     }
-  }, [name, setValue]);
+  }, [formData.name]);
 
-  const onSubmit = async (data: CategoryFormData) => {
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!formData.name || formData.name.length < 2) {
+      newErrors.name = "Nome deve ter pelo menos 2 caracteres";
+    }
+    
+    if (!formData.slug || !/^[a-z0-9-]+$/.test(formData.slug)) {
+      newErrors.slug = "Slug deve conter apenas letras minúsculas, números e hífens";
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
     try {
       const response = await fetch("/admin/categories/api/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
@@ -63,31 +69,59 @@ export function CategoryForm({ onSuccess }: CategoryFormProps) {
       }
 
       toast.success("Categoria criada com sucesso!");
-      reset();
+      setFormData({ name: "", slug: "", description: "" });
       onSuccess?.();
-    } catch (error: any) {
-      toast.error(error.message || "Erro ao criar categoria");
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Erro ao criar categoria";
+      toast.error(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    // Limpar erro do campo quando usuário digita
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: "" }));
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 max-w-lg">
+    <form onSubmit={handleSubmit} className="space-y-4 max-w-lg">
       <div>
         <Label htmlFor="name">Nome</Label>
-        <Input id="name" {...register("name")}
-          placeholder="Ex: Cannabis Medicinal" />
-        {errors.name && <p className="text-sm text-red-500 mt-1">{errors.name.message}</p>}
+        <Input 
+          id="name" 
+          value={formData.name}
+          onChange={(e) => handleInputChange("name", e.target.value)}
+          placeholder="Ex: Cannabis Medicinal" 
+          disabled={isSubmitting}
+        />
+        {errors.name && <p className="text-sm text-red-500 mt-1">{errors.name}</p>}
       </div>
 
       <div>
         <Label htmlFor="slug">Slug</Label>
-        <Input id="slug" {...register("slug")} placeholder="cannabis-medicinal" />
-        {errors.slug && <p className="text-sm text-red-500 mt-1">{errors.slug.message}</p>}
+        <Input 
+          id="slug" 
+          value={formData.slug}
+          onChange={(e) => handleInputChange("slug", e.target.value)}
+          placeholder="cannabis-medicinal" 
+          disabled={isSubmitting}
+        />
+        {errors.slug && <p className="text-sm text-red-500 mt-1">{errors.slug}</p>}
       </div>
 
       <div>
         <Label htmlFor="description">Descrição (opcional)</Label>
-        <Input id="description" {...register("description")} placeholder="Breve descrição" />
+        <Input 
+          id="description" 
+          value={formData.description}
+          onChange={(e) => handleInputChange("description", e.target.value)}
+          placeholder="Breve descrição" 
+          disabled={isSubmitting}
+        />
       </div>
 
       <Button type="submit" disabled={isSubmitting}>
