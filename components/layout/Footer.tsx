@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, Phone, Mail, Instagram, Facebook, Youtube } from 'lucide-react';
+import { MapPin, Phone, Mail, Instagram } from 'lucide-react';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -36,17 +36,9 @@ export default function Footer() {
             </p>
             {/* Ícones sociais com melhor espaçamento e transição */}
             <div className="flex gap-3">
-              <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram da Floriplanta"
+              <Link href="https://www.instagram.com/flori.planta/" target="_blank" rel="noopener noreferrer" aria-label="Instagram da Floriplanta"
                 className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center text-white hover:bg-white/25 hover:scale-110 transition-all duration-200">
                 <Instagram size={18} />
-              </Link>
-              <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook da Floriplanta"
-                className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center text-white hover:bg-white/25 hover:scale-110 transition-all duration-200">
-                <Facebook size={18} />
-              </Link>
-              <Link href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="Youtube da Floriplanta"
-                className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center text-white hover:bg-white/25 hover:scale-110 transition-all duration-200">
-                <Youtube size={18} />
               </Link>
             </div>
           </div>
@@ -67,7 +59,7 @@ export default function Footer() {
               <Link href="/blog" className="font-inter text-white/90 hover:text-white hover:underline transition-colors duration-200 text-sm">
                 Blog e Notícias
               </Link>
-              <Link href="/duvidas" className="font-inter text-white/90 hover:text-white hover:underline transition-colors duration-200 text-sm">
+              <Link href="/cannabis/mitos-e-verdades" className="font-inter text-white/90 hover:text-white hover:underline transition-colors duration-200 text-sm">
                 Perguntas Frequentes
               </Link>
               <Link href="/contato" className="font-inter text-white/90 hover:text-white hover:underline transition-colors duration-200 text-sm">

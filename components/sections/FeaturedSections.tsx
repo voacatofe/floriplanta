@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { BookOpen, Users, Stethoscope, Droplet } from 'lucide-react'; // Example icons, adjust as needed
+import { BookOpen, Users, Stethoscope/* , Droplet */ } from 'lucide-react'; // Example icons, adjust as needed
 
 const sections = [
   {
@@ -32,7 +32,7 @@ const sections = [
     bgColor: "bg-brand-hover-purple/10",
     iconColor: "text-brand-hover-purple"
   },
-  {
+/*   {
     title: "Conheça Nossos Óleos",
     text: "Produzidos com rigor e qualidade para nossos associados. Veja a composição, laudos e como ter acesso mediante prescrição médica.",
     icon: Droplet,
@@ -40,7 +40,7 @@ const sections = [
     buttonText: "Saiba Mais Sobre os Óleos",
     bgColor: "bg-brand-light-green/40",
     iconColor: "text-green-800"
-  }
+  } */
 ];
 
 export default function FeaturedSections() {
@@ -51,7 +51,7 @@ export default function FeaturedSections() {
           <h2 className="font-futuru font-bold text-brand-purple text-3xl lg:text-4xl mb-4">Explore Nossas Áreas</h2>
           {/* Optional: Add introductory text here if needed */}
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {sections.map((section, index) => (
             <div 
               key={index} 

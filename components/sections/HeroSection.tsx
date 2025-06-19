@@ -1,9 +1,9 @@
 "use client";
 
 import React from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Leaf } from 'lucide-react';
+import OrganicFloatingElements from '../ui/OrganicFloatingElements';
 
 // Consider adding a library like 'react-intersection-observer' or 'framer-motion' 
 // for more sophisticated scroll animations if needed, but for now, 
@@ -12,10 +12,24 @@ import { ArrowRight, Leaf } from 'lucide-react';
 export default function HeroSection() {
   return (
     // Increased padding for more breathing room, especially on larger screens
-    <section className="min-h-screen py-12 lg:py-16 bg-[#f8f5f0] relative overflow-hidden flex items-center">
-      {/* Fundo verde suave */}
-      <div className="absolute inset-0 bg-[#e8f7c0]/60 rounded-[70%_30%_50%_50%] w-[95%] h-[100%] mx-auto pointer-events-none"></div>
+    <section 
+      className="min-h-screen py-12 lg:py-16 relative overflow-hidden flex items-center"
+      style={{
+        backgroundImage: 'url(/familia1.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
+      {/* Overlay para melhorar legibilidade do texto */}
+      <div className="absolute inset-0 "></div>
       
+      {/* Elementos flutuantes orgânicos */}
+      <OrganicFloatingElements />
+      
+      {/* Fundo verde suave */}
+{/*       <div className="absolute inset-0 bg-[#e8f7c0]/60 rounded-[70%_30%_50%_50%] w-[95%] h-[100%] mx-auto pointer-events-none"></div>
+ */}      
       {/* Formas decorativas orgânicas - slightly adjusted opacity */}
       <div className="absolute -top-20 -left-20 w-32 h-32 bg-brand-light-green rounded-full opacity-60 pointer-events-none"></div>
       <div className="absolute bottom-[25%] left-20 w-28 h-28 bg-brand-light-green rounded-full opacity-30 pointer-events-none"></div>
@@ -29,8 +43,8 @@ export default function HeroSection() {
             </div>
           </div>
           
-          {/* Layout de texto e imagem */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-4 items-center relative">
+          {/* Layout de texto - agora sem a coluna da imagem */}
+          <div className="relative">
             {/* Coluna de Texto */}
             <div className="text-center lg:text-left relative">
               {/* Badge "Associação de Cannabis Medicinal" */}
@@ -41,21 +55,21 @@ export default function HeroSection() {
               </div>
               
               {/* Título - Mantido conforme layout visual complexo */}
-              <div className="relative max-w-[560px] mx-auto lg:mx-0">
+              <div className="relative max-w-[560px] mx-auto lg:mx-0 px-4  lg:px-0">
                 <div className="text-center lg:text-left pl-4 mb-0 lg:mb-2">
-                  <h1 className="font-futuru font-bold text-[#c2a4ff] text-6xl lg:text-[5.8rem] leading-[0.8] tracking-tight">
+                  <h1 className="font-futuru font-bold text-[#c2a4ff] text-6xl lg:text-[5.8rem] lg:ml-12 mr-20 leading-[0.8] tracking-tight">
                     unindo
                   </h1>
                 </div>
-                <div className="flex justify-between items-center -mt-3 lg:-mt-6">
-                  <h1 className="font-behind italic text-brand-purple text-7xl lg:text-[5.5rem] font-semibold leading-[0.8] tracking-tight">
+                <div className="flex justify-center lg:justify-between items-center pl-6 lg:pl-0 -mt-3 lg:-mt-6">
+                  <h1 className="font-behind mr-2 italic text-brand-purple text-7xl lg:text-[7.5rem] font-semibold leading-[0.8] tracking-tight">
                     forças
                   </h1>
-                  <h1 className="font-futuru font-bold text-[#c2a4ff] text-6xl lg:text-[9.8rem] leading-[0.8] mr-8 mb-8 tracking-tight pb-0">
+                  <h1 className="font-futuru font-bold text-[#c2a4ff] text-6xl lg:text-[6.8rem] leading-[0.8] mr-8 mb-8 tracking-tight pb-0">
                     pela
                   </h1>
                 </div>
-                <div className="text-right -mt-3 lg:-mt-6 pr-4">
+                <div className="flex justify-center lg:justify-end text-right -mt-6 lg:-mt-7 pl-20">
                   <h1 className="font-behind italic text-brand-purple text-7xl lg:text-[8.5rem] font-semibold leading-[0.8] tracking-tight">
                     saúde
                   </h1>
@@ -79,25 +93,6 @@ export default function HeroSection() {
                     className="border-2 border-brand-purple text-brand-purple px-5 py-2.5 rounded-lg font-inter font-medium hover:bg-brand-purple hover:text-white transition-all duration-300 transform hover:scale-105 active:scale-95">
                     Saiba Mais
                   </Link>
-                </div>
-              </div>
-            </div>
-            
-            {/* Coluna da Imagem */}
-            <div className="relative mt-8 lg:mt-0">
-              {/* Imagem com moldura orgânica */}
-              <div className="relative z-10 overflow-hidden p-2 flex justify-center lg:justify-end">
-                <div className="relative overflow-hidden rounded-[60%_40%_45%_55%/40%_50%_50%_60%] border-8 border-[#e8f7c0] shadow-lg w-full max-w-md lg:max-w-lg">
-                  <Image 
-                    src="/family-lying-grass-park.jpg" 
-                    alt="Família sorrindo deitada na grama em um parque ensolarado" 
-                    width={600} 
-                    height={500} 
-                    className="object-cover w-full h-full aspect-[6/5]" // Proporção para consistência
-                    priority
-                  />
-                  {/* Sobreposição suave */}
-                  <div className="absolute inset-0 bg-brand-hover-purple/5 pointer-events-none"></div>
                 </div>
               </div>
             </div>

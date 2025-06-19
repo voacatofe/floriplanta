@@ -52,8 +52,8 @@ export default function Home() {
       {/* Benefícios */}
       <BenefitsSection />
 
-      {/* Depoimentos */}
-      <TestimonialsSection />
+      {/* Depoimentos 
+      <TestimonialsSection />*/}
 
       {/* Últimas Notícias do Blog */}
       <BlogHighlightSection />
