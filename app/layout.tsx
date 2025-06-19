@@ -1,37 +1,68 @@
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
+// import Script from 'next/script'; // Importar o componente Script - Não é necessário para dangerouslySetInnerHTML
+import { Inter, Playfair_Display, Montserrat, Lato } from 'next/font/google';
 import './globals.css';
-import { futuru, behindTheNineties, inter } from './styles/fonts';
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from '@/components/ui/sonner';
+// import { Analytics } from '@vercel/analytics/react';
+// import { SpeedInsights } from "@vercel/speed-insights/next"
+
+// Definições das fontes
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-playfair',
+});
+
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-montserrat',
+});
+
+const lato = Lato({
+  subsets: ['latin'],
+  weight: ['300', '400', '700'],
+  display: 'swap',
+  variable: '--font-lato',
+});
 
 export const metadata: Metadata = {
   title: {
-    default: 'Floriplanta - Associação de Cannabis Medicinal em Santa Catarina',
+    default: 'Floriplanta | Cannabis Medicinal e Bem-Estar',
     template: '%s | Floriplanta',
   },
-  description: 'A Floriplanta é uma associação de pacientes de cannabis medicinal em Santa Catarina, dedicada a promover o acesso legal, seguro e informado a tratamentos com cannabis. Oferecemos suporte, educação e advocacy.',
-  keywords: ['cannabis medicinal', 'Santa Catarina', 'Floriplanta', 'associação', 'tratamento', 'THC', 'CBD', 'saúde', 'bem-estar'],
-  authors: [{ name: 'Floriplanta' }],
+  description: 'Sua fonte de informação confiável sobre cannabis medicinal. Explore benefícios, pesquisas, legislação e encontre médicos prescritores. Associe-se e faça parte da nossa comunidade.',
+  keywords: ['cannabis medicinal', 'CBD', 'THC', 'bem-estar', 'saúde', 'Floriplanta', 'óleos de cannabis', 'médicos prescritores', 'associação cannabis'],
+  authors: [{ name: 'Floriplanta', url: 'https://floriplanta.com' }],
   openGraph: {
     type: 'website',
     locale: 'pt_BR',
-    url: 'https://www.floriplanta.org.br',
+    url: 'https://floriplanta.com',
     siteName: 'Floriplanta',
-    title: 'Floriplanta - Associação de Cannabis Medicinal em Santa Catarina',
-    description: 'Promovendo o acesso legal, seguro e informado a tratamentos com cannabis medicinal em SC.',
+    title: 'Floriplanta | Cannabis Medicinal e Bem-Estar',
+    description: 'Informação confiável sobre cannabis medicinal, médicos, produtos e associação.',
     images: [
       {
-        url: '/images/og-image-floriplanta.jpg', // Substitua pelo caminho real da sua OG image
+        url: 'https://floriplanta.com/og-image.png', // Substituir pelo URL da imagem Open Graph
         width: 1200,
         height: 630,
-        alt: 'Floriplanta Associação de Cannabis Medicinal',
+        alt: 'Floriplanta Cannabis Medicinal',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Floriplanta - Cannabis Medicinal em Santa Catarina',
-    description: 'Apoie a causa da cannabis medicinal em Santa Catarina. Junte-se à Floriplanta.',
-    images: ['/images/twitter-image-floriplanta.jpg'], // Substitua pelo caminho real da sua Twitter image
+    title: 'Floriplanta | Cannabis Medicinal e Bem-Estar',
+    description: 'Informação confiável sobre cannabis medicinal, médicos, produtos e associação.',
+    // site: '@floriplanta', // Substituir pelo Twitter handle
+    // creator: '@creatorhandle', // Substituir pelo Twitter handle do criador
+    images: ['https://floriplanta.com/twitter-image.png'], // Substituir pelo URL da imagem do Twitter
   },
   robots: {
     index: true,
@@ -44,28 +75,46 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png',
-  },
-  manifest: '/site.webmanifest',
+  // icons: { // Adicionar ícones se disponíveis
+  //   icon: '/favicon.ico',
+  //   apple: '/apple-touch-icon.png',
+  // },
+  // manifest: '/site.webmanifest', // Adicionar manifesto PWA se disponível
 };
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <html 
-      lang="pt-BR" 
-      className={`${futuru.variable} ${behindTheNineties.variable} ${inter.variable}`}
-      suppressHydrationWarning={true}
-    >
-      <body className="font-inter bg-brand-bege text-brand-texto">
+    <html lang="pt-BR" className="scroll-smooth">
+      <head>
+        {/* Google Tag Manager */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NT2XKHTD');`,
+          }}
+        />
+        {/* End Google Tag Manager */}
+      </head>
+      <body className={`${inter.variable} ${playfair.variable} ${montserrat.variable} ${lato.variable} antialiased bg-brand-bege text-brand-text`}>
+        {/* Google Tag Manager (noscript) */}
+        <noscript
+          dangerouslySetInnerHTML={{
+            __html: `<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NT2XKHTD"
+height="0" width="0" style="display:none;visibility:hidden"></iframe>`,
+          }}
+        />
+        {/* End Google Tag Manager (noscript) */}
         {children}
-        <Toaster richColors position="top-right" />
+        <Toaster />
+        {/* <Analytics /> */}
+        {/* <SpeedInsights /> */}
       </body>
     </html>
   );
