@@ -43,11 +43,10 @@ export default function AdminLayout({
             
             <Link 
               href="/admin/categories" 
-              className="flex items-center gap-3 px-3 py-2 hover:bg-gray-700 dark:hover:bg-gray-800 rounded-lg transition-colors group opacity-50 cursor-not-allowed"
+              className="flex items-center gap-3 px-3 py-2 hover:bg-gray-700 dark:hover:bg-gray-800 rounded-lg transition-colors group"
             >
               <FolderOpen className="h-5 w-5 text-gray-400" />
               <span>Categorias</span>
-              <span className="text-xs bg-yellow-600 px-2 py-0.5 rounded">Em breve</span>
             </Link>
             
             <Link 
