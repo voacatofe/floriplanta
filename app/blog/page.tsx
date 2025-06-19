@@ -2,11 +2,9 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Footer from '@/components/layout/Footer';
-import { Rss, Search, Tag, Calendar, Mail } from 'lucide-react'; // Icons
+import { Rss, Search, Tag, Mail } from 'lucide-react'; // Icons
 import { getPosts, getAllCategories } from '@/app/lib/blog-data';
-import PostCard from '@/components/blog/PostCard';
 import InfiniteScrollPosts from '@/components/blog/InfiniteScrollPosts';
-import { ArrowRight, Calendar, User } from 'lucide-react';
 
 // Placeholder data for blog posts - Replace with actual data fetching later
 const featuredPosts = [
@@ -21,43 +19,7 @@ const featuredPosts = [
   // Add 1 or 2 more featured posts if desired
 ];
 
-const recentPosts = [
-  {
-    slug: "cannabis-e-ansiedade",
-    title: "Cannabis Medicinal e Ansiedade: Como o CBD Pode Ajudar?",
-    image: "/images/placeholder-blog-2.jpg", // Replace with actual image path
-    excerpt: "Explore o potencial do Canabidiol (CBD) no manejo dos sintomas de ansiedade, com base em estudos recentes...",
-    category: "Saúde e Bem-Estar",
-    date: "04 de Maio, 2025"
-  },
-  {
-    slug: "guia-anvisa",
-    title: "Como Obter Autorização da ANVISA para Uso de Cannabis Medicinal: Guia Atualizado",
-    image: "/images/placeholder-blog-3.jpg", // Replace with actual image path
-    excerpt: "Um passo a passo detalhado sobre o processo de solicitação de autorização de importação junto à Anvisa...",
-    category: "Legislação e Direitos",
-    date: "03 de Maio, 2025"
-  },
-  {
-    slug: "sistema-endocanabinoide",
-    title: "O que é o Sistema Endocanabinoide e Por Que Ele é Importante?",
-    image: "/images/placeholder-blog-4.jpg", // Replace with actual image path
-    excerpt: "Entenda como nosso corpo produz seus próprios canabinoides e como a cannabis interage com esse sistema vital...",
-    category: "Ciência e Pesquisa",
-    date: "02 de Maio, 2025"
-  },
-  // Add more recent posts
-];
 
-const categories = [
-  { name: "Saúde e Bem-Estar", slug: "saude-bem-estar" },
-  { name: "Ciência e Pesquisa", slug: "ciencia-pesquisa" },
-  { name: "Legislação e Direitos", slug: "legislacao-direitos" },
-  { name: "Notícias da Floriplanta", slug: "noticias-floriplanta" },
-  { name: "Histórias e Depoimentos", slug: "historias-depoimentos" },
-  { name: "Mitos e Verdades", slug: "mitos-verdades" },
-  { name: "Guias e Tutoriais", slug: "guias-tutoriais" },
-];
 
 export const revalidate = 3600;
 
