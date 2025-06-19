@@ -1,15 +1,31 @@
 import Link from 'next/link';
-import { logout } from './actions'; // Importar a action de logout
-import { Button } from '@/components/ui/button'; // Importar o componente Button
-import { LogOut, Home, FileText, FolderOpen, Tag, MessageSquare, Settings, BarChart } from 'lucide-react'; // Ícones opcionais
+import { logout } from './actions';
+import { Button } from '@/components/ui/button';
+import { LogOut, Home, FileText, FolderOpen, Tag, MessageSquare, Settings, BarChart } from 'lucide-react';
 import { AdminProviders } from './providers';
 import { Toaster } from 'sonner';
+import { createSupabaseServerClient } from '@/app/lib/supabase/server';
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Se não estiver logado, renderiza somente o conteúdo (ex.: página de login)
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center p-4">
+        {children}
+        <Toaster position="top-right" richColors />
+      </div>
+    );
+  }
+
   return (
     <AdminProviders>
       <div className="admin-layout-wrapper flex h-screen bg-gray-100 dark:bg-gray-900">
@@ -109,10 +125,8 @@ export default function AdminLayout({
             {children}
           </div>
         </main>
-        
-        {/* Toast notifications */}
-        <Toaster position="top-right" richColors />
       </div>
+      <Toaster position="top-right" richColors />
     </AdminProviders>
   );
 } 
