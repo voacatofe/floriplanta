@@ -100,10 +100,6 @@ export default function Header({ forceBackground = false }: HeaderProps) {
                 className="font-futuru font-semibold text-brand-purple hover:text-brand-hover-purple transition-colors duration-200 text-sm xl:text-base whitespace-nowrap">
                 Cannabis Medicinal
               </Link>
-              <Link href="/oleos" 
-                className="font-futuru font-semibold text-brand-purple hover:text-brand-hover-purple transition-colors duration-200 text-sm xl:text-base whitespace-nowrap">
-                Nossos Óleos
-              </Link>
               <Link href="/associar" 
                 className="font-futuru font-semibold text-brand-purple hover:text-brand-hover-purple transition-colors duration-200 text-sm xl:text-base whitespace-nowrap">
                 Associe-se
@@ -165,12 +161,6 @@ export default function Header({ forceBackground = false }: HeaderProps) {
             onClick={() => setIsMenuOpen(false)}
           >
             Cannabis Medicinal
-          </Link>
-          <Link href="/oleos" 
-            className="font-futuru text-brand-purple text-xl hover:text-brand-hover-purple transition-colors duration-200 flex justify-center py-2"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Nossos Óleos
           </Link>
           <Link href="/associar" 
             className="font-futuru text-brand-purple text-xl hover:text-brand-hover-purple transition-colors duration-200 flex justify-center py-2"

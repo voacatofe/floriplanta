@@ -1,36 +1,37 @@
 import type { Metadata } from 'next';
 // import Script from 'next/script'; // Importar o componente Script - Não é necessário para dangerouslySetInnerHTML
-import { Inter, Playfair_Display, Montserrat, Lato } from 'next/font/google';
+// import { Inter, Playfair_Display, Montserrat, Lato } from 'next/font/google'; // Removido pois será do app/styles/fonts.ts
+import { inter, futuru, behindTheNineties } from '@/app/styles/fonts'; // Importando as fontes corretas
 import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
 // import { Analytics } from '@vercel/analytics/react';
 // import { SpeedInsights } from "@vercel/speed-insights/next"
 
-// Definições das fontes
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
-});
+// Definições das fontes já estão em app/styles/fonts.ts
+// const inter = Inter({
+//   subsets: ['latin'],
+//   display: 'swap',
+//   variable: '--font-inter',
+// });
 
-const playfair = Playfair_Display({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-playfair',
-});
+// const playfair = Playfair_Display({
+//   subsets: ['latin'],
+//   display: 'swap',
+//   variable: '--font-playfair',
+// });
 
-const montserrat = Montserrat({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-montserrat',
-});
+// const montserrat = Montserrat({
+//   subsets: ['latin'],
+//   display: 'swap',
+//   variable: '--font-montserrat',
+// });
 
-const lato = Lato({
-  subsets: ['latin'],
-  weight: ['300', '400', '700'],
-  display: 'swap',
-  variable: '--font-lato',
-});
+// const lato = Lato({
+//   subsets: ['latin'],
+//   weight: ['300', '400', '700'],
+//   display: 'swap',
+//   variable: '--font-lato',
+// });
 
 export const metadata: Metadata = {
   title: {
@@ -102,7 +103,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         />
         {/* End Google Tag Manager */}
       </head>
-      <body className={`${inter.variable} ${playfair.variable} ${montserrat.variable} ${lato.variable} antialiased bg-brand-bege text-brand-text`}>
+      <body className={`${inter.variable} ${futuru.variable} ${behindTheNineties.variable} antialiased bg-brand-bege text-brand-text`}>
         {/* Google Tag Manager (noscript) */}
         <noscript
           dangerouslySetInnerHTML={{

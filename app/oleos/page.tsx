@@ -99,12 +99,12 @@ export default function NossosOleosPage() {
                   <p className="font-inter text-brand-purple/70 text-xs mb-4">
                     <strong>Concentração:</strong> {oil.concentration}
                   </p>
-                  <Link 
+                  {/* <Link 
                     href={oil.link} 
                     className="mt-auto inline-block text-center bg-brand-light-green text-brand-purple px-4 py-2 rounded-lg font-inter text-sm font-semibold hover:bg-opacity-80 transition-all duration-300"
                   >
                     Ver Detalhes e Laudos
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
             ))}

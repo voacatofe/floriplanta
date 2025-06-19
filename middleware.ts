@@ -5,6 +5,12 @@ export async function middleware(request: NextRequest) {
   const { response, user } = await updateSupabaseSession(request)
   const { pathname } = request.nextUrl
 
+  // Ocultar rotas /oleos e suas subpáginas
+  // Para reativar, comente ou remova este bloco de código.
+  if (pathname.startsWith('/oleos')) {
+    return new NextResponse(null, { status: 404 });
+  }
+
   // Se o usuário não estiver logado e tentar acessar uma rota /admin (exceto /admin/login e rotas de API de autenticação)
   if (!user && pathname.startsWith('/admin') && !pathname.startsWith('/admin/login') && !pathname.startsWith('/api/auth')) {
     const url = request.nextUrl.clone()

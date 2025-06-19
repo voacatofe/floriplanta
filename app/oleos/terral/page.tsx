@@ -14,10 +14,10 @@ export default function OleoTerralPage() {
       <section className="pt-24 pb-10 lg:pt-32 lg:pb-12 bg-gradient-to-b from-white to-brand-light-green/20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-6">
-            <Link href="/oleos" className="inline-flex items-center text-brand-purple hover:text-brand-hover-purple text-sm font-inter mb-4">
+            {/* <Link href="/oleos" className="inline-flex items-center text-brand-purple hover:text-brand-hover-purple text-sm font-inter mb-4">
               <ArrowLeft className="w-4 h-4 mr-1" />
               Voltar para Todos os Óleos
-            </Link>
+            </Link> */}
             <h1 className="font-futuru font-bold text-brand-purple text-3xl lg:text-4xl">Óleo CBD Full Spectrum - Terral</h1>
             <p className="font-inter text-brand-hover-purple text-lg mt-1">20mg/mL Canabinoides Totais</p>
           </div>

@@ -61,14 +61,9 @@ module.exports = {
   			'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))'
   		},
   		fontFamily: {
-  			futuru: [
-  				'Futuru',
-  				'sans-serif'
-  			],
-  			behindnineties: [
-  				'BehindTheNineties',
-  				'sans-serif'
-  			]
+  			inter: ['var(--font-inter)', 'sans-serif'],
+  			futuru: ['var(--font-futuru)', 'sans-serif'],
+  			'behind-the-nineties': ['var(--font-behind-the-nineties)', 'sans-serif']
   		},
   		typography: (theme) => ({
   			DEFAULT: {
@@ -82,7 +77,7 @@ module.exports = {
   						textDecoration: 'none',
   					},
   					'h1, h2, h3, h4, h5, h6': {
-  						fontFamily: theme('fontFamily.futuru', ['Futuru', 'sans-serif']).join(', '),
+  						fontFamily: theme('fontFamily.futuru'),
   						color: theme('colors.brand-purple'),
   					},
   					strong: {
