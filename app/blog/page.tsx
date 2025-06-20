@@ -25,15 +25,16 @@ const featuredPosts = [
 export const revalidate = 3600;
 
 interface BlogPageProps {
-  searchParams: {
+  searchParams: Promise<{
     page?: string;
     categoria?: string;
-  };
+  }>;
 }
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
-  const currentPage = Number(searchParams.page) || 1;
-  const categorySlug = searchParams.categoria;
+  const resolvedSearchParams = await searchParams;
+  const currentPage = Number(resolvedSearchParams.page) || 1;
+  const categorySlug = resolvedSearchParams.categoria;
 
   const { posts, totalCount } = await getPosts({
     page: currentPage,

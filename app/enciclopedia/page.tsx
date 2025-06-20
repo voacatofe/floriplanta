@@ -20,17 +20,18 @@ export const metadata: Metadata = {
 };
 
 interface EncyclopediaPageProps {
-  searchParams: {
+  searchParams: Promise<{
     categoria?: EncyclopediaCategory;
     busca?: string;
-  };
+  }>;
 }
 
 const TERMS_PER_PAGE = 20;
 
 export default async function EncyclopediaPage({ searchParams }: EncyclopediaPageProps) {
-  const category = searchParams.categoria;
-  const searchQuery = searchParams.busca;
+  const resolvedSearchParams = await searchParams;
+  const category = resolvedSearchParams.categoria;
+  const searchQuery = resolvedSearchParams.busca;
 
   // Carregar dados iniciais
   const { terms: initialTerms, totalCount, categories } = await getAllTerms(

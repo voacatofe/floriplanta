@@ -15,11 +15,11 @@ import {
 } from '@/components/ui/table';
 
 interface AdminEncyclopediaPageProps {
-  searchParams: {
+  searchParams: Promise<{
     page?: string;
     categoria?: EncyclopediaCategory;
     busca?: string;
-  };
+  }>;
 }
 
 const categoryColors = {
@@ -35,9 +35,10 @@ const categoryIcons = {
 };
 
 async function TermsTable({ searchParams }: AdminEncyclopediaPageProps) {
-  const currentPage = parseInt(searchParams.page || '1');
-  const category = searchParams.categoria;
-  const searchQuery = searchParams.busca;
+  const resolvedSearchParams = await searchParams;
+  const currentPage = parseInt(resolvedSearchParams.page || '1');
+  const category = resolvedSearchParams.categoria;
+  const searchQuery = resolvedSearchParams.busca;
 
   const { terms, totalCount, categories } = await getAllTerms(
     currentPage,
@@ -186,7 +187,7 @@ async function TermsTable({ searchParams }: AdminEncyclopediaPageProps) {
   );
 }
 
-export default function AdminEncyclopediaPage({ searchParams }: AdminEncyclopediaPageProps) {
+export default async function AdminEncyclopediaPage({ searchParams }: AdminEncyclopediaPageProps) {
   return (
     <div className="space-y-6">
       {/* Header */}
