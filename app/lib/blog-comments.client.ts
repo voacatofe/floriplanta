@@ -1,5 +1,4 @@
 import { createSupabaseBrowserClient } from './supabase/client';
-import { Database } from './database.types';
 import { type AnonymousComment } from './blog-comments'; // Importar o tipo
 
 // Função para criar comentário (client-side)

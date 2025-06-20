@@ -1,5 +1,5 @@
 import { createSupabaseServerClient } from './supabase/server';
-import { Database } from './database.types';
+
 import { type AnonymousComment } from './blog-comments';
 
 // Função para buscar comentários de um post (server-side)

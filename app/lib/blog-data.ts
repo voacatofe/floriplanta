@@ -1,21 +1,63 @@
 import { createSupabaseServerClient } from './supabase/server'
-import { Database } from './database.types'
 import { POSTS_PER_PAGE } from './constants'
 
-export type Post = Database['public']['Tables']['posts']['Row'] & {
-  profiles: Pick<Database['public']['Tables']['profiles']['Row'], 'display_name' | 'username'> | null
-  categories: Pick<Database['public']['Tables']['categories']['Row'], 'id' | 'name' | 'slug'>[]
-  tags: Pick<Database['public']['Tables']['tags']['Row'], 'id' | 'name' | 'slug'>[]
+// Tipos locais para o blog
+export type Post = {
+  id: number
+  title: string
+  slug: string
+  excerpt: string | null
+  body: string | null
+  cover_image_url: string | null
+  published_at: string | null
+  status: 'draft' | 'published' | 'archived'
+  author_id: string
+  created_at: string
+  updated_at: string
+  profiles: { display_name: string | null; username: string | null } | null
+  categories: { id: number; name: string; slug: string }[]
+  tags: { id: number; name: string; slug: string }[]
 }
 
-export type SinglePost = Database['public']['Tables']['posts']['Row'] & {
-  profiles: Pick<Database['public']['Tables']['profiles']['Row'], 'id' | 'display_name' | 'username' | 'avatar_url' | 'bio'> | null
-  categories: Pick<Database['public']['Tables']['categories']['Row'], 'id' | 'name' | 'slug'>[]
-  tags: Pick<Database['public']['Tables']['tags']['Row'], 'id' | 'name' | 'slug'>[]
+export type SinglePost = {
+  id: number
+  title: string
+  slug: string
+  excerpt: string | null
+  body: string | null
+  cover_image_url: string | null
+  published_at: string | null
+  status: 'draft' | 'published' | 'archived'
+  author_id: string
+  created_at: string
+  updated_at: string
+  profiles: { 
+    id: string
+    display_name: string | null
+    username: string | null
+    avatar_url: string | null
+    bio: string | null
+  } | null
+  categories: { id: number; name: string; slug: string }[]
+  tags: { id: number; name: string; slug: string }[]
 }
 
-export type Category = Database['public']['Tables']['categories']['Row']
-export type Tag = Database['public']['Tables']['tags']['Row']
+export type Category = {
+  id: number
+  name: string
+  slug: string
+  description: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type Tag = {
+  id: number
+  name: string
+  slug: string
+  created_at: string
+  updated_at: string
+}
 
 export async function getPosts(
   options: {

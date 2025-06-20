@@ -14,9 +14,9 @@ import { Button } from '@/components/ui/button';
 import Footer from '@/components/layout/Footer';
 
 interface TermPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 const categoryColors = {
@@ -33,7 +33,8 @@ const categoryIcons = {
 
 // Gerar metadata dinâmica para SEO
 export async function generateMetadata({ params }: TermPageProps): Promise<Metadata> {
-  const term = await getTermBySlug(params.slug);
+  const resolvedParams = await params;
+  const term = await getTermBySlug(resolvedParams.slug);
   
   if (!term) {
     return {
@@ -236,7 +237,8 @@ function Breadcrumbs({ term }: { term: EncyclopediaTerm }) {
 }
 
 export default async function TermPage({ params }: TermPageProps) {
-  const term = await getTermBySlug(params.slug);
+  const resolvedParams = await params;
+  const term = await getTermBySlug(resolvedParams.slug);
   
   if (!term) {
     notFound();

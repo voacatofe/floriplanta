@@ -52,5 +52,5 @@ export default async function TagPage({ params }: TagPageProps) {
   
   // Por enquanto, redirecionar para o blog principal
   // Quando implementarmos o filtro por tag, podemos passar via searchParams
-  return <BlogPage searchParams={{}} />;
+  return <BlogPage searchParams={Promise.resolve({})} />;
 } 

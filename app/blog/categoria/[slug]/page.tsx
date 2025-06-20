@@ -51,5 +51,5 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   }
   
   // Reutilizar a página de blog passando o filtro de categoria via searchParams
-  return <BlogPage searchParams={{ categoria: slug }} />;
+  return <BlogPage searchParams={Promise.resolve({ categoria: slug })} />;
 } 
