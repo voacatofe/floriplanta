@@ -70,16 +70,65 @@ export default function LegislacaoPage() {
             <p>
               A Agência Nacional de Vigilância Sanitária (Anvisa) possui Resoluções da Diretoria Colegiada (RDCs) que normatizam a importação e a fabricação/comercialização de produtos de cannabis para fins medicinais. As principais são:
             </p>
+
+            <h3>RDC nº 660/2022 - Importação para Uso Próprio</h3>
+            <p>
+              A resolução mais atual para importação pessoal, que trouxe importantes simplificações:
+            </p>
             <ul>
-              <li>
-                <strong>RDC nº 660/2022 (e atualizações):</strong> Define os critérios e procedimentos para a importação de Produto derivado de Cannabis por pessoa física, para uso próprio, mediante prescrição de profissional legalmente habilitado. 
-                <Link href="https://www.in.gov.br/en/web/dou/-/resolucao-rdc-n-660-de-30-de-marco-de-2022-390472999" target="_blank" rel="noopener noreferrer" className="text-xs ml-1">(Link para RDC)</Link>
-              </li>
-              <li>
-                <strong>RDC nº 327/2019 (e atualizações):</strong> Dispõe sobre os procedimentos para a concessão da Autorização Sanitária para a fabricação e a importação, bem como estabelece requisitos para a comercialização, prescrição, dispensação, monitoramento e fiscalização de produtos de Cannabis para fins medicinais (vendidos em farmácias).
-                <Link href="https://www.in.gov.br/en/web/dou/-/resolucao-rdc-n-327-de-11-de-dezembro-de-2019-232669072" target="_blank" rel="noopener noreferrer" className="text-xs ml-1">(Link para RDC)</Link>
-              </li>
+              <li><strong>Cadastro válido por 2 anos</strong> (anteriormente era anual)</li>
+              <li><strong>Prescrição válida por 6 meses</strong> para múltiplas importações</li>
+              <li><strong>Análise simplificada automática</strong> para produtos constantes em Nota Técnica da Anvisa</li>
+              <li><strong>Intermediação permitida</strong> por hospitais, unidades governamentais de saúde e operadoras de planos de saúde</li>
+              <li><strong>Múltiplas formas de importação:</strong> registro no sistema de comércio exterior, bagagem acompanhada ou remessa expressa</li>
+              <li><strong>Proibida importação por remessa postal</strong></li>
             </ul>
+            <p className="text-sm text-gray-600 mt-2">
+              <Link href="https://www.in.gov.br/en/web/dou/-/resolucao-rdc-n-660-de-30-de-marco-de-2022-389908959" target="_blank" rel="noopener noreferrer">[Ver RDC 660/2022 completa]</Link>
+            </p>
+
+            <h3>RDC nº 327/2019 - Produtos Farmacêuticos</h3>
+            <p>
+              Ainda vigente para produtos vendidos em farmácias, dispõe sobre os procedimentos para a concessão da Autorização Sanitária para a fabricação e a importação, bem como estabelece requisitos para a comercialização, prescrição, dispensação, monitoramento e fiscalização de produtos de Cannabis para fins medicinais.
+            </p>
+
+            <h3>Principais Mudanças com a RDC 660/2022</h3>
+            <div className="bg-green-50 border-l-4 border-green-400 p-4 my-4">
+              <h4 className="font-semibold text-green-800 mb-2">Facilitações Implementadas:</h4>
+              <ul className="text-green-700 text-sm space-y-1">
+                <li>• <strong>Renovação menos frequente:</strong> Cadastro válido por 2 anos ao invés de 1 ano</li>
+                <li>• <strong>Menos burocracia:</strong> Prescrição válida por 6 meses para múltiplas importações</li>
+                <li>• <strong>Aprovação mais rápida:</strong> Análise automática para produtos pré-aprovados</li>
+                <li>• <strong>Mais opções de importação:</strong> Inclusive bagagem acompanhada em viagens</li>
+                <li>• <strong>Apoio institucional:</strong> Hospitais e planos de saúde podem intermediar</li>
+              </ul>
+            </div>
+
+            <h3>Documentos Necessários para Importação</h3>
+            <p>Conforme a RDC 660/2022, para cada importação são necessários:</p>
+            <ul>
+              <li>Formulário de petição</li>
+              <li>Conhecimento da carga embarcada</li>
+              <li>Fatura comercial</li>
+              <li>Prescrição médica válida (6 meses de validade)</li>
+              <li>Comprovante de endereço do paciente</li>
+            </ul>
+            <p className="text-sm text-gray-600">
+              <strong>Exceção:</strong> Na importação por bagagem acompanhada, dispensam-se os três primeiros documentos, sendo necessário apenas portar cópia da autorização da Anvisa.
+            </p>
+
+            <h3>Responsabilidades e Limitações</h3>
+            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 my-4">
+              <h4 className="font-semibold text-yellow-800 mb-2">Importante saber:</h4>
+              <ul className="text-yellow-700 text-sm space-y-1">
+                <li>• O uso é <strong>estritamente pessoal e intransferível</strong></li>
+                <li>• É <strong>proibida a venda, doação ou entrega a terceiros</strong></li>
+                <li>• O paciente assume total responsabilidade pelos efeitos e eventos adversos</li>
+                <li>• Não há comprovação oficial de qualidade, segurança e eficácia pela Anvisa</li>
+                <li>• O produto deve ser de estabelecimentos regularizados no país de origem</li>
+              </ul>
+            </div>
+
             <p>
               É fundamental consultar o <Link href="https://www.gov.br/anvisa/pt-br/assuntos/medicamentos/cannabis" target="_blank" rel="noopener noreferrer">portal da Anvisa</Link> para obter as informações mais atualizadas sobre o processo de importação e os produtos autorizados.
             </p>

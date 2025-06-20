@@ -67,7 +67,7 @@ export default function ValuesSection() {
                 <p className="font-inter text-brand-purple/80 leading-relaxed text-sm">
                   Assumimos o compromisso de ser uma voz ativa e responsável no movimento pela cannabis medicinal, 
                   priorizando sempre a melhoria da qualidade de vida dos pacientes através de informação de qualidade, 
-                  apoio contínuo e advocacy estratégico. Acreditamos que com compaixão, conhecimento e persistência, 
+                  apoio contínuo e ativismoestratégico. Acreditamos que com compaixão, conhecimento e persistência, 
                   podemos transformar não apenas vidas individuais, mas toda a perspectiva social sobre o tratamento 
                   com cannabis medicinal.
                 </p>

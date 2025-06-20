@@ -81,14 +81,14 @@ export default function HeroSection() {
               {/* Subtítulo e Botões */}
               <div className="mt-6 lg:mt-8 max-w-xl mx-auto lg:ml-0 lg:mr-0 text-center lg:text-left">
                 <p className="font-inter text-lg lg:text-lg text-brand-purple/90 leading-relaxed mb-6">
-                  A Floriplanta é a sua associação de apoio ao tratamento com cannabis medicinal em Santa Catarina. Promovemos educação, acesso seguro e acolhimento para pacientes e suas famílias.
+                A Floriplanta é uma associação sem fins lucrativos que apoia o tratamento da Canabis Medicinal localizada em Santa Catarina.
                 </p>
                 
                 {/* Botões */}
                 <div className="flex flex-wrap justify-center lg:justify-start gap-3">
                   <Link href="/associar" 
                     className="bg-brand-purple text-white px-5 py-2.5 rounded-lg font-inter font-medium inline-flex items-center gap-2 hover:bg-brand-hover-purple transition-all duration-300 transform hover:scale-105 active:scale-95">
-                    Torne-se Associado
+                    associe-se
                     <ArrowRight className="w-4 h-4" />
                   </Link>
                   <Link href="/sobre"
@@ -102,7 +102,7 @@ export default function HeroSection() {
         </div>
         
         {/* Estatísticas */}
-        <div className="flex flex-wrap justify-center mt-12 lg:mt-20">
+       {/*  <div className="flex flex-wrap justify-center mt-12 lg:mt-20">
           <div className="flex flex-wrap justify-center gap-4 md:gap-8 bg-white/90 lg:bg-white/80 backdrop-blur-md px-6 py-4 rounded-2xl shadow-sm border border-white/30">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-brand-hover-purple/20 rounded-full flex items-center justify-center">
@@ -129,7 +129,7 @@ export default function HeroSection() {
               <span className="font-inter text-brand-purple text-xs font-medium leading-tight">Especialistas<br/>Parceiros</span>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );

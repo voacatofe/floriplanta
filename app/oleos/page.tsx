@@ -1,7 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Droplet, AlertTriangle, UserPlus } from 'lucide-react'; // Icons
 
@@ -35,8 +34,6 @@ const oilTypes = [
 export default function NossosOleosPage() {
   return (
     <main className="bg-[#f8f5f0] overflow-x-hidden">
-      <Header />
-
       {/* Page Header */}
       <section className="pt-24 pb-12 lg:pt-32 lg:pb-16 bg-gradient-to-b from-white to-brand-light-green/20">
         <div className="container mx-auto px-4 text-center">

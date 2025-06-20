@@ -1,15 +1,12 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Droplet, Leaf, FlaskConical, ShieldCheck, FileText, User, Upload, Clock, Truck, AlertTriangle, ArrowLeft, UserCheck, UserPlus } from 'lucide-react'; // Icons
 
 export default function OleoTerralPage() {
   return (
     <main className="bg-[#f8f5f0] overflow-x-hidden">
-      <Header />
-
       {/* Page Header - Simplified for product page */}
       <section className="pt-24 pb-10 lg:pt-32 lg:pb-12 bg-gradient-to-b from-white to-brand-light-green/20">
         <div className="container mx-auto px-4">

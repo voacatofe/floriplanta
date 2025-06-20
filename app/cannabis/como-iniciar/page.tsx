@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 
 import Footer from "@/components/layout/Footer";
-import { PlayCircle, Stethoscope, FileText, Truck, Users, Pill, Droplet, Cloud, Hand, TrendingUp, ListChecks, AlertTriangle, ShieldCheck, LucideIcon } from 'lucide-react'; // Adicionado LucideIcon
+import { PlayCircle, Stethoscope, FileText, Truck, Pill, Droplet, Cloud, Hand, TrendingUp, ListChecks, AlertTriangle, ShieldCheck, LucideIcon } from 'lucide-react'; // Adicionado LucideIcon
 
 // Definindo interfaces para tipagem correta
 interface SubpointLink {
@@ -84,8 +84,8 @@ const steps: Step[] = [
     title: "Escolha a Via de Acesso ao Produto",
     text: "Existem diferentes formas de obter o produto legalmente:",
     subpoints: [
-      { title: "Importação (Via Anvisa)", text: "Pacientes podem importar produtos mediante autorização da Anvisa (processo envolve cadastro, envio da receita e laudo).", link: { text: "Guia Anvisa (em breve)", href: "#" } },
-      { title: "Associações de Pacientes", text: "Associações como a Floriplanta podem fornecer acesso a óleos para associados, mediante prescrição.", link: { text: "Associe-se", href: "/associar" } },
+      { title: "Importação (Via Anvisa)", text: "Pacientes podem importar produtos mediante autorização da Anvisa (processo envolve cadastro, envio da receita e laudo).", link: { text: "Guia Anvisa", href: "https://www.in.gov.br/en/web/dou/-/resolucao-rdc-n-660-de-30-de-marco-de-2022-389908959" } },
+      { title: "Associações de Pacientes", text: "Associações como a Floriplanta podem fornecer instruções personalizadas e facilitar o acesso, mediante prescrição.", link: { text: "Associe-se", href: "/associar" } },
       { title: "Farmácias (Produtos Aprovados)", text: "Alguns produtos específicos estão disponíveis em farmácias, geralmente com custo elevado." },
       { title: "Habeas Corpus para Cultivo", text: "Autorização judicial para cultivo medicinal é possível em casos específicos, exigindo assessoria jurídica.", link: { text: "Saiba mais em Legislação", href: "/cannabis/legislacao" } }
     ]

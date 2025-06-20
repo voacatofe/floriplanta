@@ -306,6 +306,7 @@ export default function OQueEPage() {
               </div>
             </div>
 
+            {/* Efeito Entourage */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
               <div className="flex items-center mb-6">
                 <div className="w-12 h-12 rounded-full bg-brand-purple/10 flex items-center justify-center mr-4">
@@ -314,22 +315,22 @@ export default function OQueEPage() {
                 <h2 className="font-futuru font-bold text-brand-purple text-2xl">Efeito Entourage (Comitiva)</h2>
               </div>
               
-              <div className="flex flex-col md:flex-row items-center mb-6 bg-brand-light-green/20 rounded-xl p-6">
-                <div className="md:w-1/3 flex justify-center md:justify-start mb-4 md:mb-0">
-                  <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center shadow-sm">
-                    <Zap className="w-12 h-12 text-brand-purple/70" />
+              <div className="flex flex-col md:flex-row items-start mb-6 bg-brand-light-green/20 rounded-xl p-6">
+                <div className="md:w-1/4 flex justify-center md:justify-start mb-4 md:mb-0 md:pt-2">
+                  <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-sm">
+                    <Zap className="w-8 h-8 text-brand-purple/70" />
                   </div>
                 </div>
-                <div className="md:w-2/3 text-center md:text-left md:pl-6">
-                  <h3 className="font-futuru font-semibold text-brand-purple text-xl mb-2">A importância da sinergia</h3>
+                <div className="md:w-3/4 md:pl-6">
+                  <h3 className="font-futuru font-semibold text-brand-purple text-xl mb-3">A importância da sinergia</h3>
                   <p className="font-inter text-brand-purple/85 leading-relaxed">
-              Acredita-se que a ação conjunta de diversos canabinoides e terpenos presentes na planta (produtos "full spectrum" ou "broad spectrum") pode ser mais eficaz do que o uso de canabinoides isolados, devido à sinergia entre os compostos.
-            </p>
+                    Acredita-se que a ação conjunta de diversos canabinoides e terpenos presentes na planta (produtos "full spectrum" ou "broad spectrum") pode ser mais eficaz do que o uso de canabinoides isolados, devido à sinergia entre os compostos.
+                  </p>
                 </div>
               </div>
               
               <p className="font-inter text-brand-purple/85 leading-relaxed">
-                Este efeito sinérgico é especialmente importante na cannabis medicinal, pois ajuda a potencializar os benefícios terapêuticos e, em alguns casos, pode reduzir efeitos indesejados. Por esse motivo, muitos médicos e pesquisadores recomendam produtos de espectro completo ao invés de canabinoides isolados para determinadas condições.
+                Este efeito sinérgico é especialmente importante na cannabis medicinal, pois ajuda a potencializar os benefícios terapêuticos e, em alguns casos, pode reduzir efeitos indesejados. Por esse motivo, muitos prescritores recomendam produtos de espectro completo ao invés de canabinoides isolados para determinadas condições.
               </p>
             </div>
 

@@ -5,6 +5,7 @@ import { inter, futuru, behindTheNineties } from '@/app/styles/fonts'; // Import
 import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
 import ConditionalMenu from '@/components/layout/ConditionalMenu';
+import GTMProvider from '@/components/analytics/GTMProvider';
 // import { Analytics } from '@vercel/analytics/react';
 // import { SpeedInsights } from "@vercel/speed-insights/next"
 
@@ -91,32 +92,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className="scroll-smooth">
-      <head>
-        {/* Google Tag Manager */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-NT2XKHTD');`,
-          }}
-        />
-        {/* End Google Tag Manager */}
-      </head>
       <body className={`${inter.variable} ${futuru.variable} ${behindTheNineties.variable} antialiased bg-brand-bege text-brand-text`}>
-        {/* Google Tag Manager (noscript) */}
-        <noscript
-          dangerouslySetInnerHTML={{
-            __html: `<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NT2XKHTD"
-height="0" width="0" style="display:none;visibility:hidden"></iframe>`,
-          }}
-        />
-        {/* End Google Tag Manager (noscript) */}
-        {children}
-        <Toaster />
-        {/* Menu condicional - só aparece se não for rota de admin */}
-        <ConditionalMenu />
+        <GTMProvider>
+          {children}
+          <Toaster />
+          {/* Menu condicional - só aparece se não for rota de admin */}
+          <ConditionalMenu />
+        </GTMProvider>
         {/* <Analytics /> */}
         {/* <SpeedInsights /> */}
       </body>

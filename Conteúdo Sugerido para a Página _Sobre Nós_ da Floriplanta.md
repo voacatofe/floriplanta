@@ -30,7 +30,7 @@ Este documento detalha o conteúdo textual sugerido para a página "Sobre Nós" 
 *   **Título da Seção:** O Que Nos Guia
 *   **(Apresentar em blocos distintos ou layout visualmente atraente)**
 *   **Missão:**
-    > Construir uma comunidade sólida para democratizar o acesso à informação e ao tratamento com o uso da cannabis medicinal em Santa Catarina, através de um movimento de educação, acolhimento e advocacy por políticas públicas justas.
+    > Construir uma comunidade sólida para democratizar o acesso à informação e ao tratamento com o uso da cannabis medicinal em Santa Catarina, através de um movimento de educação, acolhimento e ativismopor políticas públicas justas.
     *   *(Texto ajustado/combinado com base na proposta e brandbook)*
 *   **Visão:**
     > Ser a principal referência em Santa Catarina no apoio a pacientes e na promoção do uso consciente e responsável da cannabis medicinal, contribuindo para uma sociedade mais informada, saudável e inclusiva.

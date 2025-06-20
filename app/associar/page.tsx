@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Footer from "@/components/layout/Footer";
-import { Users, HeartHandshake, Droplet, BookOpen, Scale, CalendarDays, Handshake, FileText, Mail, Phone, HelpCircle, CheckCircle, Upload, Clock, Send } from 'lucide-react'; // Icons
+import { Users, HeartHandshake, BookOpen, Scale, CalendarDays, Handshake, FileText, Mail, Phone, HelpCircle, CheckCircle, Upload, Clock, Send } from 'lucide-react'; // Icons
 
 const benefits = [
   {
@@ -9,11 +9,11 @@ const benefits = [
     title: "Rede de Profissionais",
     text: "Conecte-se com médicos prescritores e outros profissionais de saúde parceiros, facilitando o acesso a acompanhamento qualificado."
   },
-  {
+  /* {
     icon: Droplet,
     title: "Acesso aos Óleos Floriplanta",
     text: "Possibilidade de obter os óleos produzidos pela associação (Terral, Swell, Maré), mediante prescrição médica e cumprimento dos requisitos."
-  },
+  }, */
   {
     icon: HeartHandshake,
     title: "Acolhimento e Suporte",
@@ -44,7 +44,7 @@ const benefits = [
 const memberTypes = [
   { 
     title: "Paciente", 
-    description: "Pessoa com indicação médica para uso de cannabis medicinal, comprovada por prescrição e laudo."
+    description: "Pessoa com indicação médica para uso de cannabis medicinal" /* comprovada por prescrição e laudo. */
   },
   { 
     title: "Familiar/Responsável Legal", 
@@ -124,10 +124,7 @@ export default function AssociarPage() {
       <section className="py-16 lg:py-20 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="font-futuru font-bold text-brand-purple text-3xl lg:text-4xl mb-6 text-center">Quem Pode se Associar?</h2>
-          <p className="font-inter text-brand-purple/80 text-base lg:text-lg text-center max-w-3xl mx-auto mb-12">
-            A Floriplanta acolhe diferentes perfis de membros, todos unidos pelo propósito de promover o acesso à saúde:
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {memberTypes.map((type, index) => (
               <div key={index} className="bg-brand-light-green/20 p-6 rounded-xl border border-brand-light-green">
                 <h3 className="font-futuru font-bold text-brand-purple text-xl mb-2">{type.title}</h3>

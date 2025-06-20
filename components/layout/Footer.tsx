@@ -3,10 +3,12 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, Phone, Mail, Instagram } from 'lucide-react';
+import { MapPin, Mail, Instagram, MessageCircle } from 'lucide-react';
+import useGTM from '@/hooks/useGTM';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const { trackNewsletterSignup, trackExternalLink } = useGTM();
   
   return (
     <footer className="bg-brand-purple text-white pt-16 pb-8 relative overflow-hidden">
@@ -32,12 +34,18 @@ export default function Footer() {
             <p className="font-inter text-white/90 mb-6 leading-relaxed text-sm">
               Associação dedicada à promoção da cannabis medicinal 
               e ao suporte aos pacientes, através da educação, pesquisa 
-              e advocacy por políticas públicas mais inclusivas.
+              e ativismopor políticas públicas mais inclusivas.
             </p>
             {/* Ícones sociais com melhor espaçamento e transição */}
             <div className="flex gap-3">
-              <Link href="https://www.instagram.com/flori.planta/" target="_blank" rel="noopener noreferrer" aria-label="Instagram da Floriplanta"
-                className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center text-white hover:bg-white/25 hover:scale-110 transition-all duration-200">
+              <Link 
+                href="https://www.instagram.com/flori.planta/" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                aria-label="Instagram da Floriplanta"
+                onClick={() => trackExternalLink('https://www.instagram.com/flori.planta/', 'Instagram Footer')}
+                className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center text-white hover:bg-white/25 hover:scale-110 transition-all duration-200"
+              >
                 <Instagram size={18} />
               </Link>
             </div>
@@ -75,49 +83,44 @@ export default function Footer() {
               <div className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-brand-light-green mt-0.5 flex-shrink-0" />
                 <p className="font-inter text-white/90 text-sm">
-                  Rua Exemplo, 123, Bairro<br />
-                  Florianópolis, SC - 88000-000
+                  Rua Laurindo Januário da Silveira, 3695<br />
+                  Canto da Lagoa, Florianópolis, SC - 88062-201
                 </p>
               </div>
               <div className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-brand-light-green flex-shrink-0" />
-                <a href="tel:+5548999999999" className="font-inter text-white/90 hover:text-white transition-colors duration-200 text-sm">(48) 99999-9999</a>
+                <MessageCircle className="w-5 h-5 text-brand-light-green flex-shrink-0" />
+                <a href="https://wa.me/5548988078312" target="_blank" rel="noopener noreferrer" className="font-inter text-white/90 hover:text-white transition-colors duration-200 text-sm">(48) 98807-8312</a>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-brand-light-green flex-shrink-0" />
-                <a href="mailto:contato@floriplanta.org" className="font-inter text-white/90 hover:text-white transition-colors duration-200 text-sm">contato@floriplanta.org</a>
+                <a href="mailto:contato@floriplanta.com" className="font-inter text-white/90 hover:text-white transition-colors duration-200 text-sm">contato@floriplanta.com</a>
               </div>
             </div>
           </div>
           
-          {/* Coluna 4: Horários e Newsletter */}
+          {/* Coluna 4: Newsletter */}
           <div className="flex flex-col">
-            <h3 className="font-futuru font-bold text-white text-lg mb-5">Horário</h3>
-            <div className="flex flex-col gap-2 text-sm mb-5">
-              <div className="flex justify-between">
-                <p className="font-inter text-white/90">Segunda-Sexta:</p>
-                <p className="font-inter text-white font-medium">09:00 - 18:00</p>
-              </div>
-              <div className="flex justify-between">
-                <p className="font-inter text-white/90">Sábado:</p>
-                <p className="font-inter text-white font-medium">10:00 - 14:00</p>
-              </div>
-              <div className="flex justify-between">
-                <p className="font-inter text-white/90">Domingo:</p>
-                <p className="font-inter text-white font-medium">Fechado</p>
-              </div>
-            </div>
-            
-            {/* Newsletter */}
-            <div>
-              <h4 className="font-futuru font-semibold text-white mb-2 text-base">Newsletter</h4>
-              <p className="font-inter text-white/90 text-sm mb-3">
-                Receba novidades sobre cannabis medicinal e nossos eventos.
-              </p>
-              <form className="flex flex-col sm:flex-row gap-2 mt-2">
+            <h3 className="font-futuru font-bold text-white text-lg mb-5">Newsletter</h3>
+            <p className="font-inter text-white/90 text-sm mb-4">
+              Receba novidades sobre cannabis medicinal e nossos eventos.
+            </p>
+                          <form 
+                className="flex flex-col sm:flex-row gap-2"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const formData = new FormData(e.currentTarget);
+                  const email = formData.get('email') as string;
+                  if (email) {
+                    trackNewsletterSignup('footer');
+                    // Aqui você adicionaria a lógica real de inscrição
+                    console.log('Newsletter signup:', email);
+                  }
+                }}
+              >
                 <label htmlFor="footer-email" className="sr-only">Email</label>
                 <input 
                   id="footer-email"
+                  name="email"
                   type="email" 
                   placeholder="Seu melhor email" 
                   required
@@ -130,7 +133,6 @@ export default function Footer() {
                   Inscrever
                 </button>
               </form>
-            </div>
           </div>
         </div>
         

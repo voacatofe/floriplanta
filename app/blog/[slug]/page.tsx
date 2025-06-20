@@ -1,3 +1,4 @@
+import React from 'react';
 import { getPostBySlug, getRelatedPosts } from '@/app/lib/blog-data';
 import { getPostComments } from '@/app/lib/blog-comments.server';
 import Image from 'next/image';
@@ -5,9 +6,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
-import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import { ArrowLeft, ArrowRight, Calendar, Clock, User, ChevronRight } from 'lucide-react';
+import { ArrowRight, Calendar, Clock, ChevronRight } from 'lucide-react';
 import ShareButtons from '@/components/blog/ShareButtons';
 import TableOfContents from '@/components/blog/TableOfContents';
 import CommentSection from '@/components/blog/CommentSection';
@@ -76,8 +76,6 @@ export default async function PostPage({ params }: PageProps) {
 
   return (
     <main className="bg-[#f8f5f0] text-gray-800 min-h-screen flex flex-col">
-      <Header forceBackground={true} />
-
       {/* Hero Section com imagem grande */}
       <div className="relative h-[50vh] md:h-[60vh] lg:h-[70vh] bg-gray-900">
         {post.cover_image_url ? (
@@ -233,12 +231,12 @@ export default async function PostPage({ params }: PageProps) {
                 <ReactMarkdown 
                   rehypePlugins={[rehypeRaw]}
                   components={{
-                    h2: ({node, children, ...props}) => {
+                    h2: ({children, ...props}) => {
                       const text = children?.toString() || '';
                       const id = `heading-${text.toLowerCase().replace(/\s+/g, '-')}`;
                       return <h2 id={id} {...props}>{children}</h2>;
                     },
-                    h3: ({node, children, ...props}) => {
+                    h3: ({children, ...props}) => {
                       const text = children?.toString() || '';
                       const id = `heading-${text.toLowerCase().replace(/\s+/g, '-')}`;
                       return <h3 id={id} {...props}>{children}</h3>;

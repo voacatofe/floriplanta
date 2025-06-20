@@ -67,7 +67,7 @@ export default function BenefitsSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-12 lg:mb-16">
           <BenefitCard 
             title="Dor Crônica"
-            description="Propriedades analgésicas auxiliam no alívio de dores persistentes, com menos efeitos colaterais que opioides tradicionais."
+            description="Propriedades analgésicas auxiliam no alívio de dores persistentes, com menos efeitos colaterais que alguns analgésicos convencionais."
             icon={Activity}
             color="green"
           />
