@@ -5,21 +5,25 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { MapPin, Mail, Instagram, MessageCircle } from 'lucide-react';
 import { useGTM } from '@/hooks/useGTM';
+import { useNewsletterForm } from '@/hooks/useNewsletterForm';
+import {
+  NEWSLETTER_FORM_ID,
+  FIELD_NAMES,
+  FIELD_IDS,
+} from '@/app/lib/forms.config';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
-  const { trackContactClick, trackNewsletterSubscribe } = useGTM();
-  
-  const handleNewsletterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const email = (form.elements.namedItem('email') as HTMLInputElement)?.value;
-    if (email) {
-      trackNewsletterSubscribe(email, 'footer');
-      // Aqui você adicionaria a lógica real de inscrição
-      form.reset();
-    }
-  };
+  const { trackContactClick } = useGTM();
+
+  const uniqueInputId = `${FIELD_IDS.EMAIL}-footer`;
+
+  const {
+    formData,
+    isSubmitting,
+    handleChange,
+    handleSubmit,
+  } = useNewsletterForm({ formLocation: 'footer' });
   
   return (
     <footer className="bg-brand-purple text-white pt-16 pb-8 relative overflow-hidden">
@@ -124,25 +128,29 @@ export default function Footer() {
               Receba novidades sobre cannabis medicinal e nossos eventos.
             </p>
             <form 
-              id="nl-form-footer"
+              id={NEWSLETTER_FORM_ID}
               className="flex flex-col sm:flex-row gap-2" 
-              onSubmit={handleNewsletterSubmit}
+              onSubmit={handleSubmit}
             >
-              <label htmlFor="footer-email" className="sr-only">Email</label>
+              <label htmlFor={uniqueInputId} className="sr-only">Email</label>
               <input 
-                id="footer-email"
-                name="email"
+                id={uniqueInputId}
+                name={FIELD_NAMES.EMAIL}
                 type="email" 
                 placeholder="Seu melhor email" 
                 required
+                value={formData[FIELD_NAMES.EMAIL]}
+                onChange={handleChange}
+                disabled={isSubmitting}
                 className="px-3 py-2 rounded-lg text-sm bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-brand-light-green focus:border-transparent text-white placeholder-white/60 font-inter flex-grow"
               />
               <button 
                 type="submit"
                 name="submit"
+                disabled={isSubmitting}
                 className="bg-brand-light-green text-brand-purple px-4 py-2 rounded-lg font-inter font-semibold text-sm hover:bg-[#c0e86e] transition-colors duration-200 transform hover:scale-105 active:scale-95"
               >
-                Inscrever
+                {isSubmitting ? 'Enviando...' : 'Inscrever'}
               </button>
             </form>
           </div>

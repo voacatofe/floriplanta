@@ -7,17 +7,26 @@ import { MapPin, Mail, Send, Instagram, MessageCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useGTM } from '@/hooks/useGTM';
 import PageTracker from '@/components/PageTracker';
+import {
+  CONTACT_FORM_ID,
+  FIELD_NAMES,
+  FIELD_IDS,
+  type ContactFormData
+} from '@/app/lib/forms.config';
 
 export default function ContatoPage() {
   const { trackFormStart, trackFormSubmit, trackContactClick } = useGTM();
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: '',
-    consent: false,
-  });
+  
+  const initialFormData: ContactFormData = {
+    [FIELD_NAMES.FULLNAME]: '',
+    [FIELD_NAMES.EMAIL]: '',
+    [FIELD_NAMES.PHONE]: '',
+    [FIELD_NAMES.SUBJECT]: '',
+    [FIELD_NAMES.MESSAGE]: '',
+    [FIELD_NAMES.CONSENT]: false,
+  };
+
+  const [formData, setFormData] = useState<ContactFormData>(initialFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [hasStartedForm, setHasStartedForm] = useState(false);
@@ -25,9 +34,8 @@ export default function ContatoPage() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     
-    // Track form start on first interaction
     if (!hasStartedForm) {
-      trackFormStart('contact-form-main');
+      trackFormStart(CONTACT_FORM_ID, { [FIELD_NAMES.FORM_LOCATION]: 'contact-page' }); 
       setHasStartedForm(true);
     }
     
@@ -41,17 +49,17 @@ export default function ContatoPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!formData.consent) {
+    if (!formData[FIELD_NAMES.CONSENT]) {
       toast.error("Você precisa concordar com os termos para continuar.");
       return;
     }
     setIsSubmitting(true);
     setSubmitStatus('loading');
 
-    // Track form submission
-    trackFormSubmit('contact-form-main', {
-      subject: formData.subject,
-      has_phone: formData.phone ? 'yes' : 'no'
+    trackFormSubmit(CONTACT_FORM_ID, {
+      [FIELD_NAMES.FORM_LOCATION]: 'contact-page',
+      [FIELD_NAMES.SUBJECT]: formData[FIELD_NAMES.SUBJECT],
+      has_phone: formData[FIELD_NAMES.PHONE] ? 'yes' : 'no'
     });
 
     try {
@@ -64,15 +72,19 @@ export default function ContatoPage() {
       });
 
       if (response.ok) {
+        toast.success('Sua mensagem foi enviada com sucesso! Entraremos em contato em breve.');
         setSubmitStatus('success');
-        setFormData({ name: '', email: '', phone: '', subject: '', message: '', consent: false });
-        setHasStartedForm(false); // Reset form tracking
+        setFormData(initialFormData);
+        setHasStartedForm(false);
       } else {
-        console.error('Form submission error:', response.statusText);
+        const errorResult = await response.json().catch(() => ({}));
+        toast.error(errorResult.message || 'Ocorreu um erro ao enviar sua mensagem.');
+        console.error('Form submission error:', response.statusText, errorResult);
         setSubmitStatus('error');
       }
     } catch (error) {
-      console.error('Form submission error:', error);
+      toast.error('Não foi possível conectar ao servidor. Tente novamente mais tarde.');
+      console.error('Form submission error (catch):', error);
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -109,53 +121,53 @@ export default function ContatoPage() {
             <div className="w-full lg:w-1/2">
               <h2 className="font-futuru font-bold text-brand-purple text-2xl lg:text-3xl mb-6">Envie sua Mensagem</h2>
               <form 
-                id="contact-form-main"
+                id={CONTACT_FORM_ID}
                 onSubmit={handleSubmit} 
                 className="space-y-4 bg-white p-6 sm:p-8 rounded-xl shadow-md border border-gray-100"
               >
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-brand-purple/90 mb-1">Nome Completo *</label>
+                  <label htmlFor={FIELD_IDS.FULLNAME} className="block text-sm font-medium text-brand-purple/90 mb-1">Nome Completo *</label>
                   <input 
                     type="text" 
-                    name="name" 
-                    id="name" 
+                    name={FIELD_NAMES.FULLNAME}
+                    id={FIELD_IDS.FULLNAME}
                     required 
-                    value={formData.name} 
+                    value={formData[FIELD_NAMES.FULLNAME]} 
                     onChange={handleChange} 
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple text-sm" 
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-brand-purple/90 mb-1">E-mail *</label>
+                  <label htmlFor={FIELD_IDS.EMAIL} className="block text-sm font-medium text-brand-purple/90 mb-1">E-mail *</label>
                   <input 
                     type="email" 
-                    name="email" 
-                    id="email" 
+                    name={FIELD_NAMES.EMAIL}
+                    id={FIELD_IDS.EMAIL}
                     required 
-                    value={formData.email} 
+                    value={formData[FIELD_NAMES.EMAIL]} 
                     onChange={handleChange} 
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple text-sm" 
                   />
                 </div>
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-brand-purple/90 mb-1">Telefone/WhatsApp</label>
+                  <label htmlFor={FIELD_IDS.PHONE} className="block text-sm font-medium text-brand-purple/90 mb-1">Telefone/WhatsApp</label>
                   <input 
                     type="tel" 
-                    name="phone" 
-                    id="phone" 
-                    value={formData.phone} 
+                    name={FIELD_NAMES.PHONE}
+                    id={FIELD_IDS.PHONE}
+                    value={formData[FIELD_NAMES.PHONE]} 
                     onChange={handleChange} 
                     placeholder="(XX) XXXXX-XXXX" 
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple text-sm" 
                   />
                 </div>
                 <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-brand-purple/90 mb-1">Assunto *</label>
+                  <label htmlFor={FIELD_IDS.SUBJECT} className="block text-sm font-medium text-brand-purple/90 mb-1">Assunto *</label>
                   <select 
-                    name="subject" 
-                    id="subject" 
+                    name={FIELD_NAMES.SUBJECT}
+                    id={FIELD_IDS.SUBJECT}
                     required 
-                    value={formData.subject} 
+                    value={formData[FIELD_NAMES.SUBJECT]} 
                     onChange={handleChange} 
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple text-sm bg-white"
                   >
@@ -169,13 +181,13 @@ export default function ContatoPage() {
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-brand-purple/90 mb-1">Sua Mensagem *</label>
+                  <label htmlFor={FIELD_IDS.MESSAGE} className="block text-sm font-medium text-brand-purple/90 mb-1">Sua Mensagem *</label>
                   <textarea 
-                    name="message" 
-                    id="message" 
+                    name={FIELD_NAMES.MESSAGE}
+                    id={FIELD_IDS.MESSAGE}
                     rows={5} 
                     required 
-                    value={formData.message} 
+                    value={formData[FIELD_NAMES.MESSAGE]} 
                     onChange={handleChange} 
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple text-sm"
                   ></textarea>
@@ -183,13 +195,13 @@ export default function ContatoPage() {
                 <div className="flex items-start">
                   <input 
                     type="checkbox" 
-                    name="consent" 
-                    id="consent" 
-                    checked={formData.consent} 
+                    name={FIELD_NAMES.CONSENT}
+                    id={FIELD_IDS.CONSENT}
+                    checked={formData[FIELD_NAMES.CONSENT]} 
                     onChange={handleChange} 
                     className="h-4 w-4 text-brand-purple border-gray-300 rounded focus:ring-brand-purple mt-1 mr-2" 
                   />
-                  <label htmlFor="consent" className="text-xs text-brand-purple/80">
+                  <label htmlFor={FIELD_IDS.CONSENT} className="text-xs text-brand-purple/80">
                     Concordo com o uso dos meus dados conforme a <Link href="/privacidade" className="underline hover:text-brand-hover-purple">Política de Privacidade</Link>. *
                   </label>
                 </div>
@@ -197,7 +209,7 @@ export default function ContatoPage() {
                   <button 
                     type="submit"
                     name="submit" 
-                    disabled={isSubmitting || !formData.consent}
+                    disabled={isSubmitting || !formData[FIELD_NAMES.CONSENT]}
                     className={`w-full inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-brand-purple hover:bg-brand-hover-purple focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-purple disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300`}
                   >
                     {isSubmitting ? 'Enviando...' : 'Enviar Mensagem'}

@@ -2,9 +2,10 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Footer from '@/components/layout/Footer';
-import { Rss, Search, Tag, Mail } from 'lucide-react'; // Icons
+import { Rss, Search, Tag } from 'lucide-react'; // Removido Mail daqui, pois o novo componente o usa
 import { getPosts, getAllCategories } from '@/app/lib/blog-data';
 import InfiniteScrollPosts from '@/components/blog/InfiniteScrollPosts';
+import BlogSidebarNewsletterForm from '@/components/blog/BlogSidebarNewsletterForm'; // ADICIONADO
 
 // Placeholder data for blog posts - Replace with actual data fetching later
 const featuredPosts = [
@@ -153,30 +154,9 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                 </ul>
               </div>
 
-              {/* Archive (Optional) */}
-              {/* 
-              <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-100">
-                <h3 className="font-futuru font-bold text-brand-purple mb-3 text-lg flex items-center"><Calendar className="w-5 h-5 mr-2"/>Arquivo</h3>
-                <ul className="space-y-1">
-                  <li><Link href="#" className="block py-1 px-2 rounded font-inter text-sm text-brand-purple hover:bg-brand-light-green/50">Maio 2025</Link></li>
-                  <li><Link href="#" className="block py-1 px-2 rounded font-inter text-sm text-brand-purple hover:bg-brand-light-green/50">Abril 2025</Link></li>
-                </ul>
-              </div>
-              */}
+              {/* Newsletter Signup - ATUALIZADO */}
+              <BlogSidebarNewsletterForm />
 
-              {/* Newsletter Signup */}
-              <div className="bg-brand-purple p-6 rounded-lg shadow-md text-white">
-                <h3 className="font-futuru font-bold mb-3 text-lg flex items-center"><Mail className="w-5 h-5 mr-2"/>Receba Novidades</h3>
-                <p className="font-inter text-sm mb-4">Assine nossa newsletter para ficar por dentro das últimas notícias e artigos.</p>
-                <input 
-                  type="email" 
-                  placeholder="Seu melhor e-mail" 
-                  className="w-full px-4 py-2 border border-brand-purple/50 rounded-md focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white text-sm text-brand-purple mb-3"
-                />
-                <button className="w-full bg-brand-light-green text-brand-purple font-semibold py-2 px-4 rounded-md hover:bg-opacity-80 transition-colors">
-                  Assinar
-                </button>
-              </div>
             </div>
           </aside>
         </div>

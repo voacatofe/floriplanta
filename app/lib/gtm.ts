@@ -47,9 +47,10 @@ export const GTMEvents = {
   }),
 
   // Eventos de formulário
-  formStart: (formName: string) => ({
+  formStart: (formName: string, formData?: Record<string, string | number | boolean>) => ({
     event: 'form_start',
     form_name: formName,
+    form_data: formData,
   }),
 
   formSubmit: (formName: string, formData?: Record<string, string | number | boolean>) => ({

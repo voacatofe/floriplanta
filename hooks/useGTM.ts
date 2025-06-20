@@ -16,8 +16,8 @@ export const useGTM = () => {
     trackEvent(GTMEvents.clickButton(buttonName, location));
   }, [trackEvent]);
 
-  const trackFormStart = useCallback((formName: string) => {
-    trackEvent(GTMEvents.formStart(formName));
+  const trackFormStart = useCallback((formName: string, formData?: Record<string, string | number | boolean>) => {
+    trackEvent(GTMEvents.formStart(formName, formData));
   }, [trackEvent]);
 
   const trackFormSubmit = useCallback((formName: string, formData?: Record<string, string | number | boolean>) => {

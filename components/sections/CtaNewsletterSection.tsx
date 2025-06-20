@@ -1,23 +1,24 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { Mail } from 'lucide-react';
-import { toast } from 'sonner';
+import { useNewsletterForm } from '@/hooks/useNewsletterForm';
+import {
+  NEWSLETTER_FORM_ID,
+  FIELD_NAMES,
+  FIELD_IDS,
+} from '@/app/lib/forms.config';
 
 export default function CtaNewsletterSection() {
-  const [email, setEmail] = useState('');
+  const uniqueInputId = `${FIELD_IDS.EMAIL}-cta`;
 
-  const handleSubscribe = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) {
-      toast.error("Por favor, insira seu e-mail.");
-      return;
-    }
-    // console.log('Subscribing email:', email);
-    toast.success(`Obrigado por se inscrever, ${email}!`);
-    setEmail("");
-  };
+  const {
+    formData,
+    isSubmitting,
+    handleChange,
+    handleSubmit,
+  } = useNewsletterForm({ formLocation: 'cta-section' });
 
   return (
     <section className="py-16 lg:py-20 bg-gradient-to-br from-brand-purple to-brand-hover-purple text-white relative overflow-hidden">
@@ -45,23 +46,30 @@ export default function CtaNewsletterSection() {
           {/* Newsletter Form */}
           <div className="max-w-lg mx-auto">
             <h3 className="font-inter font-semibold mb-3">Receba nossas novidades:</h3>
-            <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2">
-              <label htmlFor="newsletter-email" className="sr-only">Email</label>
+            <form 
+              id={NEWSLETTER_FORM_ID}
+              onSubmit={handleSubmit}
+              className="flex flex-col sm:flex-row gap-2"
+            >
+              <label htmlFor={uniqueInputId} className="sr-only">Email</label>
               <input 
                 type="email" 
-                id="newsletter-email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                name={FIELD_NAMES.EMAIL}
+                id={uniqueInputId}
+                value={formData[FIELD_NAMES.EMAIL]}
+                onChange={handleChange}
                 placeholder="Seu melhor e-mail"
                 required
                 className="flex-grow px-4 py-2 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-brand-light-green"
+                disabled={isSubmitting}
               />
               <button 
                 type="submit" 
                 className="bg-white text-brand-purple px-5 py-2 rounded-md font-inter font-medium inline-flex items-center justify-center gap-2 hover:bg-gray-100 transition-colors duration-300"
+                disabled={isSubmitting}
               >
                 <Mail className="w-4 h-4" />
-                Inscrever
+                {isSubmitting ? 'Inscrevendo...' : 'Inscrever'}
               </button>
             </form>
             <p className="text-xs opacity-70 mt-3">

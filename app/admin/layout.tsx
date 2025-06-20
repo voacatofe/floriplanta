@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { logout } from './actions';
 import { Button } from '@/components/ui/button';
-import { LogOut, Home, FileText, FolderOpen, Tag, MessageSquare, Settings, BarChart } from 'lucide-react';
+import { LogOut, Home, FileText, FolderOpen, Tag, MessageSquare, Settings, BarChart, BookOpen } from 'lucide-react';
 // import { AdminProviders } from './providers'; // Temporariamente comentado
 import { Toaster } from 'sonner';
 import { createSupabaseServerClient } from '@/app/lib/supabase/server';
@@ -72,6 +72,14 @@ export default async function AdminLayout({
             <Tag className="h-5 w-5 text-gray-400" />
             <span>Tags</span>
             <span className="text-xs bg-yellow-600 px-2 py-0.5 rounded">Em breve</span>
+          </Link>
+          
+          <Link 
+            href="/admin/enciclopedia" 
+            className="flex items-center gap-3 px-3 py-2 hover:bg-gray-700 dark:hover:bg-gray-800 rounded-lg transition-colors group"
+          >
+            <BookOpen className="h-5 w-5 text-gray-400 group-hover:text-white" />
+            <span>Enciclopédia</span>
           </Link>
           
           <Link 

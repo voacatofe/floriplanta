@@ -255,7 +255,7 @@ export default async function PostPage({ params }: PageProps) {
               <div className="mt-8 md:mt-12 pt-6 md:pt-8 border-t border-gray-200">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="font-futuru text-brand-purple text-base md:text-lg font-semibold">Tags:</span>
-                  {post.tags.map(tag => (
+                  {post.tags.map((tag: { id: string | number; slug: string; name: string }) => (
                     <Link 
                       key={tag.id} 
                       href={`/blog/tag/${tag.slug}`}
