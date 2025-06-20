@@ -5,7 +5,7 @@ import { inter, futuru, behindTheNineties } from '@/app/styles/fonts'; // Import
 import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
 import ConditionalMenu from '@/components/layout/ConditionalMenu';
-import GTMProvider from '@/components/analytics/GTMProvider';
+import GTMInitializer from '@/components/GTMInitializer';
 // import { Analytics } from '@vercel/analytics/react';
 // import { SpeedInsights } from "@vercel/speed-insights/next"
 
@@ -93,12 +93,11 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className="scroll-smooth">
       <body className={`${inter.variable} ${futuru.variable} ${behindTheNineties.variable} antialiased bg-brand-bege text-brand-text`}>
-        <GTMProvider>
-          {children}
-          <Toaster />
-          {/* Menu condicional - só aparece se não for rota de admin */}
-          <ConditionalMenu />
-        </GTMProvider>
+        <GTMInitializer />
+        {children}
+        <Toaster />
+        {/* Menu condicional - só aparece se não for rota de admin */}
+        <ConditionalMenu />
         {/* <Analytics /> */}
         {/* <SpeedInsights /> */}
       </body>

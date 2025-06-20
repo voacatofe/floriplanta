@@ -10,10 +10,12 @@ import CtaNewsletterSection from '@/components/sections/CtaNewsletterSection';
 import Footer from '@/components/layout/Footer';
 import FeaturedSections from '@/components/sections/FeaturedSections';
 import ValuesSection from '@/components/sections/ValuesSection';
+import PageTracker from '@/components/PageTracker';
 
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#f8f5f0]">
+      <PageTracker pageName="Home" pageCategory="Principal" />
       <HeroSection />
       
       {/* Introdução à Associação */}

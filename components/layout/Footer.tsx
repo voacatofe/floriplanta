@@ -4,11 +4,22 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { MapPin, Mail, Instagram, MessageCircle } from 'lucide-react';
-import useGTM from '@/hooks/useGTM';
+import { useGTM } from '@/hooks/useGTM';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
-  const { trackNewsletterSignup, trackExternalLink } = useGTM();
+  const { trackContactClick, trackNewsletterSubscribe } = useGTM();
+  
+  const handleNewsletterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const email = (form.elements.namedItem('footer-email') as HTMLInputElement)?.value;
+    if (email) {
+      trackNewsletterSubscribe(email, 'footer');
+      // Aqui você adicionaria a lógica real de inscrição
+      form.reset();
+    }
+  };
   
   return (
     <footer className="bg-brand-purple text-white pt-16 pb-8 relative overflow-hidden">
@@ -38,14 +49,8 @@ export default function Footer() {
             </p>
             {/* Ícones sociais com melhor espaçamento e transição */}
             <div className="flex gap-3">
-              <Link 
-                href="https://www.instagram.com/flori.planta/" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                aria-label="Instagram da Floriplanta"
-                onClick={() => trackExternalLink('https://www.instagram.com/flori.planta/', 'Instagram Footer')}
-                className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center text-white hover:bg-white/25 hover:scale-110 transition-all duration-200"
-              >
+              <Link href="https://www.instagram.com/flori.planta/" target="_blank" rel="noopener noreferrer" aria-label="Instagram da Floriplanta"
+                className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center text-white hover:bg-white/25 hover:scale-110 transition-all duration-200">
                 <Instagram size={18} />
               </Link>
             </div>
@@ -89,11 +94,25 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-3">
                 <MessageCircle className="w-5 h-5 text-brand-light-green flex-shrink-0" />
-                <a href="https://wa.me/5548988078312" target="_blank" rel="noopener noreferrer" className="font-inter text-white/90 hover:text-white transition-colors duration-200 text-sm">(48) 98807-8312</a>
+                <a 
+                  href="https://wa.me/5548988078312" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="font-inter text-white/90 hover:text-white transition-colors duration-200 text-sm"
+                  onClick={() => trackContactClick('whatsapp', 'footer')}
+                >
+                  (48) 98807-8312
+                </a>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-brand-light-green flex-shrink-0" />
-                <a href="mailto:contato@floriplanta.com" className="font-inter text-white/90 hover:text-white transition-colors duration-200 text-sm">contato@floriplanta.com</a>
+                <a 
+                  href="mailto:contato@floriplanta.com" 
+                  className="font-inter text-white/90 hover:text-white transition-colors duration-200 text-sm"
+                  onClick={() => trackContactClick('email', 'footer')}
+                >
+                  contato@floriplanta.com
+                </a>
               </div>
             </div>
           </div>
@@ -104,35 +123,23 @@ export default function Footer() {
             <p className="font-inter text-white/90 text-sm mb-4">
               Receba novidades sobre cannabis medicinal e nossos eventos.
             </p>
-                          <form 
-                className="flex flex-col sm:flex-row gap-2"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const formData = new FormData(e.currentTarget);
-                  const email = formData.get('email') as string;
-                  if (email) {
-                    trackNewsletterSignup('footer');
-                    // Aqui você adicionaria a lógica real de inscrição
-                    console.log('Newsletter signup:', email);
-                  }
-                }}
+            <form className="flex flex-col sm:flex-row gap-2" onSubmit={handleNewsletterSubmit}>
+              <label htmlFor="footer-email" className="sr-only">Email</label>
+              <input 
+                id="footer-email"
+                name="footer-email"
+                type="email" 
+                placeholder="Seu melhor email" 
+                required
+                className="px-3 py-2 rounded-lg text-sm bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-brand-light-green focus:border-transparent text-white placeholder-white/60 font-inter flex-grow"
+              />
+              <button 
+                type="submit"
+                className="bg-brand-light-green text-brand-purple px-4 py-2 rounded-lg font-inter font-semibold text-sm hover:bg-[#c0e86e] transition-colors duration-200 transform hover:scale-105 active:scale-95"
               >
-                <label htmlFor="footer-email" className="sr-only">Email</label>
-                <input 
-                  id="footer-email"
-                  name="email"
-                  type="email" 
-                  placeholder="Seu melhor email" 
-                  required
-                  className="px-3 py-2 rounded-lg text-sm bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-brand-light-green focus:border-transparent text-white placeholder-white/60 font-inter flex-grow"
-                />
-                <button 
-                  type="submit"
-                  className="bg-brand-light-green text-brand-purple px-4 py-2 rounded-lg font-inter font-semibold text-sm hover:bg-[#c0e86e] transition-colors duration-200 transform hover:scale-105 active:scale-95"
-                >
-                  Inscrever
-                </button>
-              </form>
+                Inscrever
+              </button>
+            </form>
           </div>
         </div>
         

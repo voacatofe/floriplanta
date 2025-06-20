@@ -1,110 +1,69 @@
+'use client';
+
 import { useCallback } from 'react';
-import TagManager from 'react-gtm-module';
+import { sendGTMEvent, GTMEvents, GTMEvent } from '@/app/lib/gtm';
 
-export interface GTMEvent {
-  event: string;
-  [key: string]: string | number | boolean | undefined;
-}
-
-export interface PageViewEvent {
-  page_title: string;
-  page_location: string;
-  page_path: string;
-  content_group1?: string; // Categoria da página
-  content_group2?: string; // Subcategoria
-}
-
-export interface UserActionEvent {
-  action: string;
-  category: string;
-  label?: string;
-  value?: number;
-}
-
-const useGTM = () => {
-  // Enviar evento personalizado
-  const trackEvent = useCallback((eventData: GTMEvent) => {
-    if (typeof window !== 'undefined') {
-      TagManager.dataLayer({
-        dataLayer: eventData,
-      });
-    }
+export const useGTM = () => {
+  const trackEvent = useCallback((event: GTMEvent) => {
+    sendGTMEvent(event);
   }, []);
 
-  // Rastrear visualização de página
-  const trackPageView = useCallback((pageData: PageViewEvent) => {
-    trackEvent({
-      event: 'page_view',
-      ...pageData,
-    });
+  const trackPageView = useCallback((pageName: string, pageCategory?: string) => {
+    trackEvent(GTMEvents.pageView(pageName, pageCategory));
   }, [trackEvent]);
 
-  // Rastrear ações do usuário (cliques, downloads, etc.)
-  const trackUserAction = useCallback((actionData: UserActionEvent) => {
-    trackEvent({
-      event: 'user_action',
-      action: actionData.action,
-      category: actionData.category,
-      label: actionData.label,
-      value: actionData.value,
-    });
+  const trackButtonClick = useCallback((buttonName: string, location: string) => {
+    trackEvent(GTMEvents.clickButton(buttonName, location));
   }, [trackEvent]);
 
-  // Eventos específicos para Cannabis Medicinal
-  const trackCannabisMedicinalEvent = useCallback((eventType: string, data?: Record<string, string | number | boolean>) => {
-    trackEvent({
-      event: 'cannabis_medicinal_interaction',
-      interaction_type: eventType,
-      ...data,
-    });
+  const trackFormStart = useCallback((formName: string) => {
+    trackEvent(GTMEvents.formStart(formName));
   }, [trackEvent]);
 
-  // Rastrear formulários
-  const trackFormSubmission = useCallback((formName: string, success: boolean, errorMessage?: string) => {
-    trackEvent({
-      event: 'form_submission',
-      form_name: formName,
-      submission_success: success,
-      error_message: errorMessage,
-    });
+  const trackFormSubmit = useCallback((formName: string, formData?: Record<string, string | number | boolean>) => {
+    trackEvent(GTMEvents.formSubmit(formName, formData));
   }, [trackEvent]);
 
-  // Rastrear downloads
-  const trackDownload = useCallback((fileName: string, fileType: string) => {
-    trackEvent({
-      event: 'file_download',
-      file_name: fileName,
-      file_type: fileType,
-    });
+  const trackNewsletterSubscribe = useCallback((email: string, location: string) => {
+    trackEvent(GTMEvents.newsletterSubscribe(email, location));
   }, [trackEvent]);
 
-  // Rastrear newsletter signup
-  const trackNewsletterSignup = useCallback((source: string) => {
-    trackEvent({
-      event: 'newsletter_signup',
-      signup_source: source,
-    });
+  const trackContactClick = useCallback((contactType: 'whatsapp' | 'email' | 'phone', location: string) => {
+    trackEvent(GTMEvents.contactClick(contactType, location));
   }, [trackEvent]);
 
-  // Rastrear navegação externa
-  const trackExternalLink = useCallback((url: string, linkText?: string) => {
-    trackEvent({
-      event: 'external_link_click',
-      external_url: url,
-      link_text: linkText,
-    });
+  const trackBlogPostView = useCallback((postTitle: string, postCategory: string, postAuthor: string) => {
+    trackEvent(GTMEvents.blogPostView(postTitle, postCategory, postAuthor));
+  }, [trackEvent]);
+
+  const trackBlogPostShare = useCallback((postTitle: string, shareMethod: string) => {
+    trackEvent(GTMEvents.blogPostShare(postTitle, shareMethod));
+  }, [trackEvent]);
+
+  const trackAssociationStart = useCallback(() => {
+    trackEvent(GTMEvents.associationStart());
+  }, [trackEvent]);
+
+  const trackAssociationComplete = useCallback((membershipType: string) => {
+    trackEvent(GTMEvents.associationComplete(membershipType));
+  }, [trackEvent]);
+
+  const trackProductView = useCallback((productName: string, productCategory: string) => {
+    trackEvent(GTMEvents.productView(productName, productCategory));
   }, [trackEvent]);
 
   return {
     trackEvent,
     trackPageView,
-    trackUserAction,
-    trackCannabisMedicinalEvent,
-    trackFormSubmission,
-    trackDownload,
-    trackNewsletterSignup,
-    trackExternalLink,
+    trackButtonClick,
+    trackFormStart,
+    trackFormSubmit,
+    trackNewsletterSubscribe,
+    trackContactClick,
+    trackBlogPostView,
+    trackBlogPostShare,
+    trackAssociationStart,
+    trackAssociationComplete,
+    trackProductView,
   };
-};
-
-export default useGTM; 
+}; 
