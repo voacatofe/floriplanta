@@ -13,7 +13,7 @@ export default function Footer() {
   const handleNewsletterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
-    const email = (form.elements.namedItem('footer-email') as HTMLInputElement)?.value;
+    const email = (form.elements.namedItem('email') as HTMLInputElement)?.value;
     if (email) {
       trackNewsletterSubscribe(email, 'footer');
       // Aqui você adicionaria a lógica real de inscrição
@@ -123,11 +123,15 @@ export default function Footer() {
             <p className="font-inter text-white/90 text-sm mb-4">
               Receba novidades sobre cannabis medicinal e nossos eventos.
             </p>
-            <form className="flex flex-col sm:flex-row gap-2" onSubmit={handleNewsletterSubmit}>
+            <form 
+              id="nl-form-footer"
+              className="flex flex-col sm:flex-row gap-2" 
+              onSubmit={handleNewsletterSubmit}
+            >
               <label htmlFor="footer-email" className="sr-only">Email</label>
               <input 
                 id="footer-email"
-                name="footer-email"
+                name="email"
                 type="email" 
                 placeholder="Seu melhor email" 
                 required
@@ -135,6 +139,7 @@ export default function Footer() {
               />
               <button 
                 type="submit"
+                name="submit"
                 className="bg-brand-light-green text-brand-purple px-4 py-2 rounded-lg font-inter font-semibold text-sm hover:bg-[#c0e86e] transition-colors duration-200 transform hover:scale-105 active:scale-95"
               >
                 Inscrever

@@ -6,6 +6,7 @@ import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
 import ConditionalMenu from '@/components/layout/ConditionalMenu';
 import GTMInitializer from '@/components/GTMInitializer';
+import HydrationWarningSupressor from '@/components/HydrationWarningSupressor';
 // import { Analytics } from '@vercel/analytics/react';
 // import { SpeedInsights } from "@vercel/speed-insights/next"
 
@@ -91,8 +92,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className="scroll-smooth">
+    <html lang="pt-BR" className="scroll-smooth" suppressHydrationWarning>
       <body className={`${inter.variable} ${futuru.variable} ${behindTheNineties.variable} antialiased bg-brand-bege text-brand-text`}>
+        <HydrationWarningSupressor />
         <GTMInitializer />
         {children}
         <Toaster />

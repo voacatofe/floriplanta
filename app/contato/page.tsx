@@ -3,10 +3,13 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Footer from "@/components/layout/Footer";
-import { MapPin, Phone, Mail, Clock, Send, Instagram, Facebook, Linkedin, Youtube } from 'lucide-react';
+import { MapPin, Mail, Send, Instagram, MessageCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { useGTM } from '@/hooks/useGTM';
+import PageTracker from '@/components/PageTracker';
 
 export default function ContatoPage() {
+  const { trackFormStart, trackFormSubmit, trackContactClick } = useGTM();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -17,9 +20,16 @@ export default function ContatoPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [hasStartedForm, setHasStartedForm] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
+    
+    // Track form start on first interaction
+    if (!hasStartedForm) {
+      trackFormStart('contact-form-main');
+      setHasStartedForm(true);
+    }
     
     if (type === 'checkbox') {
       const { checked } = e.target as HTMLInputElement;
@@ -37,7 +47,12 @@ export default function ContatoPage() {
     }
     setIsSubmitting(true);
     setSubmitStatus('loading');
-    // console.log('Form Data Submitted:', formData);
+
+    // Track form submission
+    trackFormSubmit('contact-form-main', {
+      subject: formData.subject,
+      has_phone: formData.phone ? 'yes' : 'no'
+    });
 
     try {
       const response = await fetch('/api/contact', {
@@ -50,7 +65,8 @@ export default function ContatoPage() {
 
       if (response.ok) {
         setSubmitStatus('success');
-        setFormData({ name: '', email: '', phone: '', subject: '', message: '', consent: false }); // Reset form
+        setFormData({ name: '', email: '', phone: '', subject: '', message: '', consent: false });
+        setHasStartedForm(false); // Reset form tracking
       } else {
         console.error('Form submission error:', response.statusText);
         setSubmitStatus('error');
@@ -65,6 +81,8 @@ export default function ContatoPage() {
 
   return (
     <main className="bg-[#f8f5f0] overflow-x-hidden">
+      <PageTracker pageName="Contato" pageCategory="Institucional" />
+      
       {/* Page Header */}
       <section className="pt-24 pb-12 lg:pt-32 lg:pb-16 bg-gradient-to-b from-white to-brand-light-green/20">
         <div className="container mx-auto px-4 text-center">
@@ -77,7 +95,7 @@ export default function ContatoPage() {
             Tem dúvidas, sugestões ou precisa de mais informações? A equipe da Floriplanta está à disposição para ajudar. Utilize o formulário abaixo ou escolha um dos nossos outros canais de atendimento.
           </p>
           <p className="font-inter text-sm text-brand-purple/70 mt-4 max-w-3xl mx-auto">
-            Antes de enviar: Verifique nossa seção de <Link href="#faq" className="underline hover:text-brand-hover-purple">Perguntas Frequentes</Link> ou as páginas de <Link href="/associar" className="underline hover:text-brand-hover-purple">Associe-se</Link> e <Link href="/medicos" className="underline hover:text-brand-hover-purple">Para Profissionais</Link>.
+            Antes de enviar: Verifique nossa seção de <Link href="/cannabis/mitos-e-verdades" className="underline hover:text-brand-hover-purple">Perguntas Frequentes</Link> ou as páginas de <Link href="/associar" className="underline hover:text-brand-hover-purple">Associe-se</Link> e <Link href="/medicos" className="underline hover:text-brand-hover-purple">Para Profissionais</Link>.
           </p>
         </div>
       </section>
@@ -90,22 +108,57 @@ export default function ContatoPage() {
             {/* Contact Form */}
             <div className="w-full lg:w-1/2">
               <h2 className="font-futuru font-bold text-brand-purple text-2xl lg:text-3xl mb-6">Envie sua Mensagem</h2>
-              <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 sm:p-8 rounded-xl shadow-md border border-gray-100">
+              <form 
+                id="contact-form-main"
+                onSubmit={handleSubmit} 
+                className="space-y-4 bg-white p-6 sm:p-8 rounded-xl shadow-md border border-gray-100"
+              >
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-brand-purple/90 mb-1">Nome Completo *</label>
-                  <input type="text" name="name" id="name" required value={formData.name} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple text-sm" />
+                  <input 
+                    type="text" 
+                    name="name" 
+                    id="name" 
+                    required 
+                    value={formData.name} 
+                    onChange={handleChange} 
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple text-sm" 
+                  />
                 </div>
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-brand-purple/90 mb-1">E-mail *</label>
-                  <input type="email" name="email" id="email" required value={formData.email} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple text-sm" />
+                  <input 
+                    type="email" 
+                    name="email" 
+                    id="email" 
+                    required 
+                    value={formData.email} 
+                    onChange={handleChange} 
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple text-sm" 
+                  />
                 </div>
                 <div>
                   <label htmlFor="phone" className="block text-sm font-medium text-brand-purple/90 mb-1">Telefone/WhatsApp</label>
-                  <input type="tel" name="phone" id="phone" value={formData.phone} onChange={handleChange} placeholder="(XX) XXXXX-XXXX" className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple text-sm" />
+                  <input 
+                    type="tel" 
+                    name="phone" 
+                    id="phone" 
+                    value={formData.phone} 
+                    onChange={handleChange} 
+                    placeholder="(XX) XXXXX-XXXX" 
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple text-sm" 
+                  />
                 </div>
                 <div>
                   <label htmlFor="subject" className="block text-sm font-medium text-brand-purple/90 mb-1">Assunto *</label>
-                  <select name="subject" id="subject" required value={formData.subject} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple text-sm bg-white">
+                  <select 
+                    name="subject" 
+                    id="subject" 
+                    required 
+                    value={formData.subject} 
+                    onChange={handleChange} 
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple text-sm bg-white"
+                  >
                     <option value="" disabled>Selecione um assunto</option>
                     <option value="Dúvidas Gerais">Dúvidas Gerais</option>
                     <option value="Associação">Associação</option>
@@ -117,17 +170,33 @@ export default function ContatoPage() {
                 </div>
                 <div>
                   <label htmlFor="message" className="block text-sm font-medium text-brand-purple/90 mb-1">Sua Mensagem *</label>
-                  <textarea name="message" id="message" rows={5} required value={formData.message} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple text-sm"></textarea>
+                  <textarea 
+                    name="message" 
+                    id="message" 
+                    rows={5} 
+                    required 
+                    value={formData.message} 
+                    onChange={handleChange} 
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple text-sm"
+                  ></textarea>
                 </div>
                 <div className="flex items-start">
-                  <input type="checkbox" name="consent" id="consent" checked={formData.consent} onChange={handleChange} className="h-4 w-4 text-brand-purple border-gray-300 rounded focus:ring-brand-purple mt-1 mr-2" />
+                  <input 
+                    type="checkbox" 
+                    name="consent" 
+                    id="consent" 
+                    checked={formData.consent} 
+                    onChange={handleChange} 
+                    className="h-4 w-4 text-brand-purple border-gray-300 rounded focus:ring-brand-purple mt-1 mr-2" 
+                  />
                   <label htmlFor="consent" className="text-xs text-brand-purple/80">
-                    Concordo com o uso dos meus dados conforme a <Link href="/politica-privacidade" className="underline hover:text-brand-hover-purple">Política de Privacidade</Link>. *
+                    Concordo com o uso dos meus dados conforme a <Link href="/privacidade" className="underline hover:text-brand-hover-purple">Política de Privacidade</Link>. *
                   </label>
                 </div>
                 <div>
                   <button 
-                    type="submit" 
+                    type="submit"
+                    name="submit" 
                     disabled={isSubmitting || !formData.consent}
                     className={`w-full inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-brand-purple hover:bg-brand-hover-purple focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-purple disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300`}
                   >
@@ -149,43 +218,41 @@ export default function ContatoPage() {
               <h2 className="font-futuru font-bold text-brand-purple text-2xl lg:text-3xl mb-6">Nossos Contatos</h2>
               <div className="space-y-6 font-inter text-brand-purple/90">
                 <div className="flex items-start">
-                  <Phone className="w-5 h-5 mr-3 mt-1 text-brand-purple flex-shrink-0" />
-                  <div>
-                    <h3 className="font-semibold mb-1">Telefone</h3>
-                    <a href="tel:+55XXXXXXXXXX" className="hover:text-brand-hover-purple">[Número de telefone principal]</a>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  {/* Use same icon if WhatsApp is same number, or specific WhatsApp icon */}
-                  <Phone className="w-5 h-5 mr-3 mt-1 text-brand-purple flex-shrink-0" /> 
+                  <MessageCircle className="w-5 h-5 mr-3 mt-1 text-brand-purple flex-shrink-0" />
                   <div>
                     <h3 className="font-semibold mb-1">WhatsApp</h3>
-                    <a href="https://wa.me/55XXXXXXXXXX" target="_blank" rel="noopener noreferrer" className="hover:text-brand-hover-purple">[Número de WhatsApp]</a>
+                    <a 
+                      href="https://wa.me/5548988078312" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="hover:text-brand-hover-purple"
+                      onClick={() => trackContactClick('whatsapp', 'contact-page')}
+                    >
+                      (48) 98807-8312
+                    </a>
                   </div>
                 </div>
                 <div className="flex items-start">
                   <Mail className="w-5 h-5 mr-3 mt-1 text-brand-purple flex-shrink-0" />
                   <div>
-                    <h3 className="font-semibold mb-1">E-mail Geral</h3>
-                    <a href="mailto:contato@floriplanta.org.br" className="hover:text-brand-hover-purple">contato@floriplanta.org.br</a> {/* Example */} 
-                    {/* Add specific emails if needed */}
+                    <h3 className="font-semibold mb-1">E-mail</h3>
+                    <a 
+                      href="mailto:contato@floriplanta.com" 
+                      className="hover:text-brand-hover-purple"
+                      onClick={() => trackContactClick('email', 'contact-page')}
+                    >
+                      contato@floriplanta.com
+                    </a>
                     <p className="text-xs text-brand-purple/70 mt-1">Para assuntos específicos (Associação, Parcerias, Loja), use o seletor de assunto no formulário.</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <Clock className="w-5 h-5 mr-3 mt-1 text-brand-purple flex-shrink-0" />
-                  <div>
-                    <h3 className="font-semibold mb-1">Horário de Atendimento</h3>
-                    <p>Segunda a Sexta, das 9h às 18h</p>
                   </div>
                 </div>
                 <div className="flex items-start">
                   <MapPin className="w-5 h-5 mr-3 mt-1 text-brand-purple flex-shrink-0" />
                   <div>
                     <h3 className="font-semibold mb-1">Nosso Endereço</h3>
-                    <p>[Nome da Rua, Número, Complemento]</p>
-                    <p>[Bairro, Cidade - Estado]</p>
-                    <p>[CEP]</p>
+                    <p>Rua Laurindo Januário da Silveira, 3695</p>
+                    <p>Canto da Lagoa, Florianópolis - SC</p>
+                    <p>88062-201</p>
                     <p className="text-xs text-brand-purple/70 mt-1">*(Atendimento presencial apenas com agendamento prévio)*</p>
                   </div>
                 </div>
@@ -195,10 +262,14 @@ export default function ContatoPage() {
               <div className="mt-10 pt-6 border-t border-gray-200">
                  <h2 className="font-futuru font-bold text-brand-purple text-2xl lg:text-3xl mb-4">Siga-nos</h2>
                  <div className="flex space-x-5">
-                    <a href="#" target="_blank" rel="noopener noreferrer" className="text-brand-purple hover:text-brand-hover-purple transition-colors"><Instagram size={24} /></a>
-                    <a href="#" target="_blank" rel="noopener noreferrer" className="text-brand-purple hover:text-brand-hover-purple transition-colors"><Facebook size={24} /></a>
-                    <a href="#" target="_blank" rel="noopener noreferrer" className="text-brand-purple hover:text-brand-hover-purple transition-colors"><Linkedin size={24} /></a>
-                    <a href="#" target="_blank" rel="noopener noreferrer" className="text-brand-purple hover:text-brand-hover-purple transition-colors"><Youtube size={24} /></a>
+                    <a 
+                      href="https://www.instagram.com/flori.planta/" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-brand-purple hover:text-brand-hover-purple transition-colors"
+                    >
+                      <Instagram size={24} />
+                    </a>
                  </div>
               </div>
 

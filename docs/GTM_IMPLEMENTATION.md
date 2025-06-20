@@ -174,6 +174,13 @@ useEffect(() => {
 4. **Evite PII** (Informações Pessoais Identificáveis) nos eventos
 5. **Teste no Preview Mode** do GTM antes de publicar
 6. **Use dataLayer.push** apenas através das funções fornecidas
+7. **Siga as convenções de formulários** - veja [GTM_FORM_CONVENTIONS.md](./GTM_FORM_CONVENTIONS.md)
+
+### Formulários
+- Sempre adicione `id` único no formato `[tipo]-form-[localização]`
+- Use `name="email"` para campos de email
+- Adicione `name="submit"` nos botões de envio
+- Veja exemplos completos em [GTM_FORM_CONVENTIONS.md](./GTM_FORM_CONVENTIONS.md)
 
 ## Debugging
 
