@@ -31,6 +31,17 @@ export interface EncyclopediaSearchResult {
   categories: { category: EncyclopediaCategory; count: number }[];
 }
 
+// Função para normalizar slugs (remover acentos e formatação)
+export function normalizeSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+    .replace(/[^a-z0-9]+/g, '-')     // Substitui caracteres especiais por hífen
+    .replace(/^-+|-+$/g, '')         // Remove hífens do início e fim
+    .replace(/-+/g, '-');            // Substitui múltiplos hífens por um só
+}
+
 // Função para buscar todos os termos
 export async function getAllTerms(
   page = 1,
@@ -92,10 +103,13 @@ export async function getAllTerms(
 export async function getTermBySlug(slug: string): Promise<EncyclopediaTerm | null> {
   const supabase = await createSupabaseServerClient();
   
+  // Normalizar o slug para busca consistente
+  const normalizedSlug = normalizeSlug(slug);
+  
   const { data, error } = await (supabase as any)
     .from('encyclopedia_terms')
     .select('*')
-    .eq('slug', slug)
+    .eq('slug', normalizedSlug)
     .eq('is_active', true)
     .single();
 

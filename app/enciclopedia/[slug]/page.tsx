@@ -34,7 +34,9 @@ const categoryIcons = {
 // Gerar metadata dinâmica para SEO
 export async function generateMetadata({ params }: TermPageProps): Promise<Metadata> {
   const resolvedParams = await params;
-  const term = await getTermBySlug(resolvedParams.slug);
+  // Decodificar URL para tratar acentos corretamente
+  const decodedSlug = decodeURIComponent(resolvedParams.slug);
+  const term = await getTermBySlug(decodedSlug);
   
   if (!term) {
     return {
@@ -238,7 +240,9 @@ function Breadcrumbs({ term }: { term: EncyclopediaTerm }) {
 
 export default async function TermPage({ params }: TermPageProps) {
   const resolvedParams = await params;
-  const term = await getTermBySlug(resolvedParams.slug);
+  // Decodificar URL para tratar acentos corretamente
+  const decodedSlug = decodeURIComponent(resolvedParams.slug);
+  const term = await getTermBySlug(decodedSlug);
   
   if (!term) {
     notFound();
