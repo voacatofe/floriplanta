@@ -4,55 +4,63 @@ import Link from 'next/link';
 import Footer from "@/components/layout/Footer";
 import { Users, Heart, BookOpen, Scale, Handshake, Target, Eye, FileText } from 'lucide-react';
 
-// Placeholder data for team and partners - replace with real data
-const teamMembers = [
+// Dados reais da diretoria da Floriplanta
+const diretores = [
   { 
-    name: "Lindsay Walton", 
-    role: "Desenvolvedora Front-end", 
-    image: "/placeholder-team-1.jpg",
-    gradientFrom: "from-teal-400",
-    gradientTo: "to-teal-600",
-    social: { twitter: "#", linkedin: "#" }
+    name: "Isadora Malohlava", 
+    role: "Presidente", 
+    image: "/Diretores/Isadora Malohlava - Presidente.jpg",
+    gradientFrom: "from-brand-purple/20",
+    gradientTo: "to-brand-hover-purple/30",
   },
   { 
-    name: "Courtney Henry", 
-    role: "Designer", 
-    image: "/placeholder-team-2.jpg",
-    gradientFrom: "from-slate-400",
-    gradientTo: "to-slate-600",
-    social: { twitter: "#", linkedin: "#" }
+    name: "Leonardo Penna", 
+    role: "Vice-Presidente", 
+    image: "/Diretores/Leonardo Penna - Vice presidente.jpg",
+    gradientFrom: "from-brand-light-green/40",
+    gradientTo: "to-brand-purple/20",
   },
   { 
-    name: "Tom Cook", 
-    role: "Diretor de Produto", 
-    image: "/placeholder-team-3.jpg",
-    gradientFrom: "from-gray-400",
-    gradientTo: "to-gray-600",
-    social: { twitter: "#", linkedin: "#" }
+    name: "Rodrigo Amorim", 
+    role: "Tesoureiro e Arquiteto", 
+    image: "/Diretores/Rodrigo Amorim - Tesoureiro e Arquiteto.jpg",
+    gradientFrom: "from-brand-hover-purple/20",
+    gradientTo: "to-brand-light-green/40",
   },
   { 
-    name: "Whitney Francis", 
-    role: "Copywriter", 
-    image: "/placeholder-team-1.jpg",
-    gradientFrom: "from-blue-400",
-    gradientTo: "to-blue-600",
-    social: { twitter: "#", linkedin: "#" }
+    name: "Dr. Rodolfo Hellmann", 
+    role: "Diretor Médico e Psiquiatra", 
+    image: "/Diretores/Rodolfo Hellmann - Diretor médico e médico psiquiatra.jpg",
+    gradientFrom: "from-brand-purple/30",
+    gradientTo: "to-brand-hover-purple/20",
   },
   { 
-    name: "Leonard Krasner", 
-    role: "Designer Sênior", 
-    image: "/placeholder-team-2.jpg",
-    gradientFrom: "from-purple-400",
-    gradientTo: "to-purple-600",
-    social: { twitter: "#", linkedin: "#" }
+    name: "Paula Machinski", 
+    role: "Farmacêutica", 
+    image: "/Diretores/Paula Machinski - Farmaceutica.jpg",
+    gradientFrom: "from-brand-light-green/50",
+    gradientTo: "to-brand-purple/30",
   },
   { 
-    name: "Floyd Miles", 
-    role: "Designer Principal", 
-    image: "/placeholder-team-3.jpg",
-    gradientFrom: "from-emerald-400",
-    gradientTo: "to-emerald-600",
-    social: { twitter: "#", linkedin: "#" }
+    name: "Vinícius Gomes", 
+    role: "Engenheiro Químico", 
+    image: "/Diretores/Vinicius Gomes - Engenheiro quimico.jpg",
+    gradientFrom: "from-brand-hover-purple/30",
+    gradientTo: "to-brand-light-green/30",
+  },
+  { 
+    name: "Jade Macedo", 
+    role: "Gestora de Projetos", 
+    image: "/Diretores/Jade Macedo - Gestora de projeots.jpg",
+    gradientFrom: "from-brand-purple/20",
+    gradientTo: "to-brand-hover-purple/40",
+  },
+  { 
+    name: "Bruna Pfiffer", 
+    role: "Diretora Jurídica", 
+    image: "/Diretores/Bruna pfiffer - Diretora Juridica Floriplanta.jpg",
+    gradientFrom: "from-brand-light-green/30",
+    gradientTo: "to-brand-purple/40",
   }
 ];
 
@@ -161,41 +169,29 @@ export default function SobreNosPage() {
         </div>
       </section>
 
-      {/* Nossa Equipe */}
+      {/* Nossa Diretoria */}
       <section className="py-16 lg:py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <h2 className="font-futuru font-bold text-brand-purple text-3xl lg:text-4xl mb-4 text-center">Nossa Equipe</h2>
-            <p className="font-inter text-brand-purple/70 text-base lg:text-lg text-center max-w-2xl mx-auto mb-16">
-              Somos um grupo dinâmico de indivíduos apaixonados pelo que fazemos e dedicados a entregar os melhores resultados para nossos associados.
+            <h2 className="font-futuru font-bold text-brand-purple text-3xl lg:text-4xl mb-4 text-center">Nossa Diretoria</h2>
+            <p className="font-inter text-brand-purple/70 text-base lg:text-lg text-center max-w-3xl mx-auto mb-16">
+              Conheça os profissionais dedicados que lideram a Floriplanta, cada um trazendo sua expertise única para fortalecer nossa missão de democratizar o acesso à cannabis medicinal em Santa Catarina.
             </p>
             
-            {/* Grid de Membros */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {teamMembers.map((member, index) => (
+            {/* Grid de Diretores */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {diretores.map((diretor, index) => (
                 <div key={index} className="group">
-                  <div className={`relative overflow-hidden rounded-2xl mb-6 bg-gradient-to-br ${member.gradientFrom} ${member.gradientTo} aspect-[4/3]`}>
+                  <div className={`relative overflow-hidden rounded-2xl mb-6 bg-gradient-to-br ${diretor.gradientFrom} ${diretor.gradientTo} aspect-[4/5]`}>
                     <Image 
-                      src={member.image} 
-                      alt={member.name} 
+                      src={diretor.image} 
+                      alt={diretor.name} 
                       fill
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   </div>
-                  <h3 className="font-futuru font-bold text-brand-purple text-xl mb-2">{member.name}</h3>
-                  <p className="font-inter text-brand-purple/70 text-sm mb-4">{member.role}</p>
-                  <div className="flex gap-3">
-                    {Object.entries(member.social).map(([platform, link]) => (
-                      <a key={platform} href={link} target="_blank" rel="noopener noreferrer" className="text-brand-purple/50 hover:text-brand-purple transition-colors duration-200">
-                        {platform === 'twitter' && (
-                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                        )}
-                        {platform === 'linkedin' && (
-                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-                        )}
-                      </a>
-                    ))}
-                  </div>
+                  <h3 className="font-futuru font-bold text-brand-purple text-lg mb-2 text-center">{diretor.name}</h3>
+                  <p className="font-inter text-brand-purple/70 text-sm text-center font-medium">{diretor.role}</p>
                 </div>
               ))}
             </div>
