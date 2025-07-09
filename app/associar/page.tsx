@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Footer from "@/components/layout/Footer";
-import { Users, HeartHandshake, BookOpen, Scale, CalendarDays, Handshake, FileText, Mail, Phone, HelpCircle, CheckCircle, Upload, Clock, Send } from 'lucide-react'; // Icons
+import { Users, HeartHandshake, BookOpen, Scale, CalendarDays, Handshake, FileText, HelpCircle, CheckCircle, Upload, Clock, Send } from 'lucide-react'; // Icons
 
 const benefits = [
   {
@@ -223,27 +223,6 @@ export default function AssociarPage() {
                 </details>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section className="py-16 lg:py-20 bg-brand-purple text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="font-futuru font-bold text-3xl lg:text-4xl mb-4">Ainda tem Dúvidas?</h2>
-          <p className="font-inter text-brand-light-green text-lg mb-8">
-            Se você tiver qualquer outra pergunta sobre o processo de associação, entre em contato conosco.
-          </p>
-          <div className="flex flex-col md:flex-row justify-center items-center gap-6 md:gap-10">
-            <a href="tel:+55XXXXXXXXXX" className="inline-flex items-center text-white hover:text-brand-light-green transition-colors">
-              <Phone className="w-5 h-5 mr-2" /> [Número de Telefone/WhatsApp]
-            </a>
-            <a href="mailto:associacao@floriplanta.org.br" className="inline-flex items-center text-white hover:text-brand-light-green transition-colors">
-              <Mail className="w-5 h-5 mr-2" /> associacao@floriplanta.org.br {/* Example Email */}
-            </a>
-            <Link href="/contato" className="inline-flex items-center text-white hover:text-brand-light-green transition-colors">
-              <Send className="w-5 h-5 mr-2" /> Página de Contato Geral
-            </Link>
           </div>
         </div>
       </section>
