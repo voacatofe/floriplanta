@@ -5,7 +5,7 @@ import HeroSection from '@/components/sections/HeroSection';
 import BenefitsSection from '@/components/sections/BenefitsSection';
 import MissionSection from '@/components/sections/MissionSection';
 //import TestimonialsSection from '@/components/sections/TestimonialsSection';
-import BlogHighlightSection from '@/components/sections/BlogHighlightSection';
+// import BlogHighlightSection from '@/components/sections/BlogHighlightSection';
 import CtaNewsletterSection from '@/components/sections/CtaNewsletterSection';
 import Footer from '@/components/layout/Footer';
 import FeaturedSections from '@/components/sections/FeaturedSections';
@@ -52,8 +52,8 @@ export default function HomePage() {
       {/* Depoimentos 
       <TestimonialsSection />*/}
 
-      {/* Últimas Notícias do Blog */}
-      <BlogHighlightSection />
+      {/* Últimas Notícias do Blog 
+      <BlogHighlightSection />*/}
 
       {/* Chamada para Ação e Newsletter */}
       <CtaNewsletterSection />

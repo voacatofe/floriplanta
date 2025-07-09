@@ -31,7 +31,6 @@ export default function FloatingPillMenu() {
   const menuItems = [
     { label: "Sobre Nós", href: "/sobre" },
     { label: "Cannabis Medicinal", href: "/cannabis" },
-    { label: "Blog", href: "/blog" },
     { label: "Contato", href: "/contato" },
   ]
 
