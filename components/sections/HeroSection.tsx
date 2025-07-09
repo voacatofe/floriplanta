@@ -3,8 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowRight, Leaf } from 'lucide-react';
-import dynamic from 'next/dynamic';
-const OrganicFloatingElements = dynamic(() => import('../ui/OrganicFloatingElements'), { ssr: false });
 
 // Consider adding a library like 'react-intersection-observer' or 'framer-motion' 
 // for more sophisticated scroll animations if needed, but for now, 
@@ -26,9 +24,6 @@ export default function HeroSection() {
         {/* Overlay gradient para desktop */}
         <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/10 to-transparent"></div>
       </div>
-      
-      {/* Elementos flutuantes orgânicos */}
-      <OrganicFloatingElements />
       
       {/* Formas decorativas orgânicas - mais visíveis no mobile */}
       <div className="absolute -top-20 -left-20 w-32 h-32 bg-brand-light-green rounded-full opacity-60 lg:opacity-60 pointer-events-none"></div>
