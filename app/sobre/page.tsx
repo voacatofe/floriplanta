@@ -216,7 +216,7 @@ export default function SobreNosPage() {
               Acreditamos que a transparência é fundamental para construir e manter a confiança da nossa comunidade. Disponibilizamos aqui documentos importantes sobre nossa atuação e governança.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Link href="/estatuto_social_de_associacao_Floriplanta.docx_%282%29_assinado.pdf" className="font-inter text-brand-purple underline hover:text-brand-hover-purple transition-colors duration-300 text-sm" target="_blank" rel="noopener noreferrer">Estatuto Social</Link>
+              <Link href="/estatuto_social.pdf" className="font-inter text-brand-purple underline hover:text-brand-hover-purple transition-colors duration-300 text-sm" target="_blank" rel="noopener noreferrer">Estatuto Social</Link>
             </div>
           </div>
         </div>
