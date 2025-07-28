@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getPosts, type Post } from '@/app/lib/blog-data'; // Atualizado para getPosts
+import { getPosts, type PostWithRelations } from '@/app/lib/blog-data'; // Atualizado para getPosts
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -73,10 +73,10 @@ export default async function AdminPostsPage({ searchParams }: AdminPostsPagePro
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {posts.map((post: Post) => (
+                {posts.map((post: PostWithRelations) => (
                   <TableRow key={post.id}>
                     <TableCell className="font-medium">{post.title}</TableCell>
-                    <TableCell>{post.profiles?.display_name || 'N/A'}</TableCell>
+                    <TableCell>{post.author?.name || 'N/A'}</TableCell>
                     <TableCell>{post.categories?.[0]?.name || 'N/A'}</TableCell>
                     <TableCell>
                       <Badge 
@@ -92,8 +92,8 @@ export default async function AdminPostsPage({ searchParams }: AdminPostsPagePro
                          post.status}
                       </Badge>
                     </TableCell>
-                    {/* Usar updated_at ou created_at para rascunhos e published_at para publicados */}
-                    <TableCell>{formatDate(post.status === 'published' ? post.published_at : post.updated_at || post.created_at)}</TableCell>
+                    {/* Usar updatedAt ou createdAt para rascunhos e createdAt para publicados */}
+                    <TableCell>{formatDate(post.status === 'published' ? post.createdAt.toISOString() : post.updatedAt.toISOString() || post.createdAt.toISOString())}</TableCell>
                     <TableCell className="text-right space-x-1">
                       <Button variant="ghost" size="sm" asChild title="Ver Post">
                         <Link href={`/blog/${post.slug}`} target="_blank"><Eye className="h-4 w-4" /></Link>
@@ -137,4 +137,4 @@ export default async function AdminPostsPage({ searchParams }: AdminPostsPagePro
       </div>
     </div>
   );
-} 
+}

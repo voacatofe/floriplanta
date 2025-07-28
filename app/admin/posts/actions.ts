@@ -134,9 +134,9 @@ export async function getTagsForAdmin(): Promise<Tag[]> {
   }
 }
 
-export async function deletePostAction(postId: number) {
+export async function deletePostAction(postId: string) {
   // Validações de entrada
-  if (!postId || !Number.isInteger(postId) || postId <= 0) {
+  if (!postId || typeof postId !== 'string' || postId.trim() === '') {
     return { error: "ID do post inválido." };
   }
 
@@ -148,7 +148,7 @@ export async function deletePostAction(postId: number) {
   try {
     // Primeiro, buscar o post para verificar se existe e obter o slug
     const postData = await prisma.post.findUnique({
-      where: { id: postId.toString() },
+      where: { id: postId },
       select: { id: true, slug: true, title: true }
     });
 
@@ -158,7 +158,7 @@ export async function deletePostAction(postId: number) {
 
     // Remover o post (Prisma irá lidar com as relações automaticamente devido ao cascade)
     await prisma.post.delete({
-      where: { id: postId.toString() }
+      where: { id: postId }
     });
 
     // Revalidar as páginas relevantes

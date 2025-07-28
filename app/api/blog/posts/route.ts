@@ -7,11 +7,13 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const page = parseInt(searchParams.get('page') || '1');
     const categorySlug = searchParams.get('categoria') || undefined;
+    const searchQuery = searchParams.get('busca') || undefined;
     
     const { posts, totalCount } = await getPosts({
       page,
       status: 'published',
-      categorySlug // Agora habilitado para filtrar por categoria
+      categorySlug, // Filtrar por categoria
+      searchQuery // Filtrar por busca
     });
     
     return NextResponse.json({
@@ -27,4 +29,4 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
-} 
+}

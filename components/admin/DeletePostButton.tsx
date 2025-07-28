@@ -18,7 +18,7 @@ import { deletePostAction } from "@/app/admin/posts/actions";
 import { toast } from "sonner";
 
 interface DeletePostButtonProps {
-  postId: number;
+  postId: string;
   postTitle: string;
 }
 
@@ -99,4 +99,4 @@ export default function DeletePostButton({ postId, postTitle }: DeletePostButton
       </AlertDialogContent>
     </AlertDialog>
   );
-} 
+}

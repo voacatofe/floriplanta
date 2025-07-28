@@ -3,7 +3,7 @@ import { type AnonymousComment } from './blog-comments'; // Importar o tipo
 
 // Função para criar comentário (client-side)
 export async function createComment(
-  postId: number,
+  postId: string,
   authorName: string,
   body: string,
   authorEmail?: string,

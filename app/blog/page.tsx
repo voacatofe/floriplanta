@@ -2,17 +2,18 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Footer from '@/components/layout/Footer';
-import { Rss, Search, Tag } from 'lucide-react'; // Removido Mail daqui, pois o novo componente o usa
+import { Rss, Tag } from 'lucide-react';
 import { getPosts, getAllCategories } from '@/app/lib/blog-data';
 import InfiniteScrollPosts from '@/components/blog/InfiniteScrollPosts';
-import BlogSidebarNewsletterForm from '@/components/blog/BlogSidebarNewsletterForm'; // ADICIONADO
+import BlogSidebarNewsletterForm from '@/components/blog/BlogSidebarNewsletterForm';
+import BlogSearch from '@/components/blog/BlogSearch';
 
 // Placeholder data for blog posts - Replace with actual data fetching later
 const featuredPosts = [
   {
     slug: "bem-vindos-ao-blog",
     title: "Bem-vindos ao Blog da Floriplanta!",
-    image: "/images/placeholder-blog-1.jpg", // Replace with actual image path
+    image: "/images/blog/bem-vindos-blog.svg",
     excerpt: "Nosso novo espaço de conhecimento e troca. Aqui você encontra artigos, notícias, pesquisas e histórias sobre o universo da cannabis medicinal...",
     category: "Notícias da Floriplanta",
     date: "05 de Maio, 2025"
@@ -28,6 +29,7 @@ interface BlogPageProps {
   searchParams: Promise<{
     page?: string;
     categoria?: string;
+    busca?: string;
   }>;
 }
 
@@ -35,10 +37,12 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const resolvedSearchParams = await searchParams;
   const currentPage = Number(resolvedSearchParams.page) || 1;
   const categorySlug = resolvedSearchParams.categoria;
+  const searchQuery = resolvedSearchParams.busca;
 
   const { posts, totalCount } = await getPosts({
     page: currentPage,
     categorySlug: categorySlug,
+    searchQuery: searchQuery,
     status: 'published'
   });
   
@@ -108,6 +112,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                 initialPosts={posts} 
                 totalCount={totalCount}
                 categorySlug={categorySlug}
+                searchQuery={searchQuery}
               />
             </div>
           </div>
@@ -116,17 +121,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           <aside className="w-full lg:w-1/3 lg:pl-8">
             <div className="sticky top-24 space-y-8">
               {/* Search */}
-              <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-100">
-                <h3 className="font-futuru font-bold text-brand-purple mb-3 text-lg flex items-center"><Search className="w-5 h-5 mr-2"/>Buscar no Blog</h3>
-                <div className="relative">
-                  <input 
-                    type="text" 
-                    placeholder="Digite sua busca..." 
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple text-sm"
-                  />
-                  {/* Add search button or logic */}
-                </div>
-              </div>
+              <BlogSearch />
 
               {/* Categories */}
               <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-100">

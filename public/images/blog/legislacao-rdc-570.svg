@@ -1,0 +1,85 @@
+<svg width="800" height="400" viewBox="0 0 800 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="law-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e40af;stop-opacity:0.1" />
+      <stop offset="100%" style="stop-color:#1e3a8a;stop-opacity:0.2" />
+    </linearGradient>
+    <linearGradient id="scale-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e40af" />
+      <stop offset="100%" style="stop-color:#1e3a8a" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="400" fill="url(#law-bg)"/>
+  
+  <!-- Legal symbols background -->
+  <g opacity="0.2">
+    <!-- Scales of justice -->
+    <g transform="translate(150, 100)">
+      <!-- Base -->
+      <rect x="-2" y="40" width="4" height="30" fill="#1e40af"/>
+      <rect x="-15" y="70" width="30" height="4" fill="#1e40af"/>
+      
+      <!-- Balance beam -->
+      <line x1="-25" y1="20" x2="25" y2="20" stroke="#1e40af" stroke-width="3"/>
+      
+      <!-- Left scale -->
+      <line x1="-20" y1="20" x2="-20" y2="30" stroke="#1e40af" stroke-width="2"/>
+      <ellipse cx="-20" cy="35" rx="8" ry="3" fill="none" stroke="#1e40af" stroke-width="2"/>
+      
+      <!-- Right scale -->
+      <line x1="20" y1="20" x2="20" y2="30" stroke="#1e40af" stroke-width="2"/>
+      <ellipse cx="20" cy="35" rx="8" ry="3" fill="none" stroke="#1e40af" stroke-width="2"/>
+      
+      <!-- Center pivot -->
+      <circle cx="0" cy="20" r="3" fill="#1e40af"/>
+    </g>
+    
+    <!-- Gavel -->
+    <g transform="translate(650, 300)">
+      <rect x="-15" y="-3" width="30" height="6" rx="3" fill="#8b5cf6"/>
+      <rect x="-2" y="3" width="4" height="20" fill="#92400e"/>
+      <circle cx="0" cy="0" r="4" fill="#8b5cf6"/>
+    </g>
+    
+    <!-- Legal document -->
+    <g transform="translate(100, 300)">
+      <rect x="0" y="0" width="20" height="30" rx="2" fill="none" stroke="#1e40af" stroke-width="2"/>
+      <line x1="3" y1="5" x2="17" y2="5" stroke="#1e40af" stroke-width="1"/>
+      <line x1="3" y1="10" x2="17" y2="10" stroke="#1e40af" stroke-width="1"/>
+      <line x1="3" y1="15" x2="12" y2="15" stroke="#1e40af" stroke-width="1"/>
+    </g>
+  </g>
+  
+  <!-- Main content area -->
+  <rect x="150" y="120" width="500" height="160" rx="20" fill="white" fill-opacity="0.95"/>
+  
+  <!-- Law icon -->
+  <circle cx="400" cy="170" r="25" fill="#1e40af" fill-opacity="0.1"/>
+  <!-- Paragraph symbol -->
+  <text x="400" y="180" text-anchor="middle" font-family="serif" font-size="24" font-weight="bold" fill="#1e40af">§</text>
+  
+  <!-- Title text -->
+  <text x="400" y="210" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1e40af">RDC 570/2023</text>
+  <text x="400" y="235" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#1e3a8a">Novidades na Legislação</text>
+  
+  <!-- ANVISA badge -->
+  <g transform="translate(320, 320)">
+    <rect x="0" y="0" width="80" height="25" rx="12" fill="#1e40af" fill-opacity="0.1" stroke="#1e40af" stroke-width="1"/>
+    <text x="40" y="16" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#1e40af">ANVISA</text>
+  </g>
+  
+  <!-- Progress arrows -->
+  <g transform="translate(450, 330)" opacity="0.6">
+    <path d="M0 0 L10 5 L0 10 Z" fill="#22c55e"/>
+    <path d="M15 0 L25 5 L15 10 Z" fill="#22c55e"/>
+    <path d="M30 0 L40 5 L30 10 Z" fill="#22c55e"/>
+  </g>
+  
+  <!-- Checkmark for approval -->
+  <g transform="translate(500, 320)">
+    <circle cx="0" cy="0" r="12" fill="#22c55e" fill-opacity="0.1" stroke="#22c55e" stroke-width="2"/>
+    <path d="M-5 0 L-2 3 L5 -4" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+</svg>

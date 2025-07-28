@@ -1,6 +1,7 @@
 import React from 'react';
 import { getPostBySlug, getRelatedPosts } from '@/app/lib/blog-data';
-import { getPostComments } from '@/app/lib/blog-comments.server';
+// import { getPostComments } from '@/app/lib/blog-comments.server';
+import { type AnonymousComment } from '@/app/lib/blog-comments';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -27,20 +28,20 @@ export async function generateMetadata({ params }: PageProps) {
   }
   return {
     title: `${post.title} | Blog Floriplanta`,
-    description: post.excerpt || `Leia o post ${post.title} no blog da Floriplanta.`,
+    description: post.content ? post.content.substring(0, 160) + '...' : `Leia o post ${post.title} no blog da Floriplanta.`,
     openGraph: {
       title: post.title,
-      description: post.excerpt || '',
-      images: post.cover_image_url ? [{ url: post.cover_image_url }] : [],
+      description: post.content ? post.content.substring(0, 160) + '...' : '',
+      images: post.imageUrl ? [{ url: post.imageUrl }] : [],
       type: 'article',
-      publishedTime: post.published_at || undefined,
-      authors: post.profiles?.display_name ? [post.profiles.display_name] : undefined,
+      publishedTime: post.createdAt || undefined,
+      authors: post.author?.name ? [post.author.name] : undefined,
     },
     twitter: {
       card: 'summary_large_image',
       title: post.title,
-      description: post.excerpt || '',
-      images: post.cover_image_url ? [post.cover_image_url] : [],
+      description: post.content ? post.content.substring(0, 160) + '...' : '',
+      images: post.imageUrl ? [post.imageUrl] : [],
     },
   };
 }
@@ -54,13 +55,15 @@ export default async function PostPage({ params }: PageProps) {
   }
 
   // Buscar posts relacionados
-  const relatedPosts = await getRelatedPosts(post.id, post.categories?.[0]?.id);
+  const categoryIds = post.categories?.map((cat: { id: string }) => cat.id) || [];
+  const relatedPosts = await getRelatedPosts(post.id, categoryIds);
   
   // Buscar comentários do post
-  const comments = await getPostComments(post.id);
+  // const comments = await getPostComments(post.id);
+  const comments: AnonymousComment[] = [];
 
-  const formattedDate = post.published_at
-    ? new Date(post.published_at).toLocaleDateString('pt-BR', {
+  const formattedDate = post.createdAt
+    ? new Date(post.createdAt).toLocaleDateString('pt-BR', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
@@ -71,17 +74,17 @@ export default async function PostPage({ params }: PageProps) {
 
   // Calcular tempo de leitura
   const wordsPerMinute = 200;
-  const wordCount = post.body ? post.body.split(/\s+/).length : 0;
+  const wordCount = post.content ? post.content.split(/\s+/).length : 0;
   const readingTime = Math.ceil(wordCount / wordsPerMinute);
 
   return (
     <main className="bg-[#f8f5f0] text-gray-800 min-h-screen flex flex-col">
       {/* Hero Section com imagem grande */}
       <div className="relative h-[50vh] md:h-[60vh] lg:h-[70vh] bg-gray-900">
-        {post.cover_image_url ? (
+        {post.imageUrl ? (
           <>
             <Image
-              src={post.cover_image_url}
+              src={post.imageUrl}
               alt={`Imagem de capa para ${post.title}`}
               fill
               className="object-cover"
@@ -145,30 +148,23 @@ export default async function PostPage({ params }: PageProps) {
       </div>
 
       {/* Author Card Flutuante com Glassmorphism */}
-      {post.profiles && (
+      {post.author && (
         <div className="container mx-auto px-4 -mt-10 md:-mt-12 lg:-mt-14 relative z-10 mb-6 md:mb-10 lg:mb-12">
           <div className="max-w-4xl mx-auto flex justify-center">
             <div className="bg-white/85 backdrop-blur-md border border-white/30 rounded-xl p-4 md:p-5 shadow-xl max-w-lg w-full">
               <div className="flex items-center gap-3 md:gap-4">
-                {post.profiles.avatar_url && (
-                  <Image
-                    src={post.profiles.avatar_url}
-                    alt={post.profiles.display_name || post.profiles.username || 'Avatar'}
-                    width={52}
-                    height={52}
-                    className="rounded-full border-2 md:border-3 border-white shadow-lg w-[52px] h-[52px] md:w-[68px] md:h-[68px]"
-                    unoptimized={true}
-                  />
-                )}
+                <div className="w-[52px] h-[52px] md:w-[68px] md:h-[68px] rounded-full bg-brand-purple/20 flex items-center justify-center border-2 md:border-3 border-white shadow-lg">
+                  <span className="text-brand-purple font-futuru font-bold text-lg md:text-xl">
+                    {post.author.name ? post.author.name.charAt(0).toUpperCase() : 'A'}
+                  </span>
+                </div>
                 <div className="flex-1">
                   <h3 className="text-base md:text-lg font-futuru font-semibold text-brand-purple">
-                    {post.profiles.display_name || post.profiles.username}
+                    {post.author.name || 'Autor'}
                   </h3>
-                  {post.profiles.bio && (
-                    <p className="text-gray-600 text-xs md:text-sm mt-0.5 line-clamp-1 md:line-clamp-2">{post.profiles.bio}</p>
-                  )}
+                  <p className="text-gray-600 text-xs md:text-sm mt-0.5">Autor do Floriplanta</p>
                   <Link 
-                    href={`/autores/${post.profiles.username || post.profiles.id}`}
+                    href={`/autores/${post.author.id}`}
                     className="inline-flex items-center gap-1 text-brand-green hover:text-brand-hover-green text-xs font-medium mt-1 md:mt-1.5 transition-colors"
                   >
                     Ver perfil completo
@@ -191,7 +187,7 @@ export default async function PostPage({ params }: PageProps) {
               <ShareButtons title={post.title} />
               
               {/* Índice do Artigo */}
-              {post.body && (
+              {post.content && (
                 <TableOfContents />
               )}
             </div>
@@ -199,15 +195,10 @@ export default async function PostPage({ params }: PageProps) {
 
           {/* Conteúdo Principal */}
           <article className="lg:col-span-7">
-            {/* Excerpt em destaque */}
-            {post.excerpt && (
-              <p className="text-lg md:text-xl lg:text-2xl text-gray-600 font-inter leading-relaxed mb-6 md:mb-10 lg:mb-12">
-                {post.excerpt}
-              </p>
-            )}
+
 
             {/* Corpo do artigo */}
-            {post.body ? (
+            {post.content ? (
               <div className="prose prose-base md:prose-lg lg:prose-xl max-w-none
                            prose-headings:font-futuru 
                            prose-headings:text-brand-purple
@@ -243,7 +234,7 @@ export default async function PostPage({ params }: PageProps) {
                     }
                   }}
                 >
-                  {post.body}
+                  {post.content}
                 </ReactMarkdown>
               </div>
             ) : (
@@ -325,7 +316,15 @@ export default async function PostPage({ params }: PageProps) {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-7xl mx-auto">
-              {relatedPosts.map((relatedPost) => (
+              {relatedPosts.map((relatedPost: {
+                id: string;
+                title: string;
+                content: string;
+                slug: string;
+                imageUrl: string | null;
+                createdAt: Date;
+                categories?: Array<{ name: string }>;
+              }) => (
                 <Link
                   key={relatedPost.id}
                   href={`/blog/${relatedPost.slug}`}

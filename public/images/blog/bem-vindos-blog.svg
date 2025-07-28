@@ -1,0 +1,44 @@
+<svg width="800" height="400" viewBox="0 0 800 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4ade80;stop-opacity:0.1" />
+      <stop offset="100%" style="stop-color:#22c55e;stop-opacity:0.2" />
+    </linearGradient>
+    <linearGradient id="leaf-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#22c55e" />
+      <stop offset="100%" style="stop-color:#16a34a" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="400" fill="url(#bg-gradient)"/>
+  
+  <!-- Cannabis leaves decoration -->
+  <g opacity="0.3">
+    <!-- Left leaf -->
+    <path d="M100 200 C80 180, 60 160, 80 140 C100 120, 120 140, 140 160 C160 180, 140 200, 120 220 C100 240, 80 220, 100 200 Z" fill="url(#leaf-gradient)"/>
+    <path d="M90 190 C70 170, 50 150, 70 130 C90 110, 110 130, 130 150 C150 170, 130 190, 110 210 C90 230, 70 210, 90 190 Z" fill="url(#leaf-gradient)"/>
+    
+    <!-- Right leaf -->
+    <path d="M700 150 C720 130, 740 110, 720 90 C700 70, 680 90, 660 110 C640 130, 660 150, 680 170 C700 190, 720 170, 700 150 Z" fill="url(#leaf-gradient)"/>
+    <path d="M710 160 C730 140, 750 120, 730 100 C710 80, 690 100, 670 120 C650 140, 670 160, 690 180 C710 200, 730 180, 710 160 Z" fill="url(#leaf-gradient)"/>
+  </g>
+  
+  <!-- Main content area -->
+  <rect x="150" y="100" width="500" height="200" rx="20" fill="white" fill-opacity="0.9"/>
+  
+  <!-- Welcome icon -->
+  <circle cx="400" cy="150" r="30" fill="#7c3aed" fill-opacity="0.1"/>
+  <path d="M385 140 L400 155 L415 140" stroke="#7c3aed" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M385 160 L400 175 L415 160" stroke="#7c3aed" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  
+  <!-- Title text -->
+  <text x="400" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#7c3aed">Bem-vindos ao Blog</text>
+  <text x="400" y="250" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#7c3aed">da Floriplanta!</text>
+  
+  <!-- Decorative elements -->
+  <circle cx="200" cy="130" r="3" fill="#22c55e"/>
+  <circle cx="600" cy="170" r="3" fill="#22c55e"/>
+  <circle cx="220" cy="270" r="2" fill="#7c3aed" fill-opacity="0.5"/>
+  <circle cx="580" cy="250" r="2" fill="#7c3aed" fill-opacity="0.5"/>
+</svg>

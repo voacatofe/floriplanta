@@ -3,21 +3,23 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useInView } from 'react-intersection-observer';
 import PostCard from './PostCard';
-import type { Post } from '@/app/lib/blog-data';
+import type { PostWithRelations } from '@/app/lib/blog-data';
 import { Loader2, AlertCircle } from 'lucide-react';
 
 interface InfiniteScrollPostsProps {
-  initialPosts: Post[];
+  initialPosts: PostWithRelations[];
   totalCount: number;
   categorySlug?: string;
+  searchQuery?: string;
 }
 
 export default function InfiniteScrollPosts({ 
   initialPosts, 
   totalCount,
-  categorySlug 
+  categorySlug,
+  searchQuery 
 }: InfiniteScrollPostsProps) {
-  const [posts, setPosts] = useState<Post[]>(initialPosts);
+  const [posts, setPosts] = useState<PostWithRelations[]>(initialPosts);
   const [page, setPage] = useState(2);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -37,7 +39,8 @@ export default function InfiniteScrollPosts({
     try {
       const params = new URLSearchParams({
         page: page.toString(),
-        ...(categorySlug && { categoria: categorySlug })
+        ...(categorySlug && { categoria: categorySlug }),
+        ...(searchQuery && { busca: searchQuery })
       });
       
       const response = await fetch(`/api/blog/posts?${params}`);
@@ -127,4 +130,4 @@ export default function InfiniteScrollPosts({
       </div>
     </>
   );
-} 
+}

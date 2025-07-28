@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { type AnonymousComment } from '@/app/lib/blog-comments';
 import { createComment } from '@/app/lib/blog-comments.client';
 import { MessageCircle, Send, Reply, User } from 'lucide-react';
 
 interface CommentSectionProps {
-  postId: number;
+  postId: string;
   initialComments?: AnonymousComment[];
 }
 
@@ -258,4 +258,4 @@ export default function CommentSection({ postId, initialComments = [] }: Comment
       </div>
     </section>
   );
-} 
+}
