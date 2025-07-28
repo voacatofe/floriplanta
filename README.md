@@ -20,22 +20,47 @@ O site da Floriplanta foi desenvolvido com o objetivo de:
 
 ## Instalação e Execução
 
-1. Clone o repositório:
-```bash
+### 🐳 Desenvolvimento com Docker (Recomendado)
+
+**Pré-requisitos:** Docker Desktop instalado e rodando
+
+```powershell
+# 1. Clone o repositório
 git clone [url-do-repositorio]
+cd floriplanta
+
+# 2. Inicie o ambiente Docker
+.\docker-dev.ps1 up
+
+# 3. Carregue dados de teste (primeira vez)
+.\docker-dev.ps1 seed
+
+# 4. Acesse http://localhost:3000
 ```
 
-2. Instale as dependências:
+**Login Admin:** admin@floriplanta.com.br / admin123
+
+**Comandos úteis:**
+- `.\docker-dev.ps1 logs` - Ver logs
+- `.\docker-dev.ps1 down` - Parar ambiente
+- `.\docker-dev.ps1 build` - Rebuild após mudanças
+
+📖 **Guia completo:** [docs/GUIA_DOCKER_DESENVOLVIMENTO.md](docs/GUIA_DOCKER_DESENVOLVIMENTO.md)
+
+### 💻 Desenvolvimento Local (Alternativo)
+
 ```bash
+# 1. Clone o repositório
+git clone [url-do-repositorio]
+
+# 2. Instale as dependências
 npm install
-```
 
-3. Execute o servidor de desenvolvimento:
-```bash
+# 3. Execute o servidor de desenvolvimento
 npm run dev
-```
 
-4. Acesse http://localhost:3000 no navegador
+# 4. Acesse http://localhost:3000
+```
 
 ## Estrutura do Projeto
 
