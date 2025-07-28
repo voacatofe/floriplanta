@@ -89,7 +89,6 @@ export default async function AdminPostsPage({ searchParams }: AdminPostsPagePro
                         {post.published ? 'Publicado' : 'Rascunho'}
                       </Badge>
                     </TableCell>
-                    {/* Usar createdAt para posts publicados e updatedAt para rascunhos */}
                     <TableCell>{formatDate(post.published ? post.createdAt.toISOString() : post.updatedAt.toISOString())}</TableCell>
                     <TableCell className="text-right space-x-1">
                       <Button variant="ghost" size="sm" asChild title="Ver Post">

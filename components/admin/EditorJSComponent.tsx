@@ -1,27 +1,27 @@
 'use client';
 
 import React, { useEffect, useRef, memo } from 'react';
-import EditorJS, { OutputData, ToolConstructable, ToolSettings } from '@editorjs/editorjs';
+import EditorJS, { OutputData } from '@editorjs/editorjs';
 import { type SupabaseClient } from '@supabase/supabase-js';
 import './EditorJSComponent.css';
-// @ts-ignore
+// @ts-expect-error - Header types may not be fully compatible
 import Header from '@editorjs/header';
-// @ts-ignore
+// @ts-expect-error - Paragraph types may not be fully compatible
 import Paragraph from '@editorjs/paragraph';
-// @ts-ignore
+// @ts-expect-error - List types may not be fully compatible
 import List from '@editorjs/list';
-// @ts-ignore
+// @ts-expect-error - Quote types may not be fully compatible
 import Quote from '@editorjs/quote';
 import ImageTool from '@editorjs/image';
-// @ts-ignore
+// @ts-expect-error - CodeTool types may not be fully compatible
 import CodeTool from '@editorjs/code';
-// @ts-ignore
+// @ts-expect-error - Delimiter types may not be fully compatible
 import Delimiter from '@editorjs/delimiter';
-// @ts-ignore
+// @ts-expect-error - Embed types may not be fully compatible
 import Embed from '@editorjs/embed';
-// @ts-ignore
+// @ts-expect-error - Checklist types may not be fully compatible
 import Checklist from '@editorjs/checklist';
-// @ts-ignore
+// @ts-expect-error - Table types may not be fully compatible
 import Table from '@editorjs/table';
 
 interface EditorProps {
@@ -53,7 +53,7 @@ const EditorJSComponent: React.FC<EditorProps> = ({
           onReady: () => {
             console.log('Editor.js is ready to work!');
           },
-          onChange: async (api, event) => {
+          onChange: async (api, _event) => {
             if (onChange) {
               const savedData = await api.saver.save();
               onChange(savedData);
@@ -82,7 +82,7 @@ const EditorJSComponent: React.FC<EditorProps> = ({
                     const filePath = `editorjs_uploads/${fileName}`; 
                     
                     try {
-                      const { data, error } = await supabaseClient.storage
+                      const { data: _data, error } = await supabaseClient.storage
                         .from('blogimages')
                         .upload(filePath, file, {
                           cacheControl: '3600',

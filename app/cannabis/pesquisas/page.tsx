@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 
 import Footer from "@/components/layout/Footer";
-import { FlaskConical, BookOpen, Search, Database, Link as LinkIcon } from 'lucide-react'; // Example icons
+import { FlaskConical, BookOpen, Database, Link as LinkIcon } from 'lucide-react'; // Example icons
 
 // Reusable Sidebar Component
 const CannabisSidebarNav = () => {

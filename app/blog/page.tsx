@@ -43,7 +43,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     page: currentPage,
     categorySlug: categorySlug,
     searchQuery: searchQuery,
-    status: 'published'
+    published: true
   });
   
   const allCategories = await getAllCategories();

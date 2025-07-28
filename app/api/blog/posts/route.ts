@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     
     const { posts, totalCount } = await getPosts({
       page,
-      status: 'published',
+      published: true,
       categorySlug, // Filtrar por categoria
       searchQuery // Filtrar por busca
     });

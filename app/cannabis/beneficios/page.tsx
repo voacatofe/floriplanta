@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link'; // For linking to sources
 
 import Footer from "@/components/layout/Footer";
-import { HeartPulse, Brain, Bone, Wind, Smile, Utensils, Activity, Users, ShieldCheck, AlertTriangle, ChevronRight, Award, Heart, Shield, Zap } from 'lucide-react'; // Example icons
+import { HeartPulse, Brain, Bone, Wind, Smile, Utensils, Activity, Users, ShieldCheck, AlertTriangle } from 'lucide-react'; // Example icons
 
 // Reusable Sidebar Component (assuming it's in a shared location or copied)
 // For simplicity, copying the definition here. Ideally, import from a shared components folder.

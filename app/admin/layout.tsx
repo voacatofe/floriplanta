@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
-import { redirect } from 'next/navigation';
 import type { Session } from 'next-auth';
 import { Home, FileText, FolderOpen, Tag, BookOpen, MessageSquare, BarChart, Settings } from 'lucide-react';
 import { Toaster } from 'sonner';

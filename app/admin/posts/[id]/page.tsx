@@ -1,35 +1,63 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, Loader2, CalendarIcon, Save, Eye, Settings2 } from 'lucide-react';
-import { getPostForEdit, updatePostAction, getCategoriesForAdmin, getTagsForAdmin, type PostUpdateData } from '../actions';
-import { type Category, type Tag } from '@/app/lib/blog-data';
-import { MultiSelectCheckbox, type MultiSelectOption } from '@/components/ui/multi-select-checkbox';
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Calendar } from "@/components/ui/calendar"
-import { format } from "date-fns"
-import { ptBR } from 'date-fns/locale'
-import { cn } from "@/lib/utils"
-import { createBrowserClient } from '@supabase/ssr';
-import { toast } from "sonner";
-import { OutputData } from '@editorjs/editorjs';
 import { Textarea } from '@/components/ui/textarea';
-import type { SupabaseClient } from '@supabase/supabase-js';
+import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Save, Eye, Calendar as CalendarIcon, Loader2 } from 'lucide-react';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import { createSupabaseClient } from '@/app/lib/supabase/client';
+import { getPostForEdit, updatePostAction } from '../actions';
+import { getCategoriesAction } from '../../categorias/actions';
+import { getTagsAction } from '../../tags/actions';
+import { AdminFormLayout, SidebarCard } from '@/components/admin/admin-form-layout';
+import { FormField } from '@/components/admin/form-field';
+import { ImageUploader } from '@/components/admin/image-uploader';
+import { TagSelector } from '@/components/admin/tag-selector';
+import { useFormValidation } from '@/hooks/use-form-validation';
+import EditorJSComponent from '@/components/admin/EditorJSComponent';
+import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 
-const EditorJSComponent = dynamic(() => import('@/components/admin/EditorJSComponent'), {
-  ssr: false,
-  loading: () => <div className="border rounded-md min-h-[400px] flex items-center justify-center bg-gray-100 text-gray-400"><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Carregando Editor...</div>,
-});
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+interface Tag {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+interface PostFormData {
+  title: string;
+  slug: string;
+  content: object | null;
+  excerpt: string;
+  cover_image_url: string;
+  status: 'draft' | 'published';
+  published_at: Date | null;
+  category_ids: string[];
+  tag_ids: string[];
+  meta_description: string;
+}
 
 function normalizeSlug(text: string): string {
-  return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').replace(/-+/g, '-');
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .replace(/-+/g, '-');
 }
 
 interface EditPostPageProps {
@@ -39,488 +67,401 @@ interface EditPostPageProps {
 export default function EditPostPage({ params }: EditPostPageProps) {
   const router = useRouter();
   const [postId, setPostId] = useState<string>('');
-  const [formData, setFormData] = useState<Partial<Omit<PostUpdateData, 'body'>>>({ title: '', slug: '', excerpt: '', cover_image_url: '', status: 'draft', category_ids: [], tag_ids: [], published_at: null });
-  const [editorData, setEditorData] = useState<OutputData | undefined>(undefined);
   const [categories, setCategories] = useState<Category[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedPublishedDate, setSelectedPublishedDate] = useState<Date | undefined>(undefined);
+  const [supabaseClient, setSupabaseClient] = useState<ReturnType<typeof createSupabaseClient> | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [filePreview, setFilePreview] = useState<string | null>(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); 
-  const [supabase, setSupabase] = useState<SupabaseClient | null>(null);
+  const [isScheduled, setIsScheduled] = useState(false);
 
-  // Inicializar o cliente Supabase no lado do cliente
-  useEffect(() => {
-    const supabaseClient = createBrowserClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
-    setSupabase(supabaseClient);
-  }, []);
+  const {
+    data: formData,
+    errors,
+    updateField,
+    updateFields,
+    save,
+    isSaving,
+    isDirty,
+    lastSaved
+  } = useFormValidation<PostFormData>({
+    initialData: {
+      title: '',
+      slug: '',
+      content: null,
+      excerpt: '',
+      cover_image_url: '',
+      status: 'draft',
+      published_at: null,
+      category_ids: [],
+      tag_ids: [],
+      meta_description: ''
+    },
+    validationRules: {
+      title: { required: true, minLength: 3, maxLength: 200 },
+      slug: { required: true, minLength: 3, maxLength: 200 },
+      content: { required: true },
+      excerpt: { maxLength: 500 }
+    },
+    onSave: async (data) => {
+      await handleSave(data, false);
+    },
+    autoSaveDelay: 3000
+  });
 
-  // Resolver params e carregar dados do post
   useEffect(() => {
-    async function loadPost() {
+    async function initializeData() {
       try {
         const resolvedParams = await params;
         const id = resolvedParams.id;
         setPostId(id);
 
-        // Carregar dados do post
-        const postResult = await getPostForEdit(id);
+        const client = createSupabaseClient();
+        setSupabaseClient(client);
+
+        const [postResult, categoriesResult, tagsResult] = await Promise.all([
+          getPostForEdit(id),
+          getCategoriesAction(),
+          getTagsAction()
+        ]);
+
         if (postResult.error) {
-          setError(postResult.error);
+          toast.error('Erro ao carregar post: ' + postResult.error);
+          router.push('/admin/posts');
           return;
         }
 
+        if (categoriesResult.data) setCategories(categoriesResult.data);
+        if (tagsResult.data) setTags(tagsResult.data);
+
+        // Carregar dados do post
         const post = postResult.data!;
-        
-        // Preencher formulário com dados do post
-        setFormData({
+        const postData = {
           title: post.title,
           slug: post.slug,
-          excerpt: post.content ? post.content.substring(0, 160) : '',
+          content: post.content ? JSON.parse(post.content) : null,
+          excerpt: post.excerpt || '',
           cover_image_url: post.imageUrl || '',
-          status: post.published ? 'published' : 'draft',
-          category_ids: post.categories?.map(cat => parseInt(cat.id)) || [],
-          tag_ids: post.tags?.map(tag => parseInt(tag.id)) || [],
-          published_at: post.createdAt ? new Date(post.createdAt).toISOString() : null
-        });
+          status: post.published ? 'published' as const : 'draft' as const,
+          published_at: post.createdAt ? new Date(post.createdAt) : null,
+          category_ids: post.categories?.map(cat => cat.id.toString()) || [],
+          tag_ids: post.tags?.map(tag => tag.id.toString()) || [],
+          meta_description: post.metaDescription || ''
+        };
 
-        // Configurar preview da imagem
-        if (post.imageUrl) {
-          setFilePreview(post.imageUrl);
-        }
-
-        // Configurar editor com conteúdo existente
-        if (post.content) {
-          try {
-            const parsedContent = JSON.parse(post.content);
-            setEditorData(parsedContent);
-          } catch {
-            // Se não for JSON válido, criar estrutura básica
-            setEditorData({
-              time: Date.now(),
-              blocks: [{
-                type: 'paragraph',
-                data: { text: post.content }
-              }],
-              version: '2.28.2'
-            });
-          }
-        }
-
+        updateFields(postData);
+        setIsScheduled(!!postData.published_at && postData.published_at > new Date());
       } catch (error) {
-        console.error('Erro ao carregar post:', error);
-        setError('Erro ao carregar dados do post.');
+        console.error('Erro ao carregar dados:', error);
+        toast.error('Erro ao carregar dados do post');
       } finally {
         setIsLoading(false);
       }
     }
 
-    loadPost();
-  }, [params]);
+    initializeData();
+  }, [params, router, updateFields]);
 
-  // Carregar categorias e tags
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const [categoriesData, tagsData] = await Promise.all([
-          getCategoriesForAdmin(),
-          getTagsForAdmin()
-        ]);
-        setCategories(categoriesData);
-        setTags(tagsData);
-      } catch (error) {
-        console.error('Erro ao carregar categorias e tags:', error);
-      }
-    }
-    loadData();
-  }, []);
+  const handleTitleChange = (title: string) => {
+    updateFields({
+      title,
+      slug: normalizeSlug(title)
+    });
+  };
 
-  const handleInputChange = useCallback((field: keyof typeof formData, value: string | number[] | string[] | null) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    
-    if (field === 'title' && typeof value === 'string') {
-      const newSlug = normalizeSlug(value);
-      setFormData(prev => ({ ...prev, slug: newSlug }));
-    }
-  }, []);
+  const handleImageUpload = async (file: File): Promise<string> => {
+    if (!supabaseClient) throw new Error('Supabase client not initialized');
 
-  const handleFileSelect = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setFilePreview(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  }, []);
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Date.now()}.${fileExt}`;
+    const filePath = `posts/${fileName}`;
 
-  const uploadFile = useCallback(async (file: File): Promise<string | null> => {
-    if (!supabase) {
-      toast.error('Cliente Supabase não inicializado');
-      return null;
-    }
+    const { error: uploadError } = await supabaseClient.storage
+      .from('blog-images')
+      .upload(filePath, file);
 
+    if (uploadError) throw uploadError;
+
+    const { data: { publicUrl } } = supabaseClient.storage
+      .from('blog-images')
+      .getPublicUrl(filePath);
+
+    return publicUrl;
+  };
+
+  const handleSave = async (data: PostFormData, redirect = true) => {
     try {
-      setUploading(true);
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-      const filePath = `blog-covers/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('blog-images')
-        .upload(filePath, file);
-
-      if (uploadError) {
-        console.error('Erro no upload:', uploadError);
-        toast.error('Erro ao fazer upload da imagem');
-        return null;
-      }
-
-      const { data } = supabase.storage
-        .from('blog-images')
-        .getPublicUrl(filePath);
-
-      return data.publicUrl;
-    } catch (error) {
-      console.error('Erro no upload:', error);
-      toast.error('Erro ao fazer upload da imagem');
-      return null;
-    } finally {
-      setUploading(false);
-    }
-  }, [supabase]);
-
-  const handleSubmit = useCallback(async (status: 'draft' | 'published') => {
-    if (!formData.title?.trim()) {
-      toast.error('Título é obrigatório');
-      return;
-    }
-
-    setIsSaving(true);
-    setError(null);
-
-    try {
-      let coverImageUrl = formData.cover_image_url;
+      let coverImageUrl = data.cover_image_url;
       
       if (selectedFile) {
-        const uploadedUrl = await uploadFile(selectedFile);
-        if (uploadedUrl) {
-          coverImageUrl = uploadedUrl;
-        }
+        coverImageUrl = await handleImageUpload(selectedFile);
+        setSelectedFile(null);
       }
 
-      const editorContent = editorData ? JSON.stringify(editorData) : null;
+      const result = await updatePostAction(postId, {
+        ...data,
+        cover_image_url: coverImageUrl,
+        content: JSON.stringify(data.content)
+      });
 
-      const postData: PostUpdateData = {
-        title: formData.title!,
-        slug: formData.slug!,
-        excerpt: formData.excerpt || null,
-        body: editorContent,
-        cover_image_url: coverImageUrl || null,
-        status,
-        category_ids: formData.category_ids || [],
-        tag_ids: formData.tag_ids || [],
-        published_at: selectedPublishedDate?.toISOString() || null
-      };
-
-      const result = await updatePostAction(postId, postData);
-      
       if (result.error) {
-        setError(result.error);
-        toast.error(result.error);
-      } else {
-        toast.success(`Post ${status === 'published' ? 'publicado' : 'salvo como rascunho'} com sucesso!`);
+        throw new Error(result.error);
+      }
+
+      toast.success('Post atualizado com sucesso!');
+
+      if (redirect) {
         router.push('/admin/posts');
       }
     } catch (error) {
-      console.error('Erro ao atualizar post:', error);
-      setError('Erro interno do servidor');
-      toast.error('Erro ao atualizar post');
-    } finally {
-      setIsSaving(false);
+      console.error('Erro ao salvar post:', error);
+      toast.error('Erro ao salvar post');
+      throw error;
     }
-  }, [formData, editorData, selectedPublishedDate, selectedFile, uploadFile, postId, router]);
+  };
 
-  const categoryOptions: MultiSelectOption[] = categories.map(cat => ({
-    value: cat.id,
-    label: cat.name
-  }));
+  const handlePublish = async () => {
+    const publishData = {
+      ...formData,
+      status: 'published' as const,
+      published_at: isScheduled ? formData.published_at : new Date()
+    };
+    
+    updateFields(publishData);
+    await handleSave(publishData);
+  };
 
-  const tagOptions: MultiSelectOption[] = tags.map(tag => ({
-    value: tag.id,
-    label: tag.name
-  }));
+  const handleScheduleToggle = (checked: boolean) => {
+    setIsScheduled(checked);
+    if (!checked) {
+      updateField('published_at', null);
+    }
+  };
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin" />
-        <span className="ml-2">Carregando post...</span>
-      </div>
-    );
-  }
-
-  if (error && !formData.title) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-red-50 border border-red-200 rounded-md p-4">
-          <h2 className="text-lg font-semibold text-red-800 mb-2">Erro ao carregar post</h2>
-          <p className="text-red-600">{error}</p>
-          <Link href="/admin/posts" className="inline-block mt-4">
-            <Button variant="outline">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Voltar para Posts
-            </Button>
-          </Link>
+        <div className="flex items-center space-x-2">
+          <Loader2 className="h-6 w-6 animate-spin" />
+          <span>Carregando post...</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-4">
-          <Link href="/admin/posts">
-            <Button variant="outline" size="sm">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Voltar
-            </Button>
-          </Link>
-          <h1 className="text-2xl font-semibold">Editar Post</h1>
-        </div>
-        
+    <AdminFormLayout
+      title="Editar Post"
+      description="Edite as informações do seu post"
+      backUrl="/admin/posts"
+      actions={
         <div className="flex items-center space-x-2">
+          {lastSaved && (
+            <span className="text-sm text-muted-foreground">
+              Salvo {format(lastSaved, 'HH:mm', { locale: ptBR })}
+            </span>
+          )}
           <Button
             variant="outline"
-            size="sm"
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            onClick={() => save()}
+            disabled={isSaving || !isDirty}
           >
-            <Settings2 className="h-4 w-4" />
+            {isSaving ? (
+              <Loader2 className="h-4 w-4 animate-spin mr-2" />
+            ) : (
+              <Save className="h-4 w-4 mr-2" />
+            )}
+            {isSaving ? 'Salvando...' : 'Salvar Rascunho'}
+          </Button>
+          <Button onClick={handlePublish} disabled={isSaving}>
+            {formData.status === 'published' ? 'Atualizar' : 'Publicar'}
           </Button>
         </div>
-      </div>
+      }
+      sidebar={
+        <div className="space-y-6">
+          {/* Status e Publicação */}
+          <SidebarCard title="Publicação" icon={Eye}>
+            <div className="space-y-4">
+              <FormField label="Status">
+                <Select
+                  value={formData.status}
+                  onValueChange={(value: 'draft' | 'published') => updateField('status', value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="draft">Rascunho</SelectItem>
+                    <SelectItem value="published">Publicado</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormField>
 
-      {error && (
-        <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
-          <p className="text-red-600">{error}</p>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="schedule"
+                  checked={isScheduled}
+                  onCheckedChange={handleScheduleToggle}
+                />
+                <label htmlFor="schedule" className="text-sm font-medium">
+                  Agendar publicação
+                </label>
+              </div>
+
+              {isScheduled && (
+                <FormField label="Data de publicação">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !formData.published_at && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {formData.published_at ? (
+                          format(formData.published_at, "PPP 'às' HH:mm", { locale: ptBR })
+                        ) : (
+                          <span>Selecionar data</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={formData.published_at || undefined}
+                        onSelect={(date) => updateField('published_at', date || null)}
+                        disabled={(date) => date < new Date()}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </FormField>
+              )}
+            </div>
+          </SidebarCard>
+
+          {/* Categorias */}
+          <SidebarCard title="Organização">
+            <div className="space-y-4">
+              <TagSelector
+                label="Categorias"
+                items={categories.map(cat => ({ id: cat.id, name: cat.name }))}
+                selectedIds={formData.category_ids}
+                onChange={(ids) => updateField('category_ids', ids)}
+                placeholder="Selecionar categorias"
+                maxItems={3}
+              />
+
+              <TagSelector
+                label="Tags"
+                items={tags.map(tag => ({ id: tag.id, name: tag.name }))}
+                selectedIds={formData.tag_ids}
+                onChange={(ids) => updateField('tag_ids', ids)}
+                placeholder="Selecionar tags"
+                allowCreate
+                maxItems={10}
+              />
+            </div>
+          </SidebarCard>
+
+          {/* Mídia e Resumo */}
+          <SidebarCard title="Mídia & Resumo">
+            <div className="space-y-4">
+              <FormField label="Imagem de capa">
+                <ImageUploader
+                  currentImage={formData.cover_image_url}
+                  onImageSelect={setSelectedFile}
+                  onImageRemove={() => {
+                    updateField('cover_image_url', '');
+                    setSelectedFile(null);
+                  }}
+                  maxSize={5 * 1024 * 1024} // 5MB
+                />
+              </FormField>
+
+              <FormField 
+                label="Resumo" 
+                description="Breve descrição do post (máx. 500 caracteres)"
+                error={errors.excerpt}
+              >
+                <Textarea
+                  value={formData.excerpt}
+                  onChange={(e) => updateField('excerpt', e.target.value)}
+                  placeholder="Escreva um resumo do post..."
+                  rows={3}
+                  maxLength={500}
+                />
+                <div className="text-xs text-muted-foreground mt-1">
+                  {formData.excerpt.length}/500 caracteres
+                </div>
+              </FormField>
+
+              <FormField 
+                label="Meta Descrição" 
+                description="Descrição para SEO (máx. 160 caracteres)"
+              >
+                <Textarea
+                  value={formData.meta_description}
+                  onChange={(e) => updateField('meta_description', e.target.value)}
+                  placeholder="Meta descrição para SEO..."
+                  rows={2}
+                  maxLength={160}
+                />
+                <div className="text-xs text-muted-foreground mt-1">
+                  {formData.meta_description.length}/160 caracteres
+                </div>
+              </FormField>
+            </div>
+          </SidebarCard>
         </div>
-      )}
-
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Conteúdo Principal */}
-        <div className={cn("space-y-6", isSidebarOpen ? "lg:col-span-3" : "lg:col-span-4")}>
-          {/* Título */}
-          <div className="space-y-2">
-            <Label htmlFor="title">Título *</Label>
+      }
+    >
+      <div className="space-y-6">
+        {/* Título e Slug */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField 
+            label="Título" 
+            required 
+            error={errors.title}
+          >
             <Input
-              id="title"
-              value={formData.title || ''}
-              onChange={(e) => handleInputChange('title', e.target.value)}
-              placeholder="Digite o título do post..."
-              className="text-lg"
+              value={formData.title}
+              onChange={(e) => handleTitleChange(e.target.value)}
+              placeholder="Título do post"
             />
-          </div>
+          </FormField>
 
-          {/* Slug */}
-          <div className="space-y-2">
-            <Label htmlFor="slug">Slug *</Label>
+          <FormField 
+            label="Slug" 
+            required 
+            error={errors.slug}
+            description="URL amigável do post"
+          >
             <Input
-              id="slug"
-              value={formData.slug || ''}
-              onChange={(e) => handleInputChange('slug', e.target.value)}
+              value={formData.slug}
+              onChange={(e) => updateField('slug', e.target.value)}
               placeholder="slug-do-post"
             />
-          </div>
-
-          {/* Resumo */}
-          <div className="space-y-2">
-            <Label htmlFor="excerpt">Resumo</Label>
-            <Textarea
-              id="excerpt"
-              value={formData.excerpt || ''}
-              onChange={(e) => handleInputChange('excerpt', e.target.value)}
-              placeholder="Breve descrição do post..."
-              rows={3}
-            />
-          </div>
-
-          {/* Editor */}
-          <div className="space-y-2">
-            <Label>Conteúdo</Label>
-            {supabase && (
-              <EditorJSComponent
-                value={editorData}
-                onChange={setEditorData}
-                supabaseClient={supabase}
-              />
-            )}
-          </div>
+          </FormField>
         </div>
 
-        {/* Sidebar */}
-        {isSidebarOpen && (
-          <div className="lg:col-span-1 space-y-6">
-            {/* Ações */}
-            <div className="bg-white border rounded-lg p-4 space-y-4">
-              <h3 className="font-medium">Ações</h3>
-              
-              <div className="space-y-2">
-                <Button
-                  onClick={() => handleSubmit('draft')}
-                  disabled={isSaving}
-                  variant="outline"
-                  className="w-full"
-                >
-                  {isSaving ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    <Save className="mr-2 h-4 w-4" />
-                  )}
-                  Salvar Rascunho
-                </Button>
-                
-                <Button
-                  onClick={() => handleSubmit('published')}
-                  disabled={isSaving}
-                  className="w-full"
-                >
-                  {isSaving ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    <Eye className="mr-2 h-4 w-4" />
-                  )}
-                  Publicar
-                </Button>
-              </div>
-            </div>
-
-            {/* Status */}
-            <div className="bg-white border rounded-lg p-4 space-y-4">
-              <h3 className="font-medium">Status</h3>
-              <Select
-                value={formData.status}
-                onValueChange={(value: 'draft' | 'published') => handleInputChange('status', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="draft">Rascunho</SelectItem>
-                  <SelectItem value="published">Publicado</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Imagem de Capa */}
-            <div className="bg-white border rounded-lg p-4 space-y-4">
-              <h3 className="font-medium">Imagem de Capa</h3>
-              
-              {filePreview && (
-                <div className="relative">
-                  <img
-                    src={filePreview}
-                    alt="Preview"
-                    className="w-full h-32 object-cover rounded border"
-                  />
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    className="absolute top-2 right-2"
-                    onClick={() => {
-                      setFilePreview(null);
-                      setSelectedFile(null);
-                      handleInputChange('cover_image_url', '');
-                    }}
-                  >
-                    ×
-                  </Button>
-                </div>
-              )}
-              
-              <div className="space-y-2">
-                <Label htmlFor="cover-image">Selecionar Imagem</Label>
-                <Input
-                  id="cover-image"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileSelect}
-                  disabled={uploading}
-                />
-                {uploading && (
-                  <div className="flex items-center text-sm text-gray-500">
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Fazendo upload...
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Categorias */}
-            <div className="bg-white border rounded-lg p-4 space-y-4">
-              <h3 className="font-medium">Categorias</h3>
-              <MultiSelectCheckbox
-                options={categoryOptions}
-                value={formData.category_ids?.map(String) || []}
-                onChange={(values) => handleInputChange('category_ids', values.map(Number))}
-                placeholder="Selecionar categorias..."
-              />
-            </div>
-
-            {/* Tags */}
-            <div className="bg-white border rounded-lg p-4 space-y-4">
-              <h3 className="font-medium">Tags</h3>
-              <MultiSelectCheckbox
-                options={tagOptions}
-                value={formData.tag_ids?.map(String) || []}
-                onChange={(values) => handleInputChange('tag_ids', values.map(Number))}
-                placeholder="Selecionar tags..."
-              />
-            </div>
-
-            {/* Data de Publicação */}
-            <div className="bg-white border rounded-lg p-4 space-y-4">
-              <h3 className="font-medium">Data de Publicação</h3>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !selectedPublishedDate && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {selectedPublishedDate ? (
-                      format(selectedPublishedDate, "PPP", { locale: ptBR })
-                    ) : (
-                      <span>Selecionar data</span>
-                    )}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={selectedPublishedDate}
-                    onSelect={setSelectedPublishedDate}
-                    initialFocus
-                    locale={ptBR}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
+        {/* Editor de Conteúdo */}
+        <FormField 
+          label="Conteúdo" 
+          required 
+          error={errors.content}
+        >
+          <div className="border rounded-lg">
+            <EditorJSComponent
+              value={formData.content}
+              onChange={(data) => updateField('content', data)}
+              supabaseClient={supabaseClient}
+            />
           </div>
-        )}
+        </FormField>
       </div>
-    </div>
+    </AdminFormLayout>
   );
 }
