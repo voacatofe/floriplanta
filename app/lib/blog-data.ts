@@ -1,67 +1,17 @@
 import { POSTS_PER_PAGE } from './constants';
+import { PrismaClient, Post, Category, Tag, User } from '../../lib/generated/prisma';
 
-// Mock prisma client - replace with actual implementation
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const prisma = {
-  post: {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    findMany: async (_args?: unknown): Promise<PostWithRelations[]> => [],
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    findUnique: async (_args?: unknown): Promise<SinglePost | null> => null,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    count: async (_args?: unknown): Promise<number> => 0
-  },
-  category: {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    findMany: async (_args?: unknown): Promise<Category[]> => []
-  },
-  tag: {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    findMany: async (_args?: unknown): Promise<Tag[]> => []
-  },
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  $transaction: async (_queries: unknown[]): Promise<[PostWithRelations[], number]> => {
-    // Mock implementation that returns the expected types
-    return [[], 0];
-  }
+// Re-exportar tipos do Prisma para uso em outros arquivos
+export type { Category, Tag, Post, User };
+
+// Singleton pattern para PrismaClient
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
 };
 
-// Tipos baseados no schema Prisma
-export interface Post {
-  id: string;
-  title: string;
-  content: string;
-  slug: string;
-  imageUrl: string | null;
-  published: boolean;
-  status: 'published' | 'draft' | 'archived';
-  createdAt: Date;
-  updatedAt: Date;
-  authorId: string;
-}
+const prisma = globalForPrisma.prisma ?? new PrismaClient();
 
-export interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface Tag {
-  id: string;
-  name: string;
-  slug: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface User {
-  id: string;
-  name: string | null;
-  email: string | null;
-}
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 // Tipos com relacionamentos incluídos
 export type PostWithRelations = Post & {
@@ -81,10 +31,10 @@ export async function getPosts(
     page?: number;
     categorySlug?: string;
     searchQuery?: string;
-    status?: 'published' | 'draft' | 'archived' | 'all';
+    published?: boolean | 'all';
   } = {}
 ): Promise<{ posts: PostWithRelations[]; totalCount: number }> {
-  const { page = 1, categorySlug, searchQuery, status = 'published' } = options;
+  const { page = 1, categorySlug, searchQuery, published = true } = options;
 
   const whereClause: {
     published?: boolean;
@@ -104,8 +54,8 @@ export async function getPosts(
       };
     }>;
   } = {};
-  if (status !== 'all') {
-    whereClause.published = status === 'published';
+  if (published !== 'all') {
+    whereClause.published = published;
   }
   if (categorySlug) {
     whereClause.categories = {

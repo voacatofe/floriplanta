@@ -39,7 +39,7 @@ export default async function AdminPostsPage({ searchParams }: AdminPostsPagePro
   const currentPage = Number(resolvedSearchParams?.page) || 1;
   const { posts, totalCount } = await getPosts({ 
     page: currentPage, 
-    status: 'all' // Buscar todos os status para o admin
+    published: 'all' // Buscar todos os posts (publicados e não publicados) para o admin
   });
 
   const totalPages = Math.ceil(totalCount / POSTS_PER_PAGE);
@@ -80,26 +80,23 @@ export default async function AdminPostsPage({ searchParams }: AdminPostsPagePro
                     <TableCell>{post.categories?.[0]?.name || 'N/A'}</TableCell>
                     <TableCell>
                       <Badge 
-                        variant={post.status === 'published' ? 'default' : (post.status === 'draft' ? 'secondary' : 'outline')}
+                        variant={post.published ? 'default' : 'secondary'}
                         className={
-                          post.status === 'published' ? 'bg-green-100 text-green-700' :
-                          post.status === 'draft' ? 'bg-yellow-100 text-yellow-700' :
-                          'bg-gray-100 text-gray-700' // Para outros status como 'archived'
+                          post.published ? 'bg-green-100 text-green-700' :
+                          'bg-yellow-100 text-yellow-700'
                         }
                       >
-                        {post.status === 'published' ? 'Publicado' : 
-                         post.status === 'draft' ? 'Rascunho' : 
-                         post.status}
+                        {post.published ? 'Publicado' : 'Rascunho'}
                       </Badge>
                     </TableCell>
-                    {/* Usar updatedAt ou createdAt para rascunhos e createdAt para publicados */}
-                    <TableCell>{formatDate(post.status === 'published' ? post.createdAt.toISOString() : post.updatedAt.toISOString() || post.createdAt.toISOString())}</TableCell>
+                    {/* Usar createdAt para posts publicados e updatedAt para rascunhos */}
+                    <TableCell>{formatDate(post.published ? post.createdAt.toISOString() : post.updatedAt.toISOString())}</TableCell>
                     <TableCell className="text-right space-x-1">
                       <Button variant="ghost" size="sm" asChild title="Ver Post">
                         <Link href={`/blog/${post.slug}`} target="_blank"><Eye className="h-4 w-4" /></Link>
                       </Button>
                       <Button variant="ghost" size="sm" asChild title="Editar Post">
-                        <Link href={`/admin/posts/editar/${post.id}`}><Edit className="h-4 w-4" /></Link>
+                        <Link href={`/admin/posts/${post.id}`}><Edit className="h-4 w-4" /></Link>
                       </Button>
                       <DeletePostButton postId={post.id} postTitle={post.title} />
                     </TableCell>

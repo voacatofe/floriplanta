@@ -15,15 +15,20 @@ export default async function AdminLayout({
 }) {
   const session = await getServerSession(authOptions) as Session | null;
 
-  // Se não estiver logado (e não estiver na página de login), redireciona para o login
-  // A verificação do pathname é necessária para evitar um loop infinito de redirect
-  // Esta lógica será melhorada com o middleware. Por enquanto, é uma guarda básica.
+  // O middleware já cuida do redirecionamento para login
+  // Se chegou até aqui, é porque:
+  // 1. Tem sessão válida, ou
+  // 2. É a página de login (que não precisa de sessão)
+  // Não fazemos redirect aqui para evitar loop com o middleware
+
+  // Se não há sessão, renderiza apenas o conteúdo (página de login)
   if (!session) {
-    // Para simplificar, o middleware cuidará do redirecionamento.
-    // A página de login será renderizada pelo {children} se a rota for /admin/login
-    // Qualquer outra rota /admin/* sem sessão será pega pelo middleware.
-    // No entanto, como uma proteção extra, podemos redirecionar aqui.
-    redirect('/admin/login');
+    return (
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+        <Toaster />
+        {children}
+      </div>
+    );
   }
 
   return (

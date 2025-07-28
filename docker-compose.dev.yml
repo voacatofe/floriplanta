@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database para desenvolvimento
+  postgres:
+    image: postgres:15-alpine
+    container_name: floriplanta-postgres-dev
+    environment:
+      POSTGRES_DB: floriplanta
+      POSTGRES_USER: floriplanta
+      POSTGRES_PASSWORD: floriplanta123
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    networks:
+      - floriplanta-dev
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U floriplanta -d floriplanta"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Aplicação Next.js Floriplanta
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: floriplanta-app-dev
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://floriplanta:floriplanta123@postgres:5432/floriplanta
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=floriplanta-secret-key-for-development-change-in-production
+      - NEXT_PUBLIC_BASE_URL=http://localhost:3000
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    networks:
+      - floriplanta-dev
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: npm run dev
+    restart: unless-stopped
+
+  # Adminer - Interface web para PostgreSQL (opcional)
+  adminer:
+    image: adminer:latest
+    container_name: floriplanta-adminer
+    ports:
+      - "8080:8080"
+    networks:
+      - floriplanta-dev
+    profiles:
+      - adminer
+
+volumes:
+  postgres_dev_data:
+
+networks:
+  floriplanta-dev:
+    driver: bridge

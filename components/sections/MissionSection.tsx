@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Wand2, LightbulbIcon, HeartHandshake, HelpCircle } from 'lucide-react';
+import { Wand2 } from 'lucide-react';
 
 interface MissionSectionProps {
   title?: string;
@@ -83,4 +83,4 @@ export default function MissionSection({
       <div className="absolute bottom-0 left-0 right-0 h-2" style={{ background: getAccentColor() }}></div>
     </section>
   );
-} 
+}

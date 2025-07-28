@@ -10,7 +10,7 @@ import Header from '@editorjs/header';
 import Paragraph from '@editorjs/paragraph';
 // @ts-ignore
 import List from '@editorjs/list';
-// @ts-ignore 
+// @ts-ignore
 import Quote from '@editorjs/quote';
 import ImageTool from '@editorjs/image';
 // @ts-ignore
@@ -113,7 +113,7 @@ const EditorJSComponent: React.FC<EditorProps> = ({
             },
             code: CodeTool,
             delimiter: Delimiter,
-            // @ts-ignore 
+            // @ts-expect-error - EditorJS plugin configuration lacks TypeScript definitions
             embed: Embed,
             checklist: Checklist,
             table: Table,
@@ -136,4 +136,4 @@ const EditorJSComponent: React.FC<EditorProps> = ({
   );
 };
 
-export default memo(EditorJSComponent); 
+export default memo(EditorJSComponent);

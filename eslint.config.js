@@ -2,7 +2,7 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['node_modules/**', '.next/**', 'out/**'],
+    ignores: ['node_modules/**', '.next/**', 'out/**', 'lib/generated/**'],
   },
   ...tseslint.configs.recommended,
   {

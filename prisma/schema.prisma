@@ -5,8 +5,9 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../lib/generated/prisma"
+  provider      = "prisma-client-js"
+  output        = "../lib/generated/prisma"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
@@ -53,4 +54,20 @@ model Tag {
   name      String   @unique
   slug      String   @unique
   posts     Post[]   @relation("PostTags")
+}
+
+model EncyclopediaTerm {
+  id                      String   @id @default(cuid())
+  term                    String
+  slug                    String   @unique
+  definition              String   @db.Text
+  category                String
+  related_terms           String[]
+  created_at              DateTime @default(now())
+  updated_at              DateTime @updatedAt
+  is_active               Boolean  @default(true)
+  meta_description        String?
+  unresolved_related_terms String[]
+
+  @@map("encyclopedia_terms")
 }

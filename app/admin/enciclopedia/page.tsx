@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
-import { Plus, Search, Edit, Trash2, BookOpen } from 'lucide-react';
+import { Plus, Search, Edit, BookOpen } from 'lucide-react';
+import DeleteTermButton from './DeleteTermButton';
 import { getAllTerms, type EncyclopediaCategory } from '@/app/lib/encyclopedia';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -150,17 +151,14 @@ async function TermsTable({ searchParams }: AdminEncyclopediaPageProps) {
                       size="sm"
                       asChild
                     >
-                      <Link href={`/admin/enciclopedia/editar/${term.id}`}>
+                      <Link href={`/admin/enciclopedia/${term.id}`}>
                         <Edit className="h-4 w-4" />
                       </Link>
                     </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-red-600 hover:text-red-700"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <DeleteTermButton
+                      termId={term.id}
+                      termName={term.term}
+                    />
                   </div>
                 </TableCell>
               </TableRow>
@@ -220,4 +218,4 @@ export default async function AdminEncyclopediaPage({ searchParams }: AdminEncyc
       </Suspense>
     </div>
   );
-} 
+}

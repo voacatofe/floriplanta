@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: floriplanta-postgres
+    environment:
+      POSTGRES_DB: floriplanta
+      POSTGRES_USER: floriplanta
+      POSTGRES_PASSWORD: floriplanta123
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d
+    networks:
+      - floriplanta-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U floriplanta -d floriplanta"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Next.js Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: floriplanta-app
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://floriplanta:floriplanta123@postgres:5432/floriplanta
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=your-secret-key-here-change-in-production
+      - NEXT_PUBLIC_BASE_URL=http://localhost:3000
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - floriplanta-network
+    command: >
+      sh -c "npm run db:migrate && npm run db:seed && npm run dev"
+
+  # Prisma Studio (opcional)
+  prisma-studio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: floriplanta-prisma-studio
+    environment:
+      - DATABASE_URL=postgresql://floriplanta:floriplanta123@postgres:5432/floriplanta
+    ports:
+      - "5555:5555"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - floriplanta-network
+    command: npx prisma studio --hostname 0.0.0.0
+    profiles:
+      - studio
+
+volumes:
+  postgres_data:
+
+networks:
+  floriplanta-network:
+    driver: bridge

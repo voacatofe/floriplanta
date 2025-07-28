@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { Hash } from 'lucide-react';
 
 interface Heading {
   id: string;
@@ -106,4 +105,4 @@ export default function TableOfContents() {
       ))}
     </nav>
   );
-} 
+}
