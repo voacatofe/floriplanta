@@ -28,28 +28,28 @@ export default function BlogSidebarNewsletterForm() {
       <p className="font-inter text-sm mb-4">
         Assine nossa newsletter para ficar por dentro das últimas notícias e artigos.
       </p>
-      <form 
-        id={NEWSLETTER_FORM_ID} 
-        onSubmit={handleSubmit} 
+      <form
+        id={NEWSLETTER_FORM_ID}
+        onSubmit={(e) => void handleSubmit(e)}
         className="space-y-3"
       >
         <div>
           <label htmlFor={uniqueInputId} className="sr-only">
             Seu melhor e-mail
           </label>
-          <input 
-            type="email" 
+          <input
+            type="email"
             name={FIELD_NAMES.EMAIL}
             id={uniqueInputId}
             value={formData[FIELD_NAMES.EMAIL]}
             onChange={handleChange}
-            placeholder="Seu melhor e-mail" 
+            placeholder="Seu melhor e-mail"
             required
             disabled={isSubmitting}
             className="w-full px-4 py-2 border border-brand-purple/50 rounded-md focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white text-sm text-brand-purple"
           />
         </div>
-        <button 
+        <button
           type="submit"
           disabled={isSubmitting}
           className="w-full bg-brand-light-green text-brand-purple font-semibold py-2 px-4 rounded-md hover:bg-opacity-80 transition-colors duration-300"

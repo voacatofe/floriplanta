@@ -4,9 +4,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Search, BookOpen, ArrowRight, Loader2 } from 'lucide-react';
-import { 
+import {
   type EncyclopediaTerm,
-  type EncyclopediaCategory, 
+  type EncyclopediaCategory,
 } from '@/app/lib/encyclopedia';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -53,11 +53,11 @@ function TermCard({ term }: { term: EncyclopediaTerm }) {
           {categoryIcons[term.category]} {term.category}
         </Badge>
       </div>
-      
+
       <p className="font-inter text-brand-purple/80 text-sm leading-relaxed line-clamp-3 mb-4">
         {term.meta_description || term.definition.substring(0, 150)}...
       </p>
-      
+
       <div className="flex items-center text-brand-green text-sm font-medium group-hover:text-brand-hover-green transition-colors">
         Saiba mais
         <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -66,12 +66,12 @@ function TermCard({ term }: { term: EncyclopediaTerm }) {
   );
 }
 
-function CategoryFilter({ 
-  categories, 
+function CategoryFilter({
+  categories,
   currentCategory,
-  onCategoryChange, 
-}: { 
-  categories: { category: EncyclopediaCategory; count: number }[]; 
+  onCategoryChange,
+}: {
+  categories: { category: EncyclopediaCategory; count: number }[];
   currentCategory?: EncyclopediaCategory;
   onCategoryChange: (category?: EncyclopediaCategory) => void;
 }) {
@@ -79,24 +79,22 @@ function CategoryFilter({
     <div className="flex flex-wrap gap-3 mb-8">
       <button
         onClick={() => onCategoryChange(undefined)}
-        className={`px-6 py-3 rounded-full font-inter font-medium transition-all duration-300 ${
-          !currentCategory 
-            ? 'bg-brand-green text-white shadow-sm' 
-            : 'bg-white text-brand-purple border border-gray-200 hover:border-brand-green/30 hover:shadow-sm'
-        }`}
+        className={`px-6 py-3 rounded-full font-inter font-medium transition-all duration-300 ${!currentCategory
+          ? 'bg-brand-green text-white shadow-sm'
+          : 'bg-white text-brand-purple border border-gray-200 hover:border-brand-green/30 hover:shadow-sm'
+          }`}
       >
         Todas ({categories.reduce((total, cat) => total + cat.count, 0)})
       </button>
-      
+
       {categories.map(({ category, count }) => (
         <button
           key={category}
           onClick={() => onCategoryChange(category)}
-          className={`px-6 py-3 rounded-full font-inter font-medium transition-all duration-300 ${
-            currentCategory === category
-              ? 'bg-brand-green text-white shadow-sm'
-              : 'bg-white text-brand-purple border border-gray-200 hover:border-brand-green/30 hover:shadow-sm'
-          }`}
+          className={`px-6 py-3 rounded-full font-inter font-medium transition-all duration-300 ${currentCategory === category
+            ? 'bg-brand-green text-white shadow-sm'
+            : 'bg-white text-brand-purple border border-gray-200 hover:border-brand-green/30 hover:shadow-sm'
+            }`}
         >
           {categoryIcons[category]} {category} ({count})
         </button>
@@ -105,11 +103,11 @@ function CategoryFilter({
   );
 }
 
-function SearchBox({ 
-  initialQuery, 
-  onSearch, 
-}: { 
-  initialQuery?: string; 
+function SearchBox({
+  initialQuery,
+  onSearch,
+}: {
+  initialQuery?: string;
   onSearch: (query: string) => void;
 }) {
   const [query, setQuery] = useState(initialQuery || '');
@@ -130,8 +128,8 @@ function SearchBox({
           className="pl-12 pr-20 py-4 text-lg border-2 border-gray-200 focus:border-brand-green rounded-xl font-inter bg-white"
         />
       </div>
-      <Button 
-        type="submit" 
+      <Button
+        type="submit"
         className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-brand-green hover:bg-brand-hover-green text-white px-6 py-2 rounded-lg font-inter font-medium"
       >
         Buscar
@@ -149,7 +147,7 @@ export default function EncyclopediaClient({
   termsPerPage,
 }: EncyclopediaClientProps) {
   const router = useRouter();
-  
+
   const [terms, setTerms] = useState<EncyclopediaTerm[]>(initialTerms);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -174,7 +172,7 @@ export default function EncyclopediaClient({
       if (data.terms && data.terms.length > 0) {
         setTerms(prev => [...prev, ...data.terms]);
         setCurrentPage(prev => prev + 1);
-        
+
         // Verificar se há mais páginas
         const totalPages = Math.ceil(data.totalCount / termsPerPage);
         setHasMore(currentPage + 1 < totalPages);
@@ -210,12 +208,12 @@ export default function EncyclopediaClient({
   // Função para resetar e buscar novos termos
   const resetAndSearch = useCallback(async (newCategory?: EncyclopediaCategory, newSearchQuery?: string) => {
     setLoading(true);
-    
+
     // Atualizar URL
     const params = new URLSearchParams();
     if (newCategory) params.set('categoria', newCategory);
     if (newSearchQuery) params.set('busca', newSearchQuery);
-    
+
     const newUrl = `/enciclopedia${params.toString() ? `?${params.toString()}` : ''}`;
     router.push(newUrl);
 
@@ -227,7 +225,7 @@ export default function EncyclopediaClient({
       setCurrentPage(1);
       setCurrentCategory(newCategory);
       setCurrentSearchQuery(newSearchQuery);
-      
+
       const totalPages = Math.ceil(data.totalCount / termsPerPage);
       setHasMore(totalPages > 1);
     } catch (error) {
@@ -260,7 +258,7 @@ export default function EncyclopediaClient({
             legislação brasileira sobre cannabis. Informações científicas e atualizadas para profissionais e
             interessados no universo da cannabis.
           </p>
-          
+
           <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
             <div className="text-center">
               <div className="text-3xl font-bold text-brand-green">{categories.find(c => c.category === 'Saúde')?.count || 0}</div>
@@ -287,8 +285,8 @@ export default function EncyclopediaClient({
           {/* Search and Filters */}
           <div className="max-w-4xl mx-auto mb-12">
             <SearchBox initialQuery={currentSearchQuery} onSearch={handleSearch} />
-            <CategoryFilter 
-              categories={categories} 
+            <CategoryFilter
+              categories={categories}
               currentCategory={currentCategory}
               onCategoryChange={handleCategoryChange}
             />
@@ -312,7 +310,7 @@ export default function EncyclopediaClient({
                   <TermCard key={`${term.id}-${index}`} term={term} />
                 ))}
               </div>
-              
+
               {/* Loading indicator */}
               {loading && (
                 <div className="flex justify-center items-center py-8">

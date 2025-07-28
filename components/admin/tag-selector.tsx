@@ -39,13 +39,13 @@ export function TagSelector({
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const filteredOptions = options.filter(option => 
+  const filteredOptions = options.filter(option =>
     !selectedValues.includes(option.id) &&
     option.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const canCreate = allowCreate && 
-    searchTerm.trim() && 
+  const canCreate = allowCreate &&
+    searchTerm.trim() &&
     !options.some(option => option.name.toLowerCase() === searchTerm.toLowerCase()) &&
     !selectedValues.some(id => {
       const option = options.find(opt => opt.id === id);
@@ -66,7 +66,7 @@ export function TagSelector({
 
   const handleSelect = (optionId: string) => {
     if (maxTags && selectedValues.length >= maxTags) return;
-    
+
     onChange([...selectedValues, optionId]);
     setSearchTerm('');
     inputRef.current?.focus();
@@ -78,7 +78,7 @@ export function TagSelector({
 
   const handleCreate = async () => {
     if (!canCreate || !onCreate) return;
-    
+
     setIsCreating(true);
     try {
       const newOption = await onCreate(searchTerm.trim());
@@ -99,7 +99,7 @@ export function TagSelector({
       if (filteredOptions.length > 0) {
         handleSelect(filteredOptions[0].id);
       } else if (canCreate) {
-        handleCreate();
+        void handleCreate();
       }
     } else if (e.key === 'Escape') {
       setIsOpen(false);
@@ -164,11 +164,11 @@ export function TagSelector({
                 <Plus className="h-4 w-4 text-muted-foreground" />
               </button>
             ))}
-            
+
             {canCreate && (
               <button
                 type="button"
-                onClick={handleCreate}
+                onClick={() => void handleCreate()}
                 disabled={isCreating}
                 className="w-full px-3 py-2 text-left hover:bg-muted transition-colors flex items-center justify-between border-t"
               >

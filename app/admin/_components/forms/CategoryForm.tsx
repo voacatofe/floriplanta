@@ -34,28 +34,28 @@ export function CategoryForm({ onSuccess }: CategoryFormProps) {
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    
+
     if (!formData.name || formData.name.length < 2) {
       newErrors.name = 'Nome deve ter pelo menos 2 caracteres';
     }
-    
+
     if (!formData.slug || !/^[a-z0-9-]+$/.test(formData.slug)) {
       newErrors.slug = 'Slug deve conter apenas letras minúsculas, números e hífens';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     setIsSubmitting(true);
-    
+
     try {
       const response = await fetch('/admin/categories/api/create', {
         method: 'POST',
@@ -91,11 +91,11 @@ export function CategoryForm({ onSuccess }: CategoryFormProps) {
     <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4 max-w-lg">
       <div>
         <Label htmlFor="name">Nome</Label>
-        <Input 
-          id="name" 
+        <Input
+          id="name"
           value={formData.name}
           onChange={(e) => handleInputChange('name', e.target.value)}
-          placeholder="Ex: Cannabis Medicinal" 
+          placeholder="Ex: Cannabis Medicinal"
           disabled={isSubmitting}
         />
         {errors.name && <p className="text-sm text-red-500 mt-1">{errors.name}</p>}
@@ -103,11 +103,11 @@ export function CategoryForm({ onSuccess }: CategoryFormProps) {
 
       <div>
         <Label htmlFor="slug">Slug</Label>
-        <Input 
-          id="slug" 
+        <Input
+          id="slug"
           value={formData.slug}
           onChange={(e) => handleInputChange('slug', e.target.value)}
-          placeholder="cannabis-medicinal" 
+          placeholder="cannabis-medicinal"
           disabled={isSubmitting}
         />
         {errors.slug && <p className="text-sm text-red-500 mt-1">{errors.slug}</p>}
@@ -115,11 +115,11 @@ export function CategoryForm({ onSuccess }: CategoryFormProps) {
 
       <div>
         <Label htmlFor="description">Descrição (opcional)</Label>
-        <Input 
-          id="description" 
+        <Input
+          id="description"
           value={formData.description}
           onChange={(e) => handleInputChange('description', e.target.value)}
-          placeholder="Breve descrição" 
+          placeholder="Breve descrição"
           disabled={isSubmitting}
         />
       </div>

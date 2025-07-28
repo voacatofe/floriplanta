@@ -40,7 +40,7 @@ export function ImageUploader({
   const handleDrop = useCallback(async (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    
+
     const files = Array.from(e.dataTransfer.files);
     if (files.length > 0) {
       await handleFile(files[0]);
@@ -56,19 +56,19 @@ export function ImageUploader({
 
   const handleFile = async (file: File) => {
     setError(null);
-    
+
     // Validar tipo de arquivo
     if (!file.type.startsWith('image/')) {
       setError('Por favor, selecione apenas arquivos de imagem.');
       return;
     }
-    
+
     // Validar tamanho
     if (file.size > maxSize * 1024 * 1024) {
       setError(`O arquivo deve ter no máximo ${maxSize}MB.`);
       return;
     }
-    
+
     if (onUpload) {
       setIsUploading(true);
       try {
@@ -120,18 +120,18 @@ export function ImageUploader({
           )}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
+          onDrop={(e) => void handleDrop(e)}
           onClick={() => document.getElementById('image-upload')?.click()}
         >
           <input
             id="image-upload"
             type="file"
             accept={accept}
-            onChange={handleFileInput}
+            onChange={(e) => void handleFileInput(e)}
             className="hidden"
             disabled={isUploading}
           />
-          
+
           <div className="space-y-4">
             <div className="mx-auto w-12 h-12 bg-muted rounded-full flex items-center justify-center">
               {isUploading ? (
@@ -140,7 +140,7 @@ export function ImageUploader({
                 <ImageIcon className="h-6 w-6 text-muted-foreground" />
               )}
             </div>
-            
+
             <div>
               <p className="text-sm font-medium">
                 {isUploading ? 'Fazendo upload...' : 'Clique ou arraste uma imagem'}
@@ -149,7 +149,7 @@ export function ImageUploader({
                 PNG, JPG, WEBP até {maxSize}MB
               </p>
             </div>
-            
+
             {!isUploading && (
               <Button type="button" variant="outline" size="sm">
                 <Upload className="h-4 w-4 mr-2" />
@@ -159,7 +159,7 @@ export function ImageUploader({
           </div>
         </div>
       )}
-      
+
       {error && (
         <p className="text-sm text-red-600">{error}</p>
       )}

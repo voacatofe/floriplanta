@@ -34,9 +34,9 @@ export default function AdminLoginPage() {
       if (result?.error) {
         // Mapeia o erro genérico para uma mensagem mais amigável
         if (result.error === 'CredentialsSignin') {
-            setError('Credenciais inválidas. Verifique seu email e senha.');
+          setError('Credenciais inválidas. Verifique seu email e senha.');
         } else {
-            setError('Ocorreu um erro ao tentar fazer login. Tente novamente.');
+          setError('Ocorreu um erro ao tentar fazer login. Tente novamente.');
         }
         setIsLoading(false);
       } else {
@@ -44,59 +44,59 @@ export default function AdminLoginPage() {
         router.push(callbackUrl);
       }
     } catch (error) {
-        console.error('Erro inesperado no login:', error);
-        setError('Ocorreu um erro inesperado.');
-        setIsLoading(false);
+      console.error('Erro inesperado no login:', error);
+      setError('Ocorreu um erro inesperado.');
+      setIsLoading(false);
     }
   };
 
   return (
     <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">Login do Administrador</CardTitle>
-          <CardDescription className="text-center">
-            Acesse o painel de controle da Floriplanta.
-          </CardDescription>
-        </CardHeader>
-        <form onSubmit={(e) => void handleSubmit(e)}>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input 
-                id="email" 
-                name="email" 
-                type="email" 
-                placeholder="seu@email.com" 
-                required 
-                disabled={isLoading}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Senha</Label>
-              <Input 
-                id="password" 
-                name="password" 
-                type="password" 
-                required 
-                disabled={isLoading}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            {error && (
-              <p className="text-sm text-red-600 bg-red-100 border border-red-300 p-3 rounded-md">
-                {error}
-              </p>
-            )}
-          </CardContent>
-          <CardFooter>
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? 'Entrando...' : 'Entrar'}
-            </Button>
-          </CardFooter>
-        </form>
-      </Card>
+      <CardHeader>
+        <CardTitle className="text-2xl font-bold text-center">Login do Administrador</CardTitle>
+        <CardDescription className="text-center">
+          Acesse o painel de controle da Floriplanta.
+        </CardDescription>
+      </CardHeader>
+      <form onSubmit={(e) => void handleSubmit(e)}>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="seu@email.com"
+              required
+              disabled={isLoading}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="password">Senha</Label>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              required
+              disabled={isLoading}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          {error && (
+            <p className="text-sm text-red-600 bg-red-100 border border-red-300 p-3 rounded-md">
+              {error}
+            </p>
+          )}
+        </CardContent>
+        <CardFooter>
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? 'Entrando...' : 'Entrar'}
+          </Button>
+        </CardFooter>
+      </form>
+    </Card>
   );
 } 

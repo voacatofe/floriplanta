@@ -24,13 +24,13 @@ export default function Footer() {
     handleChange,
     handleSubmit,
   } = useNewsletterForm({ formLocation: 'footer' });
-  
+
   return (
     <footer className="bg-brand-purple text-white pt-16 pb-8 relative overflow-hidden">
       {/* Formas orgânicas decorativas - Ajuste de opacidade e posicionamento */}
       <div className="absolute top-0 right-0 w-[60vw] h-[60vw] md:w-[40vw] md:h-[40vw] bg-brand-hover-purple/10 rounded-full translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 w-[50vw] h-[50vw] md:w-[35vw] md:h-[35vw] bg-brand-light-green/5 rounded-full -translate-x-1/4 translate-y-1/4 pointer-events-none"></div>
-      
+
       <div className="container mx-auto px-4 relative z-10">
         {/* Ajuste no gap para melhor espaçamento em telas menores */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-10">
@@ -47,8 +47,8 @@ export default function Footer() {
               />
             </div>
             <p className="font-inter text-white/90 mb-6 leading-relaxed text-sm">
-              Associação dedicada à promoção da cannabis medicinal 
-              e ao suporte aos pacientes, através da educação, pesquisa 
+              Associação dedicada à promoção da cannabis medicinal
+              e ao suporte aos pacientes, através da educação, pesquisa
               e ativismopor políticas públicas mais inclusivas.
             </p>
             {/* Ícones sociais com melhor espaçamento e transição */}
@@ -59,7 +59,7 @@ export default function Footer() {
               </Link>
             </div>
           </div>
-          
+
           {/* Coluna 2: Links rápidos */}
           <div className="flex flex-col">
             <h3 className="font-futuru font-bold text-white text-lg mb-5">Links Rápidos</h3>
@@ -84,7 +84,7 @@ export default function Footer() {
               </Link>
             </div>
           </div>
-          
+
           {/* Coluna 3: Contato */}
           <div className="flex flex-col">
             <h3 className="font-futuru font-bold text-white text-lg mb-5">Contato</h3>
@@ -98,10 +98,10 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-3">
                 <MessageCircle className="w-5 h-5 text-brand-light-green flex-shrink-0" />
-                <a 
-                  href="https://wa.me/5548988078312" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
+                <a
+                  href="https://wa.me/5548988078312"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="font-inter text-white/90 hover:text-white transition-colors duration-200 text-sm"
                   onClick={() => trackContactClick('whatsapp', 'footer')}
                 >
@@ -110,8 +110,8 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-brand-light-green flex-shrink-0" />
-                <a 
-                  href="mailto:contato@floriplanta.com" 
+                <a
+                  href="mailto:contato@floriplanta.com"
                   className="font-inter text-white/90 hover:text-white transition-colors duration-200 text-sm"
                   onClick={() => trackContactClick('email', 'footer')}
                 >
@@ -120,31 +120,31 @@ export default function Footer() {
               </div>
             </div>
           </div>
-          
+
           {/* Coluna 4: Newsletter */}
           <div className="flex flex-col">
             <h3 className="font-futuru font-bold text-white text-lg mb-5">Newsletter</h3>
             <p className="font-inter text-white/90 text-sm mb-4">
               Receba novidades sobre cannabis medicinal e nossos eventos.
             </p>
-            <form 
+            <form
               id={NEWSLETTER_FORM_ID}
-              className="flex flex-col sm:flex-row gap-2" 
-              onSubmit={handleSubmit}
+              className="flex flex-col sm:flex-row gap-2"
+              onSubmit={(e) => void handleSubmit(e)}
             >
               <label htmlFor={uniqueInputId} className="sr-only">Email</label>
-              <input 
+              <input
                 id={uniqueInputId}
                 name={FIELD_NAMES.EMAIL}
-                type="email" 
-                placeholder="Seu melhor email" 
+                type="email"
+                placeholder="Seu melhor email"
                 required
                 value={formData[FIELD_NAMES.EMAIL]}
                 onChange={handleChange}
                 disabled={isSubmitting}
                 className="px-3 py-2 rounded-lg text-sm bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-brand-light-green focus:border-transparent text-white placeholder-white/60 font-inter flex-grow"
               />
-              <button 
+              <button
                 type="submit"
                 name="submit"
                 disabled={isSubmitting}
@@ -155,7 +155,7 @@ export default function Footer() {
             </form>
           </div>
         </div>
-        
+
         {/* Linha divisória e links inferiores */}
         <div className="border-t border-white/15 mt-12 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="font-inter text-white/80 text-xs text-center md:text-left">
