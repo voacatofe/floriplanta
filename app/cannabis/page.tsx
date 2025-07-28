@@ -1,57 +1,57 @@
 import React from 'react';
 import Link from 'next/link';
-import Footer from "@/components/layout/Footer";
+import Footer from '@/components/layout/Footer';
 import { Leaf, BookOpen, Users, Scale, Heart, ArrowRight } from 'lucide-react';
 
 const subSections = [
   {
-    title: "O que é Cannabis Medicinal?",
-    description: "Entenda a planta, seus compostos e como ela interage com nosso corpo.",
+    title: 'O que é Cannabis Medicinal?',
+    description: 'Entenda a planta, seus compostos e como ela interage com nosso corpo.',
     icon: BookOpen,
-    link: "/cannabis/o-que-e",
-    bgColor: "bg-brand-light-green/40",
-    iconColor: "text-green-800"
+    link: '/cannabis/o-que-e',
+    bgColor: 'bg-brand-light-green/40',
+    iconColor: 'text-green-800',
   },
   {
-    title: "Benefícios e Indicações",
-    description: "Explore as condições de saúde onde a cannabis medicinal tem mostrado potencial terapêutico.",
+    title: 'Benefícios e Indicações',
+    description: 'Explore as condições de saúde onde a cannabis medicinal tem mostrado potencial terapêutico.',
     icon: Heart,
-    link: "/cannabis/beneficios",
-    bgColor: "bg-brand-hover-purple/10",
-    iconColor: "text-brand-hover-purple"
+    link: '/cannabis/beneficios',
+    bgColor: 'bg-brand-hover-purple/10',
+    iconColor: 'text-brand-hover-purple',
   },
   {
-    title: "Como Iniciar o Tratamento",
-    description: "Um guia prático com os passos essenciais para começar seu tratamento com segurança.",
+    title: 'Como Iniciar o Tratamento',
+    description: 'Um guia prático com os passos essenciais para começar seu tratamento com segurança.',
     icon: ArrowRight,
-    link: "/cannabis/como-iniciar",
-    bgColor: "bg-brand-light-green/40",
-    iconColor: "text-green-800"
+    link: '/cannabis/como-iniciar',
+    bgColor: 'bg-brand-light-green/40',
+    iconColor: 'text-green-800',
   },
   {
-    title: "Pesquisas Científicas",
-    description: "Acesse estudos e artigos científicos que embasam o uso terapêutico da cannabis.",
+    title: 'Pesquisas Científicas',
+    description: 'Acesse estudos e artigos científicos que embasam o uso terapêutico da cannabis.',
     icon: Scale,
-    link: "/cannabis/pesquisas",
-    bgColor: "bg-brand-hover-purple/10",
-    iconColor: "text-brand-hover-purple"
+    link: '/cannabis/pesquisas',
+    bgColor: 'bg-brand-hover-purple/10',
+    iconColor: 'text-brand-hover-purple',
   },
   {
-    title: "Mitos e Verdades",
-    description: "Desmistificando informações incorretas e esclarecendo dúvidas comuns.",
+    title: 'Mitos e Verdades',
+    description: 'Desmistificando informações incorretas e esclarecendo dúvidas comuns.',
     icon: Users,
-    link: "/cannabis/mitos-e-verdades",
-    bgColor: "bg-brand-light-green/40",
-    iconColor: "text-green-800"
+    link: '/cannabis/mitos-e-verdades',
+    bgColor: 'bg-brand-light-green/40',
+    iconColor: 'text-green-800',
   },
   {
-    title: "Legislação no Brasil",
-    description: "Entenda o cenário regulatório atual para o uso medicinal da cannabis no país.",
+    title: 'Legislação no Brasil',
+    description: 'Entenda o cenário regulatório atual para o uso medicinal da cannabis no país.',
     icon: Leaf,
-    link: "/cannabis/legislacao",
-    bgColor: "bg-brand-hover-purple/10",
-    iconColor: "text-brand-hover-purple"
-  }
+    link: '/cannabis/legislacao',
+    bgColor: 'bg-brand-hover-purple/10',
+    iconColor: 'text-brand-hover-purple',
+  },
 ];
 
 export default function CannabisInfoCenterPage() {

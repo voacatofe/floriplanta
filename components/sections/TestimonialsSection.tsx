@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import { Star } from 'lucide-react'; // Example icon
@@ -6,20 +6,20 @@ import { Star } from 'lucide-react'; // Example icon
 // Placeholder data - replace with real testimonials when available
 const testimonials = [
   {
-    quote: "Desde que me associei à Floriplanta, minha qualidade de vida melhorou imensamente. O acesso ao óleo e o apoio da equipe foram fundamentais no meu tratamento para dor crônica.",
-    name: "Associado(a) Exemplo",
-    location: "Florianópolis, SC"
+    quote: 'Desde que me associei à Floriplanta, minha qualidade de vida melhorou imensamente. O acesso ao óleo e o apoio da equipe foram fundamentais no meu tratamento para dor crônica.',
+    name: 'Associado(a) Exemplo',
+    location: 'Florianópolis, SC',
   },
   {
-    quote: "Encontrei na Floriplanta a informação e o acolhimento que precisava para entender o tratamento do meu filho com CBD. Sou muito grata por todo o suporte.",
-    name: "Mãe/Pai Exemplo",
-    location: "São José, SC"
+    quote: 'Encontrei na Floriplanta a informação e o acolhimento que precisava para entender o tratamento do meu filho com CBD. Sou muito grata por todo o suporte.',
+    name: 'Mãe/Pai Exemplo',
+    location: 'São José, SC',
   },
   {
-    quote: "Como médico, vejo a importância do trabalho sério da Floriplanta em educar e facilitar o acesso seguro à cannabis medicinal. Recomendo a associação aos meus pacientes.",
-    name: "Dr(a). Exemplo",
-    location: "Palhoça, SC"
-  }
+    quote: 'Como médico, vejo a importância do trabalho sério da Floriplanta em educar e facilitar o acesso seguro à cannabis medicinal. Recomendo a associação aos meus pacientes.',
+    name: 'Dr(a). Exemplo',
+    location: 'Palhoça, SC',
+  },
 ];
 
 export default function TestimonialsSection() {

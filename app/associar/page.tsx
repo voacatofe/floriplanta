@@ -1,13 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
-import Footer from "@/components/layout/Footer";
+import Footer from '@/components/layout/Footer';
 import { Users, HeartHandshake, BookOpen, Scale, CalendarDays, Handshake, FileText, HelpCircle, CheckCircle, Upload, Clock, Send } from 'lucide-react'; // Icons
 
 const benefits = [
   {
     icon: Users, // Changed to represent network
-    title: "Rede de Profissionais",
-    text: "Conecte-se com médicos prescritores e outros profissionais de saúde parceiros, facilitando o acesso a acompanhamento qualificado."
+    title: 'Rede de Profissionais',
+    text: 'Conecte-se com médicos prescritores e outros profissionais de saúde parceiros, facilitando o acesso a acompanhamento qualificado.',
   },
   /* {
     icon: Droplet,
@@ -16,70 +16,70 @@ const benefits = [
   }, */
   {
     icon: HeartHandshake,
-    title: "Acolhimento e Suporte",
-    text: "Participe de grupos de apoio, troque experiências com outros pacientes e familiares, e receba orientação da nossa equipe."
+    title: 'Acolhimento e Suporte',
+    text: 'Participe de grupos de apoio, troque experiências com outros pacientes e familiares, e receba orientação da nossa equipe.',
   },
   {
     icon: BookOpen,
-    title: "Informação Qualificada",
-    text: "Acesso a palestras, workshops, materiais educativos e conteúdos exclusivos sobre cannabis medicinal, saúde e bem-estar."
+    title: 'Informação Qualificada',
+    text: 'Acesso a palestras, workshops, materiais educativos e conteúdos exclusivos sobre cannabis medicinal, saúde e bem-estar.',
   },
   {
     icon: Scale,
-    title: "Orientação Jurídica e Social",
-    text: "Suporte inicial e direcionamento para questões legais relacionadas ao tratamento e acesso a direitos."
+    title: 'Orientação Jurídica e Social',
+    text: 'Suporte inicial e direcionamento para questões legais relacionadas ao tratamento e acesso a direitos.',
   },
   {
     icon: CalendarDays,
-    title: "Participação em Eventos",
-    text: "Descontos ou acesso gratuito a eventos, cursos e atividades promovidas pela associação."
+    title: 'Participação em Eventos',
+    text: 'Descontos ou acesso gratuito a eventos, cursos e atividades promovidas pela associação.',
   },
   {
     icon: Handshake,
-    title: "Fortalecimento da Causa",
-    text: "Sua associação contribui diretamente para a manutenção das atividades, defesa dos direitos dos pacientes e luta pela regulamentação justa."
-  }
+    title: 'Fortalecimento da Causa',
+    text: 'Sua associação contribui diretamente para a manutenção das atividades, defesa dos direitos dos pacientes e luta pela regulamentação justa.',
+  },
 ];
 
 const memberTypes = [
   { 
-    title: "Paciente", 
-    description: "Pessoa com indicação médica para uso de cannabis medicinal" /* comprovada por prescrição e laudo. */
+    title: 'Paciente', 
+    description: 'Pessoa com indicação médica para uso de cannabis medicinal', /* comprovada por prescrição e laudo. */
   },
   { 
-    title: "Familiar/Responsável Legal", 
-    description: "Parente ou responsável legal por um paciente que fará uso da cannabis medicinal."
+    title: 'Familiar/Responsável Legal', 
+    description: 'Parente ou responsável legal por um paciente que fará uso da cannabis medicinal.',
   },
   { 
-    title: "Apoiador/Colaborador", 
-    description: "Pessoa física ou jurídica que apoia a causa e deseja contribuir com as atividades da associação."
-  }
+    title: 'Apoiador/Colaborador', 
+    description: 'Pessoa física ou jurídica que apoia a causa e deseja contribuir com as atividades da associação.',
+  },
 ];
 
 const steps = [
-  { icon: Send, title: "Preencha o Formulário", text: "Clique no botão abaixo e preencha o formulário de pré-cadastro com suas informações básicas." },
-  { icon: Upload, title: "Envie os Documentos", text: "Após o pré-cadastro, você receberá um e-mail com as instruções para envio seguro dos documentos necessários (veja lista abaixo)." },
-  { icon: Clock, title: "Análise", text: "Nossa equipe analisará seu cadastro e documentação." },
-  { icon: CheckCircle, title: "Boas-Vindas", text: "Após a aprovação, você receberá seu número de associado e acesso à Área do Sócio." }
+  { icon: Send, title: 'Preencha o Formulário', text: 'Clique no botão abaixo e preencha o formulário de pré-cadastro com suas informações básicas.' },
+  { icon: Upload, title: 'Envie os Documentos', text: 'Após o pré-cadastro, você receberá um e-mail com as instruções para envio seguro dos documentos necessários (veja lista abaixo).' },
+  { icon: Clock, title: 'Análise', text: 'Nossa equipe analisará seu cadastro e documentação.' },
+  { icon: CheckCircle, title: 'Boas-Vindas', text: 'Após a aprovação, você receberá seu número de associado e acesso à Área do Sócio.' },
 ];
 
 const faqs = [
   {
-    question: "Preciso ser paciente para me associar?",
-    answer: "Não necessariamente. Você pode se associar como Apoiador/Colaborador para fortalecer a causa, mesmo sem ser paciente."
+    question: 'Preciso ser paciente para me associar?',
+    answer: 'Não necessariamente. Você pode se associar como Apoiador/Colaborador para fortalecer a causa, mesmo sem ser paciente.',
   },
   {
-    question: "Quanto tempo leva o processo de associação?",
-    answer: "Após o envio correto de todos os documentos, a análise leva em média 5 dias úteis."
+    question: 'Quanto tempo leva o processo de associação?',
+    answer: 'Após o envio correto de todos os documentos, a análise leva em média 5 dias úteis.',
   },
   {
-    question: "A associação garante o recebimento imediato do óleo?",
-    answer: "A associação é o primeiro passo. O acesso ao óleo depende da análise da prescrição médica, da disponibilidade do produto e do cumprimento das normas internas. Nossa equipe orientará sobre os prazos e procedimentos após a associação."
+    question: 'A associação garante o recebimento imediato do óleo?',
+    answer: 'A associação é o primeiro passo. O acesso ao óleo depende da análise da prescrição médica, da disponibilidade do produto e do cumprimento das normas internas. Nossa equipe orientará sobre os prazos e procedimentos após a associação.',
   },
   {
-    question: "Posso me associar se moro em outra cidade/estado?",
-    answer: "Sim, aceitamos associados de todo o Brasil. A logística de envio dos óleos (quando aplicável e aprovado) será combinada individualmente."
-  }
+    question: 'Posso me associar se moro em outra cidade/estado?',
+    answer: 'Sim, aceitamos associados de todo o Brasil. A logística de envio dos óleos (quando aplicável e aprovado) será combinada individualmente.',
+  },
 ];
 
 export default function AssociarPage() {

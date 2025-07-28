@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import { Heart, Book, UserPlus, Scale } from 'lucide-react';
@@ -30,10 +30,10 @@ export default function ValuesSection() {
           {/* Grid de Valores - Adicionado efeito hover e transição */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {[ // Array para facilitar a renderização e manutenção
-              { icon: Heart, title: "Empatia", text: "Reconhecemos a jornada única de cada paciente, acolhendo suas necessidades com compreensão e sensibilidade.", iconBg: "bg-brand-hover-purple/15" },
-              { icon: Book, title: "Educação", text: "Compartilhamos conhecimento baseado em ciência, combatendo desinformação e preconceitos com fatos e pesquisas.", iconBg: "bg-brand-light-green/50" },
-              { icon: UserPlus, title: "Inclusão", text: "Trabalhamos para garantir que o acesso aos benefícios da cannabis medicinal seja um direito para todos que necessitam.", iconBg: "bg-brand-hover-purple/15" },
-              { icon: Scale, title: "Responsabilidade", text: "Atuamos com ética, transparência e compromisso tanto com nossos associados quanto com a sociedade.", iconBg: "bg-brand-light-green/50" },
+              { icon: Heart, title: 'Empatia', text: 'Reconhecemos a jornada única de cada paciente, acolhendo suas necessidades com compreensão e sensibilidade.', iconBg: 'bg-brand-hover-purple/15' },
+              { icon: Book, title: 'Educação', text: 'Compartilhamos conhecimento baseado em ciência, combatendo desinformação e preconceitos com fatos e pesquisas.', iconBg: 'bg-brand-light-green/50' },
+              { icon: UserPlus, title: 'Inclusão', text: 'Trabalhamos para garantir que o acesso aos benefícios da cannabis medicinal seja um direito para todos que necessitam.', iconBg: 'bg-brand-hover-purple/15' },
+              { icon: Scale, title: 'Responsabilidade', text: 'Atuamos com ética, transparência e compromisso tanto com nossos associados quanto com a sociedade.', iconBg: 'bg-brand-light-green/50' },
             ].map((value, index) => (
               <div 
                 key={index}

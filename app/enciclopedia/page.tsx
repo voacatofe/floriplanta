@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { 
   getAllTerms, 
   generateEncyclopediaJsonLd,
-  type EncyclopediaCategory 
+  type EncyclopediaCategory, 
 } from '@/app/lib/encyclopedia';
 import Footer from '@/components/layout/Footer';
 import EncyclopediaClient from './EncyclopediaClient';
@@ -15,8 +15,8 @@ export const metadata: Metadata = {
     title: 'Enciclopédia Canábica - Glossário Completo | Floriplanta',
     description: 'Enciclopédia completa sobre cannabis medicinal com mais de 50 termos técnicos explicados de forma clara e científica.',
     type: 'website',
-    locale: 'pt_BR'
-  }
+    locale: 'pt_BR',
+  },
 };
 
 interface EncyclopediaPageProps {
@@ -38,7 +38,7 @@ export default async function EncyclopediaPage({ searchParams }: EncyclopediaPag
     1, // Sempre começar da primeira página
     TERMS_PER_PAGE,
     category,
-    searchQuery
+    searchQuery,
   );
 
   // Gerar JSON-LD para SEO

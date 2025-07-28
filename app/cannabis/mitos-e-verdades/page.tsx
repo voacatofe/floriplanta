@@ -1,17 +1,17 @@
 import React from 'react';
-import Footer from "@/components/layout/Footer";
+import Footer from '@/components/layout/Footer';
 import { HelpCircle, CheckCircle, XCircle } from 'lucide-react'; // Icons for myth/truth
 
 // Reusable Sidebar Component
 const CannabisSidebarNav = () => {
   const navItems = [
-    { title: "Visão Geral", href: "/cannabis" },
-    { title: "O que é?", href: "/cannabis/o-que-e" },
-    { title: "Benefícios", href: "/cannabis/beneficios" },
-    { title: "Como Iniciar", href: "/cannabis/como-iniciar" },
-    { title: "Pesquisas", href: "/cannabis/pesquisas" },
-    { title: "Mitos e Verdades", href: "/cannabis/mitos-e-verdades" },
-    { title: "Legislação", href: "/cannabis/legislacao" },
+    { title: 'Visão Geral', href: '/cannabis' },
+    { title: 'O que é?', href: '/cannabis/o-que-e' },
+    { title: 'Benefícios', href: '/cannabis/beneficios' },
+    { title: 'Como Iniciar', href: '/cannabis/como-iniciar' },
+    { title: 'Pesquisas', href: '/cannabis/pesquisas' },
+    { title: 'Mitos e Verdades', href: '/cannabis/mitos-e-verdades' },
+    { title: 'Legislação', href: '/cannabis/legislacao' },
   ];
 
   return (
@@ -40,24 +40,24 @@ const CannabisSidebarNav = () => {
 // Placeholder data for myths and truths - Add more as needed
 const mythsTruths = [
   {
-    myth: "Cannabis medicinal vicia tanto quanto o uso recreativo.",
-    truth: "O potencial de dependência varia com o composto (THC > CBD) e forma de uso. Tratamentos com CBD ou baixas doses de THC, sob acompanhamento médico, apresentam risco consideravelmente menor que o uso recreativo de altas doses de THC. Muitos pacientes usam cannabis medicinal para reduzir o uso de medicamentos mais viciantes, como opioides."
+    myth: 'Cannabis medicinal vicia tanto quanto o uso recreativo.',
+    truth: 'O potencial de dependência varia com o composto (THC > CBD) e forma de uso. Tratamentos com CBD ou baixas doses de THC, sob acompanhamento médico, apresentam risco consideravelmente menor que o uso recreativo de altas doses de THC. Muitos pacientes usam cannabis medicinal para reduzir o uso de medicamentos mais viciantes, como opioides.',
   },
   {
-    myth: "Cannabis medicinal é uma \"cura milagrosa\" para todas as doenças.",
-    truth: "Embora promissora, não é uma panaceia. Sua eficácia varia, e funciona melhor como parte de um tratamento integrado, sob orientação médica. É crucial ter expectativas realistas e baseadas em evidências."
+    myth: 'Cannabis medicinal é uma "cura milagrosa" para todas as doenças.',
+    truth: 'Embora promissora, não é uma panaceia. Sua eficácia varia, e funciona melhor como parte de um tratamento integrado, sob orientação médica. É crucial ter expectativas realistas e baseadas em evidências.',
   },
   {
-    myth: "Usar óleo de CBD vai me deixar \"chapado(a)\".",
-    truth: "O CBD (Canabidiol) é não psicoativo, não causa euforia ou intoxicação associada ao THC. Produtos ricos em CBD e com baixo/nenhum THC não alteram a percepção ou cognição significativamente."
+    myth: 'Usar óleo de CBD vai me deixar "chapado(a)".',
+    truth: 'O CBD (Canabidiol) é não psicoativo, não causa euforia ou intoxicação associada ao THC. Produtos ricos em CBD e com baixo/nenhum THC não alteram a percepção ou cognição significativamente.',
   },
   {
-    myth: "Qualquer óleo de cânhamo (hemp oil) vendido online serve como cannabis medicinal.",
-    truth: "Muitos óleos de cânhamo são derivados das sementes e contêm pouco ou nenhum canabinoide (CBD/THC). Produtos medicinais devem ter composição (concentração de canabinoides) especificada e comprovada por laudos."
+    myth: 'Qualquer óleo de cânhamo (hemp oil) vendido online serve como cannabis medicinal.',
+    truth: 'Muitos óleos de cânhamo são derivados das sementes e contêm pouco ou nenhum canabinoide (CBD/THC). Produtos medicinais devem ter composição (concentração de canabinoides) especificada e comprovada por laudos.',
   },
   {
-    myth: "Cannabis medicinal é ilegal no Brasil.",
-    truth: "O uso medicinal é regulamentado. A Anvisa permite importação e venda de alguns produtos em farmácias (com prescrição). O cultivo medicinal ainda depende de autorização judicial (Habeas Corpus), mas há movimento pela regulamentação."
+    myth: 'Cannabis medicinal é ilegal no Brasil.',
+    truth: 'O uso medicinal é regulamentado. A Anvisa permite importação e venda de alguns produtos em farmácias (com prescrição). O cultivo medicinal ainda depende de autorização judicial (Habeas Corpus), mas há movimento pela regulamentação.',
   },
   // Add more myths here
 ];

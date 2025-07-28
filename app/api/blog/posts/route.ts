@@ -13,20 +13,20 @@ export async function GET(request: NextRequest) {
       page,
       published: true,
       categorySlug, // Filtrar por categoria
-      searchQuery // Filtrar por busca
+      searchQuery, // Filtrar por busca
     });
     
     return NextResponse.json({
       posts,
       totalCount,
       page,
-      hasMore: posts.length === POSTS_PER_PAGE
+      hasMore: posts.length === POSTS_PER_PAGE,
     });
   } catch (error) {
     console.error('Error fetching posts:', error);
     return NextResponse.json(
       { error: 'Erro ao buscar posts' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

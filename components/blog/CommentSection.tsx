@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
 import { useState } from 'react';
 import { type AnonymousComment } from '@/app/lib/blog-comments';
-import { createComment } from '@/app/lib/blog-comments.client';
+// import { createComment } from '@/app/lib/blog-comments.client';
 import { MessageCircle, Send, Reply, User } from 'lucide-react';
 
 interface CommentSectionProps {
@@ -11,70 +11,73 @@ interface CommentSectionProps {
 }
 
 export default function CommentSection({ postId, initialComments = [] }: CommentSectionProps) {
-  const [comments, setComments] = useState<AnonymousComment[]>(initialComments);
+  const [comments] = useState<AnonymousComment[]>(initialComments);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [replyingTo, setReplyingTo] = useState<number | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    comment: ''
+    comment: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    
+
     if (!formData.name.trim()) {
       newErrors.name = 'Nome é obrigatório';
     }
-    
+
     if (!formData.comment.trim()) {
       newErrors.comment = 'Comentário é obrigatório';
     }
-    
+
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Email inválido';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent, parentCommentId?: number) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     setIsSubmitting(true);
-    
+
     try {
-      const newComment = await createComment(
-        postId,
-        formData.name,
-        formData.comment,
-        formData.email || undefined,
-        parentCommentId
-      );
-      
-      // Atualizar a lista de comentários
-      if (parentCommentId) {
-        // Se for uma resposta, adicionar ao comentário pai
-        setComments(prevComments => 
-          prevComments.map(comment => {
-            if (comment.id === parentCommentId) {
-              return {
-                ...comment,
-                replies: [...(comment.replies || []), newComment]
-              };
-            }
-            return comment;
-          })
-        );
-      } else {
-        // Se for um comentário novo, adicionar ao topo
-        setComments(prevComments => [{ ...newComment, replies: [] }, ...prevComments]);
-      }
-      
+      // TODO: Implementar createComment quando o sistema de comentários for finalizado
+      // const newComment = await createComment(
+      //   postId,
+      //   formData.name,
+      //   formData.comment,
+      //   formData.email || undefined,
+      //   parentCommentId
+      // );
+
+      console.log('Comentário seria criado:', { postId, ...formData, parentCommentId });
+
+      // // Atualizar a lista de comentários
+      // if (parentCommentId) {
+      // Se for uma resposta, adicionar ao comentário pai
+      // setComments(prevComments => 
+      //   prevComments.map(comment => {
+      //     if (comment.id === parentCommentId) {
+      //       return {
+      //         ...comment,
+      //         replies: [...(comment.replies || []), newComment]
+      //       };
+      //     }
+      //     return comment;
+      //   })
+      // );
+      // } else {
+      // Se for um comentário novo, adicionar ao topo
+      // setComments(prevComments => [{ ...newComment, replies: [] }, ...prevComments]);
+      // }
+
       // Limpar formulário
       setFormData({ name: '', email: '', comment: '' });
       setReplyingTo(null);
@@ -93,7 +96,7 @@ export default function CommentSection({ postId, initialComments = [] }: Comment
       month: 'long',
       year: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
 
@@ -122,11 +125,11 @@ export default function CommentSection({ postId, initialComments = [] }: Comment
           </div>
         </div>
       </div>
-      
+
       {/* Formulário de resposta */}
       {replyingTo === comment.id && (
         <div className="ml-8 md:ml-12 mt-3">
-          <form onSubmit={(e) => handleSubmit(e, comment.id)} className="bg-gray-50 rounded-lg p-4">
+          <form onSubmit={(e) => void handleSubmit(e, comment.id)} className="bg-gray-50 rounded-lg p-4">
             <h5 className="text-sm font-semibold text-brand-purple mb-3">
               Respondendo a {comment.author_name}
             </h5>
@@ -150,7 +153,7 @@ export default function CommentSection({ postId, initialComments = [] }: Comment
           </form>
         </div>
       )}
-      
+
       {/* Respostas */}
       {comment.replies && comment.replies.length > 0 && (
         <div className="mt-4">
@@ -171,9 +174,8 @@ export default function CommentSection({ postId, initialComments = [] }: Comment
             placeholder="Seu nome *"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green/50 ${
-              errors.name ? 'border-red-500' : 'border-gray-300'
-            }`}
+            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green/50 ${errors.name ? 'border-red-500' : 'border-gray-300'
+              }`}
           />
           {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
         </div>
@@ -183,9 +185,8 @@ export default function CommentSection({ postId, initialComments = [] }: Comment
             placeholder="Seu email (opcional)"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green/50 ${
-              errors.email ? 'border-red-500' : 'border-gray-300'
-            }`}
+            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green/50 ${errors.email ? 'border-red-500' : 'border-gray-300'
+              }`}
           />
           {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
         </div>
@@ -196,9 +197,8 @@ export default function CommentSection({ postId, initialComments = [] }: Comment
           value={formData.comment}
           onChange={(e) => setFormData({ ...formData, comment: e.target.value })}
           rows={4}
-          className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green/50 resize-none ${
-            errors.comment ? 'border-red-500' : 'border-gray-300'
-          }`}
+          className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-green/50 resize-none ${errors.comment ? 'border-red-500' : 'border-gray-300'
+            }`}
         />
         {errors.comment && <p className="text-red-500 text-xs mt-1">{errors.comment}</p>}
       </div>
@@ -220,7 +220,7 @@ export default function CommentSection({ postId, initialComments = [] }: Comment
           {/* Formulário de novo comentário */}
           <div className="bg-white rounded-xl p-6 shadow-sm mb-8">
             <h4 className="font-semibold text-brand-purple mb-4">Deixe seu comentário</h4>
-            <form onSubmit={(e) => handleSubmit(e)}>
+            <form onSubmit={(e) => void handleSubmit(e)}>
               <CommentForm />
               {errors.submit && (
                 <p className="text-red-500 text-sm mt-2">{errors.submit}</p>

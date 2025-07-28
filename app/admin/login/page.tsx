@@ -44,7 +44,7 @@ export default function AdminLoginPage() {
         router.push(callbackUrl);
       }
     } catch (error) {
-        console.error("Erro inesperado no login:", error);
+        console.error('Erro inesperado no login:', error);
         setError('Ocorreu um erro inesperado.');
         setIsLoading(false);
     }
@@ -58,7 +58,7 @@ export default function AdminLoginPage() {
             Acesse o painel de controle da Floriplanta.
           </CardDescription>
         </CardHeader>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={(e) => void handleSubmit(e)}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>

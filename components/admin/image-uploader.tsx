@@ -21,7 +21,7 @@ export function ImageUploader({
   onUpload,
   className,
   accept = 'image/*',
-  maxSize = 5
+  maxSize = 5,
 }: ImageUploaderProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -74,7 +74,7 @@ export function ImageUploader({
       try {
         const url = await onUpload(file);
         onChange(file, url);
-      } catch (_err) {
+      } catch {
         setError('Erro ao fazer upload da imagem.');
       } finally {
         setIsUploading(false);
@@ -116,7 +116,7 @@ export function ImageUploader({
           className={cn(
             'border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer',
             isDragging ? 'border-primary bg-primary/5' : 'border-muted-foreground/25 hover:border-primary/50',
-            isUploading && 'pointer-events-none opacity-50'
+            isUploading && 'pointer-events-none opacity-50',
           )}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}

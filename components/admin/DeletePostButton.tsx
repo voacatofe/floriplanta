@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useState, useTransition } from "react";
-import { Trash2, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useState, useTransition } from 'react';
+import { Trash2, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,9 +13,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { deletePostAction } from "@/app/admin/posts/actions";
-import { toast } from "sonner";
+} from '@/components/ui/alert-dialog';
+import { deletePostAction } from '@/app/admin/posts/actions';
+import { toast } from 'sonner';
 
 interface DeletePostButtonProps {
   postId: string;
@@ -32,19 +32,19 @@ export default function DeletePostButton({ postId, postTitle }: DeletePostButton
         const result = await deletePostAction(postId);
         
         if (result?.error) {
-          toast.error("Erro ao excluir post", {
+          toast.error('Erro ao excluir post', {
             description: result.error,
           });
         } else {
-          toast.success("Post excluído com sucesso!", {
+          toast.success('Post excluído com sucesso!', {
             description: `"${postTitle}" foi removido permanentemente.`,
           });
           setOpen(false);
         }
       } catch (error) {
-        console.error("Erro inesperado ao excluir post:", error);
-        toast.error("Erro inesperado", {
-          description: "Ocorreu um erro inesperado ao excluir o post. Tente novamente.",
+        console.error('Erro inesperado ao excluir post:', error);
+        toast.error('Erro inesperado', {
+          description: 'Ocorreu um erro inesperado ao excluir o post. Tente novamente.',
         });
       }
     });
@@ -92,7 +92,7 @@ export default function DeletePostButton({ postId, postTitle }: DeletePostButton
                 Excluindo...
               </>
             ) : (
-              "Excluir Permanentemente"
+              'Excluir Permanentemente'
             )}
           </AlertDialogAction>
         </AlertDialogFooter>

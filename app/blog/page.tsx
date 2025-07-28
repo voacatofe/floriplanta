@@ -11,12 +11,12 @@ import BlogSearch from '@/components/blog/BlogSearch';
 // Placeholder data for blog posts - Replace with actual data fetching later
 const featuredPosts = [
   {
-    slug: "bem-vindos-ao-blog",
-    title: "Bem-vindos ao Blog da Floriplanta!",
-    image: "/images/blog/bem-vindos-blog.svg",
-    excerpt: "Nosso novo espaço de conhecimento e troca. Aqui você encontra artigos, notícias, pesquisas e histórias sobre o universo da cannabis medicinal...",
-    category: "Notícias da Floriplanta",
-    date: "05 de Maio, 2025"
+    slug: 'bem-vindos-ao-blog',
+    title: 'Bem-vindos ao Blog da Floriplanta!',
+    image: '/images/blog/bem-vindos-blog.svg',
+    excerpt: 'Nosso novo espaço de conhecimento e troca. Aqui você encontra artigos, notícias, pesquisas e histórias sobre o universo da cannabis medicinal...',
+    category: 'Notícias da Floriplanta',
+    date: '05 de Maio, 2025',
   },
   // Add 1 or 2 more featured posts if desired
 ];
@@ -43,7 +43,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     page: currentPage,
     categorySlug: categorySlug,
     searchQuery: searchQuery,
-    published: true
+    published: true,
   });
   
   const allCategories = await getAllCategories();

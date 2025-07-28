@@ -1,29 +1,12 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import BlogPage from '@/app/blog/page';
-import { createSupabaseServerClient } from '@/app/lib/supabase/server';
+import { getCategoryBySlug } from '@/app/lib/blog-data';
 
 interface CategoryPageProps {
   params: Promise<{
     slug: string;
   }>;
-}
-
-// Buscar categoria pelo slug
-async function getCategoryBySlug(slug: string) {
-  const supabase = await createSupabaseServerClient();
-  
-  const { data, error } = await supabase
-    .from('categories')
-    .select('*')
-    .eq('slug', slug)
-    .single();
-  
-  if (error || !data) {
-    return null;
-  }
-  
-  return data;
 }
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
@@ -38,7 +21,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   
   return {
     title: `${category.name} | Blog Floriplanta`,
-    description: category.description || `Posts sobre ${category.name} no blog da Floriplanta`,
+    description: `Posts sobre ${category.name} no blog da Floriplanta`,
   };
 }
 

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, memo } from 'react';
 import EditorJS, { OutputData } from '@editorjs/editorjs';
-import { type SupabaseClient } from '@supabase/supabase-js';
+
 import './EditorJSComponent.css';
 // @ts-expect-error - Header types may not be fully compatible
 import Header from '@editorjs/header';
@@ -29,7 +29,6 @@ interface EditorProps {
   onChange: (data: OutputData) => void;
   holderId?: string;
   readOnly?: boolean;
-  supabaseClient: SupabaseClient;
 }
 
 const EDITOR_HOLDER_ID = 'editorjs-container';
@@ -38,8 +37,7 @@ const EditorJSComponent: React.FC<EditorProps> = ({
   value, 
   onChange, 
   holderId = EDITOR_HOLDER_ID, 
-  readOnly = false, 
-  supabaseClient
+  readOnly = false,
 }) => {
   const editorInstanceRef = useRef<EditorJS | null>(null);
 
@@ -53,7 +51,7 @@ const EditorJSComponent: React.FC<EditorProps> = ({
           onReady: () => {
             console.log('Editor.js is ready to work!');
           },
-          onChange: async (api, _event) => {
+          onChange: async (api) => {
             if (onChange) {
               const savedData = await api.saver.save();
               onChange(savedData);
@@ -69,47 +67,33 @@ const EditorJSComponent: React.FC<EditorProps> = ({
               config: {
                 uploader: {
                   uploadByFile: async (file: File) => {
-                    if (!supabaseClient) {
-                      console.error("Supabase client não fornecido para o Editor.js uploader.");
-                      return {
-                        success: 0,
-                        file: { url: '' },
-                        message: 'Supabase client não configurado para upload.'
+                    try {
+                      const formData = new FormData();
+                      formData.append('file', file);
+                      formData.append('folder', 'editorjs');
+
+                      const response = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: formData,
+                      });
+
+                      if (!response.ok) {
+                        throw new Error('Erro no upload da imagem');
+                      }
+
+                      const { url } = await response.json();
+                      return { success: 1, file: { url } };
+                    } catch (error) {
+                      console.error('Erro no upload do Editor.js:', error);
+                      return { 
+                        success: 0, 
+                        file: { url: '' }, 
+                        message: error instanceof Error ? error.message : 'Erro desconhecido no upload',
                       };
                     }
-                    
-                    const fileName = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`.toLowerCase();
-                    const filePath = `editorjs_uploads/${fileName}`; 
-                    
-                    try {
-                      const { data: _data, error } = await supabaseClient.storage
-                        .from('blogimages')
-                        .upload(filePath, file, {
-                          cacheControl: '3600',
-                          upsert: false
-                        });
-
-                      if (error) {
-                        console.error('Supabase upload error no Editor.js:', error);
-                        return { success: 0, file: { url: '' }, message: error.message };
-                      }
-
-                      const { data: publicUrlData } = supabaseClient.storage
-                        .from('blogimages')
-                        .getPublicUrl(filePath);
-
-                      if (publicUrlData && publicUrlData.publicUrl) {
-                        return { success: 1, file: { url: publicUrlData.publicUrl } };
-                      } else {
-                        return { success: 0, file: { url: '' }, message: 'Não foi possível obter a URL pública da imagem.' };
-                      }
-                    } catch (e) {
-                       console.error('Erro no bloco catch do upload do Editor.js:', e);
-                       return { success: 0, file: { url: '' }, message: (e as Error).message };
-                    }
                   },
-                }
-              }
+                },
+              },
             },
             code: CodeTool,
             delimiter: Delimiter,
@@ -129,7 +113,7 @@ const EditorJSComponent: React.FC<EditorProps> = ({
         editorInstanceRef.current = null;
       }
     };
-  }, [holderId, value, onChange, readOnly, supabaseClient]);
+  }, [holderId, value, onChange, readOnly]);
 
   return (
     <div id={holderId} className="min-h-[300px]" />

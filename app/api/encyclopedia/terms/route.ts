@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
       page,
       perPage,
       category,
-      searchQuery
+      searchQuery,
     );
 
     return NextResponse.json({
@@ -22,13 +22,13 @@ export async function GET(request: NextRequest) {
       totalCount,
       categories,
       currentPage: page,
-      totalPages: Math.ceil(totalCount / perPage)
+      totalPages: Math.ceil(totalCount / perPage),
     });
   } catch (error) {
     console.error('Erro ao buscar termos da enciclopédia:', error);
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 } 

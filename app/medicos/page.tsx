@@ -1,68 +1,68 @@
 import React from 'react';
 import Link from 'next/link';
 
-import Footer from "@/components/layout/Footer";
+import Footer from '@/components/layout/Footer';
 import { Stethoscope, Users, Droplet, BookOpen, Network, ShieldCheck, Handshake, FileText, Send, Mail, Phone, HelpCircle } from 'lucide-react'; // Icons
 
 const partnershipBenefits = [
   {
     icon: Users,
-    title: "Pacientes Informados e Acolhidos",
-    text: "Encaminhe seus pacientes para uma associação que oferece suporte, informação e acolhimento, complementando o tratamento prescrito."
+    title: 'Pacientes Informados e Acolhidos',
+    text: 'Encaminhe seus pacientes para uma associação que oferece suporte, informação e acolhimento, complementando o tratamento prescrito.',
   },
   {
     icon: Droplet,
-    title: "Acesso a Produtos de Qualidade",
-    text: "Tenha a segurança de prescrever produtos com controle de qualidade rastreável, produzidos pela associação e com laudos disponíveis."
+    title: 'Acesso a Produtos de Qualidade',
+    text: 'Tenha a segurança de prescrever produtos com controle de qualidade rastreável, produzidos pela associação e com laudos disponíveis.',
   },
   {
     icon: BookOpen,
-    title: "Educação Continuada",
-    text: "Participe de eventos científicos, webinars, grupos de estudo e tenha acesso a materiais atualizados sobre cannabis medicinal."
+    title: 'Educação Continuada',
+    text: 'Participe de eventos científicos, webinars, grupos de estudo e tenha acesso a materiais atualizados sobre cannabis medicinal.',
   },
   {
     icon: Network,
-    title: "Rede de Colaboração",
-    text: "Troque experiências com outros profissionais prescritores e parceiros da associação, fortalecendo a prática clínica."
+    title: 'Rede de Colaboração',
+    text: 'Troque experiências com outros profissionais prescritores e parceiros da associação, fortalecendo a prática clínica.',
   },
   {
     icon: ShieldCheck,
-    title: "Suporte Regulatório",
-    text: "Receba orientação sobre as normas da ANVISA, processos de prescrição e documentação necessária para o acesso legal dos pacientes."
+    title: 'Suporte Regulatório',
+    text: 'Receba orientação sobre as normas da ANVISA, processos de prescrição e documentação necessária para o acesso legal dos pacientes.',
   },
   {
     icon: Handshake,
-    title: "Contribuição Social",
-    text: "Associe sua prática a uma causa importante, ajudando a ampliar o acesso a tratamentos que podem transformar vidas."
-  }
+    title: 'Contribuição Social',
+    text: 'Associe sua prática a uma causa importante, ajudando a ampliar o acesso a tratamentos que podem transformar vidas.',
+  },
 ];
 
 const prescriptionSteps = [
-  { number: 1, title: "Avaliação e Prescrição", text: "Realize a avaliação clínica e emita a prescrição médica conforme as normas da ANVISA, especificando produto, concentração, posologia e CID." },
-  { number: 2, title: "Laudo Médico", text: "Elabore um laudo médico detalhado que justifique a indicação terapêutica." },
-  { number: 3, title: "Orientação ao Paciente", text: "Oriente o paciente a procurar a Floriplanta para iniciar o processo de associação, informando sobre a necessidade da prescrição e do laudo." },
-  { number: 4, title: "Processo de Associação (Paciente)", text: "O paciente realizará o cadastro e envio da documentação diretamente para a associação." },
-  { number: 5, title: "Análise e Liberação (Floriplanta)", text: "Nossa equipe analisará a documentação e procederá com a associação e orientações para acesso ao óleo." },
-  { number: 6, title: "Comunicação (Opcional)", text: "Disponibilizamos um canal para profissionais tirarem dúvidas sobre o processo ou produtos." }
+  { number: 1, title: 'Avaliação e Prescrição', text: 'Realize a avaliação clínica e emita a prescrição médica conforme as normas da ANVISA, especificando produto, concentração, posologia e CID.' },
+  { number: 2, title: 'Laudo Médico', text: 'Elabore um laudo médico detalhado que justifique a indicação terapêutica.' },
+  { number: 3, title: 'Orientação ao Paciente', text: 'Oriente o paciente a procurar a Floriplanta para iniciar o processo de associação, informando sobre a necessidade da prescrição e do laudo.' },
+  { number: 4, title: 'Processo de Associação (Paciente)', text: 'O paciente realizará o cadastro e envio da documentação diretamente para a associação.' },
+  { number: 5, title: 'Análise e Liberação (Floriplanta)', text: 'Nossa equipe analisará a documentação e procederá com a associação e orientações para acesso ao óleo.' },
+  { number: 6, title: 'Comunicação (Opcional)', text: 'Disponibilizamos um canal para profissionais tirarem dúvidas sobre o processo ou produtos.' },
 ];
 
 const faqs = [
   {
-    question: "Quais produtos a Floriplanta oferece?",
-    answer: "Atualmente, produzimos os óleos Terral (CBD Full Spectrum), Swell (THC Full Spectrum) e Maré (Balanceado Full Spectrum), todos com 20mg/mL. Os laudos de análise estão disponíveis para consulta na seção 'Nossos Óleos'."
+    question: 'Quais produtos a Floriplanta oferece?',
+    answer: "Atualmente, produzimos os óleos Terral (CBD Full Spectrum), Swell (THC Full Spectrum) e Maré (Balanceado Full Spectrum), todos com 20mg/mL. Os laudos de análise estão disponíveis para consulta na seção 'Nossos Óleos'.",
   },
   {
-    question: "A Floriplanta oferece suporte na definição da dosagem?",
-    answer: "A definição da dosagem é um ato médico. No entanto, oferecemos materiais de referência e podemos conectar profissionais para troca de experiências, sempre respeitando a autonomia prescritiva."
+    question: 'A Floriplanta oferece suporte na definição da dosagem?',
+    answer: 'A definição da dosagem é um ato médico. No entanto, oferecemos materiais de referência e podemos conectar profissionais para troca de experiências, sempre respeitando a autonomia prescritiva.',
   },
   {
-    question: "Como funciona a comunicação sobre o paciente encaminhado?",
-    answer: "A comunicação sobre o paciente é protegida por sigilo. Só compartilhamos informações com o profissional prescritor mediante consentimento explícito do paciente, conforme a LGPD."
+    question: 'Como funciona a comunicação sobre o paciente encaminhado?',
+    answer: 'A comunicação sobre o paciente é protegida por sigilo. Só compartilhamos informações com o profissional prescritor mediante consentimento explícito do paciente, conforme a LGPD.',
   },
   {
-    question: "Há algum custo para o profissional se tornar parceiro?",
-    answer: "Não há custos para estabelecer uma parceria informal de encaminhamento e colaboração. Para parcerias formais com benefícios adicionais, entre em contato para discutirmos as possibilidades."
-  }
+    question: 'Há algum custo para o profissional se tornar parceiro?',
+    answer: 'Não há custos para estabelecer uma parceria informal de encaminhamento e colaboração. Para parcerias formais com benefícios adicionais, entre em contato para discutirmos as possibilidades.',
+  },
 ];
 
 export default function MedicosPage() {

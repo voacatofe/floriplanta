@@ -5,8 +5,8 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import type { Session } from 'next-auth';
 import { PrismaClient } from '@/lib/generated/prisma';
-import { type Category, type Tag, getAllCategories, getAllTags } from "@/app/lib/blog-data";
-import { MAX_TITLE_LENGTH, MAX_SLUG_LENGTH } from "@/app/lib/constants";
+import { type Category, type Tag, getAllCategories, getAllTags } from '@/app/lib/blog-data';
+import { MAX_TITLE_LENGTH, MAX_SLUG_LENGTH } from '@/app/lib/constants';
 
 const prisma = new PrismaClient();
 
@@ -16,7 +16,7 @@ export interface PostCreationData {
   excerpt: string | null;
   body: string | null;
   cover_image_url: string | null;
-  status: "draft" | "published";
+  status: 'draft' | 'published';
   category_ids?: number[];
   tag_ids?: number[];
   published_at: string | null;
@@ -26,7 +26,7 @@ export async function createPostAction(data: PostCreationData) {
   const session = await getServerSession(authOptions) as Session | null;
 
   if (!session || !session.user) {
-    return { error: "Usuário não autenticado." };
+    return { error: 'Usuário não autenticado.' };
   }
 
   // Validações de entrada
@@ -34,11 +34,11 @@ export async function createPostAction(data: PostCreationData) {
   const trimmedSlug = data.slug?.trim();
   
   if (!trimmedTitle || trimmedTitle.length === 0) {
-    return { error: "Título é obrigatório." };
+    return { error: 'Título é obrigatório.' };
   }
   
   if (!trimmedSlug || trimmedSlug.length === 0) {
-    return { error: "Slug é obrigatório." };
+    return { error: 'Slug é obrigatório.' };
   }
   
   if (trimmedTitle.length > MAX_TITLE_LENGTH) {
@@ -52,27 +52,27 @@ export async function createPostAction(data: PostCreationData) {
   // Validar se o slug contém apenas caracteres permitidos
   const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
   if (!slugRegex.test(trimmedSlug)) {
-    return { error: "Slug deve conter apenas letras minúsculas, números e hífens." };
+    return { error: 'Slug deve conter apenas letras minúsculas, números e hífens.' };
   }
   
   // Verificar se o slug já existe
   try {
     const existingPost = await prisma.post.findUnique({
       where: { slug: trimmedSlug },
-      select: { id: true }
+      select: { id: true },
     });
     
     if (existingPost) {
-      return { error: "Este slug já está em uso. Escolha outro." };
+      return { error: 'Este slug já está em uso. Escolha outro.' };
     }
   } catch (error) {
-    console.error("Erro ao verificar slug existente:", error);
-    return { error: "Erro ao verificar disponibilidade do slug." };
+    console.error('Erro ao verificar slug existente:', error);
+    return { error: 'Erro ao verificar disponibilidade do slug.' };
   }
   
   // Validar status
   if (!['draft', 'published', 'archived'].includes(data.status)) {
-    return { error: "Status inválido." };
+    return { error: 'Status inválido.' };
   }
 
   // Cast session.user to include id property
@@ -81,7 +81,7 @@ export async function createPostAction(data: PostCreationData) {
   const { title, slug, body, cover_image_url, status, category_ids, tag_ids } = {
     ...data,
     title: trimmedTitle,
-    slug: trimmedSlug
+    slug: trimmedSlug,
   };
 
   try {
@@ -94,23 +94,23 @@ export async function createPostAction(data: PostCreationData) {
         published: status === 'published',
         authorId: author_id,
         categories: category_ids ? {
-          connect: category_ids.map(id => ({ id: id.toString() }))
+          connect: category_ids.map(id => ({ id: id.toString() })),
         } : undefined,
         tags: tag_ids ? {
-          connect: tag_ids.map(id => ({ id: id.toString() }))
-        } : undefined
+          connect: tag_ids.map(id => ({ id: id.toString() })),
+        } : undefined,
       },
-      select: { id: true }
+      select: { id: true },
     });
 
-    revalidatePath("/admin/posts");
-    revalidatePath("/blog");
+    revalidatePath('/admin/posts');
+    revalidatePath('/blog');
     revalidatePath(`/blog/${slug}`);
 
     return { error: null, data: { postId: postData.id } };
   } catch (error) {
-    console.error("Erro ao criar post:", error);
-    return { error: "Erro interno do servidor ao criar o post." };
+    console.error('Erro ao criar post:', error);
+    return { error: 'Erro interno do servidor ao criar o post.' };
   } 
 }
 
@@ -137,50 +137,50 @@ export async function getTagsForAdmin(): Promise<Tag[]> {
 export async function deletePostAction(postId: string) {
   // Validações de entrada
   if (!postId || typeof postId !== 'string' || postId.trim() === '') {
-    return { error: "ID do post inválido." };
+    return { error: 'ID do post inválido.' };
   }
 
   const session = await getServerSession(authOptions) as Session | null;
   if (!session?.user) {
-    return { error: "Usuário não autenticado." };
+    return { error: 'Usuário não autenticado.' };
   }
 
   try {
     // Primeiro, buscar o post para verificar se existe e obter o slug
     const postData = await prisma.post.findUnique({
       where: { id: postId },
-      select: { id: true, slug: true, title: true }
+      select: { id: true, slug: true, title: true },
     });
 
     if (!postData) {
-      return { error: "Post não encontrado." };
+      return { error: 'Post não encontrado.' };
     }
 
     // Remover o post (Prisma irá lidar com as relações automaticamente devido ao cascade)
     await prisma.post.delete({
-      where: { id: postId }
+      where: { id: postId },
     });
 
     // Revalidar as páginas relevantes
-    revalidatePath("/admin/posts");
-    revalidatePath("/blog");
+    revalidatePath('/admin/posts');
+    revalidatePath('/blog');
     revalidatePath(`/blog/${postData.slug}`);
 
     return { error: null, data: { deletedPost: postData } };
   } catch (error) {
-    console.error("Erro ao excluir post:", error);
-    return { error: "Erro interno do servidor ao excluir o post." };
+    console.error('Erro ao excluir post:', error);
+    return { error: 'Erro interno do servidor ao excluir o post.' };
   }
 }
 
 export async function getPostForEdit(postId: string) {
   const session = await getServerSession(authOptions) as Session | null;
   if (!session?.user) {
-    return { error: "Usuário não autenticado." };
+    return { error: 'Usuário não autenticado.' };
   }
 
   if (!postId || typeof postId !== 'string' || postId.trim() === '') {
-    return { error: "ID do post inválido." };
+    return { error: 'ID do post inválido.' };
   }
 
   try {
@@ -188,7 +188,7 @@ export async function getPostForEdit(postId: string) {
       where: { id: postId },
       include: {
         author: {
-          select: { id: true, name: true }
+          select: { id: true, name: true },
         },
         categories: true,
         tags: true,
@@ -196,13 +196,13 @@ export async function getPostForEdit(postId: string) {
     });
 
     if (!post) {
-      return { error: "Post não encontrado." };
+      return { error: 'Post não encontrado.' };
     }
 
     return { error: null, data: post };
   } catch (error) {
-    console.error("Erro ao buscar post para edição:", error);
-    return { error: "Erro interno do servidor ao buscar o post." };
+    console.error('Erro ao buscar post para edição:', error);
+    return { error: 'Erro interno do servidor ao buscar o post.' };
   }
 }
 
@@ -212,7 +212,7 @@ export interface PostUpdateData {
   excerpt: string | null;
   body: string | null;
   cover_image_url: string | null;
-  status: "draft" | "published";
+  status: 'draft' | 'published';
   category_ids?: number[];
   tag_ids?: number[];
   published_at: string | null;
@@ -222,11 +222,11 @@ export async function updatePostAction(postId: string, data: PostUpdateData) {
   const session = await getServerSession(authOptions) as Session | null;
 
   if (!session || !session.user) {
-    return { error: "Usuário não autenticado." };
+    return { error: 'Usuário não autenticado.' };
   }
 
   if (!postId || typeof postId !== 'string' || postId.trim() === '') {
-    return { error: "ID do post inválido." };
+    return { error: 'ID do post inválido.' };
   }
 
   // Validações de entrada
@@ -234,11 +234,11 @@ export async function updatePostAction(postId: string, data: PostUpdateData) {
   const trimmedSlug = data.slug?.trim();
   
   if (!trimmedTitle || trimmedTitle.length === 0) {
-    return { error: "Título é obrigatório." };
+    return { error: 'Título é obrigatório.' };
   }
   
   if (!trimmedSlug || trimmedSlug.length === 0) {
-    return { error: "Slug é obrigatório." };
+    return { error: 'Slug é obrigatório.' };
   }
   
   if (trimmedTitle.length > MAX_TITLE_LENGTH) {
@@ -252,44 +252,44 @@ export async function updatePostAction(postId: string, data: PostUpdateData) {
   // Validar se o slug contém apenas caracteres permitidos
   const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
   if (!slugRegex.test(trimmedSlug)) {
-    return { error: "Slug deve conter apenas letras minúsculas, números e hífens." };
+    return { error: 'Slug deve conter apenas letras minúsculas, números e hífens.' };
   }
   
   // Verificar se o slug já existe (exceto para o post atual)
   try {
     const existingPost = await prisma.post.findUnique({
       where: { slug: trimmedSlug },
-      select: { id: true }
+      select: { id: true },
     });
     
     if (existingPost && existingPost.id !== postId) {
-      return { error: "Este slug já está em uso. Escolha outro." };
+      return { error: 'Este slug já está em uso. Escolha outro.' };
     }
   } catch (error) {
-    console.error("Erro ao verificar slug existente:", error);
-    return { error: "Erro ao verificar disponibilidade do slug." };
+    console.error('Erro ao verificar slug existente:', error);
+    return { error: 'Erro ao verificar disponibilidade do slug.' };
   }
   
   // Validar status
   if (!['draft', 'published', 'archived'].includes(data.status)) {
-    return { error: "Status inválido." };
+    return { error: 'Status inválido.' };
   }
 
   const { title, slug, body, cover_image_url, status, category_ids, tag_ids } = {
     ...data,
     title: trimmedTitle,
-    slug: trimmedSlug
+    slug: trimmedSlug,
   };
 
   try {
     // Primeiro, buscar o post atual para obter o slug antigo
     const currentPost = await prisma.post.findUnique({
       where: { id: postId },
-      select: { slug: true }
+      select: { slug: true },
     });
 
     if (!currentPost) {
-      return { error: "Post não encontrado." };
+      return { error: 'Post não encontrado.' };
     }
 
     const updatedPost = await prisma.post.update({
@@ -302,24 +302,24 @@ export async function updatePostAction(postId: string, data: PostUpdateData) {
         published: status === 'published',
         categories: {
           set: [], // Remove todas as categorias
-          connect: category_ids ? category_ids.map(id => ({ id: id.toString() })) : []
+          connect: category_ids ? category_ids.map(id => ({ id: id.toString() })) : [],
         },
         tags: {
           set: [], // Remove todas as tags
-          connect: tag_ids ? tag_ids.map(id => ({ id: id.toString() })) : []
-        }
+          connect: tag_ids ? tag_ids.map(id => ({ id: id.toString() })) : [],
+        },
       },
-      select: { id: true, slug: true }
+      select: { id: true, slug: true },
     });
 
-    revalidatePath("/admin/posts");
-    revalidatePath("/blog");
+    revalidatePath('/admin/posts');
+    revalidatePath('/blog');
     revalidatePath(`/blog/${currentPost.slug}`); // Slug antigo
     revalidatePath(`/blog/${updatedPost.slug}`); // Slug novo
 
     return { error: null, data: { postId: updatedPost.id, slug: updatedPost.slug } };
   } catch (error) {
-    console.error("Erro ao atualizar post:", error);
-    return { error: "Erro interno do servidor ao atualizar o post." };
+    console.error('Erro ao atualizar post:', error);
+    return { error: 'Erro interno do servidor ao atualizar o post.' };
   }
 }

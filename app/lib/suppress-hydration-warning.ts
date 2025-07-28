@@ -20,7 +20,7 @@ export function suppressHydrationWarning() {
       
       // Check if the error contains any of these attributes
       const isExtensionRelatedError = extensionAttributes.some(attr => 
-        errorString.includes(attr)
+        errorString.includes(attr),
       );
       
       // Also check for the specific hydration mismatch error

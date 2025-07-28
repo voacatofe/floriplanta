@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import { BrainCog, Pill, ScanFace, Dna, Activity, HeartPulse } from 'lucide-react';
@@ -10,7 +10,7 @@ function BenefitCard({
   title, 
   description, 
   icon: Icon, 
-  color
+  color,
 }: { 
   title: string; 
   description: string; 
@@ -19,10 +19,10 @@ function BenefitCard({
 }) {
   const colorClasses = color === 'purple' ? {
     bg: 'bg-brand-hover-purple/10',
-    icon: 'text-brand-purple'
+    icon: 'text-brand-purple',
   } : {
     bg: 'bg-brand-light-green/40',
-    icon: 'text-brand-purple' // Manter ícone roxo para consistência?
+    icon: 'text-brand-purple', // Manter ícone roxo para consistência?
     // Ou usar uma cor derivada do verde: icon: 'text-brand-green'
   };
 

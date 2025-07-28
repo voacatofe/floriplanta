@@ -1,56 +1,45 @@
-import { createClient } from '@supabase/supabase-js';
+import { PrismaClient } from '@prisma/client';
 import fs from 'fs';
+import path from 'path';
 
-// Função para normalizar slugs (mesma que criamos no encyclopedia.ts)
+const prisma = new PrismaClient();
+
+// Função para normalizar slugs
 function normalizeSlug(text) {
+  if (!text) return '';
   return text
     .toLowerCase()
     .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '') // Remove acentos
-    .replace(/[^a-z0-9]+/g, '-')     // Substitui caracteres especiais por hífen
-    .replace(/^-+|-+$/g, '')         // Remove hífens do início e fim
-    .replace(/-+/g, '-');            // Substitui múltiplos hífens por um só
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .replace(/-+/g, '-');
 }
 
 async function main() {
-  // Configurar cliente Supabase
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY; // Chave de serviço para operações administrativas
-  
-  if (!supabaseUrl || !supabaseKey) {
-    console.error('❌ Erro: Variáveis de ambiente NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY são necessárias');
-    process.exit(1);
-  }
-
-  const supabase = createClient(supabaseUrl, supabaseKey);
-
   try {
-    console.log('🔍 Verificando slugs na tabela encyclopedia_terms...');
-    
-    // Buscar todos os termos
-    const { data: terms, error } = await supabase
-      .from('encyclopedia_terms')
-      .select('id, term, slug');
-    
-    if (error) {
-      throw error;
-    }
+    console.log('🔍 Verificando slugs na tabela EncyclopediaTerm...');
+
+    const terms = await prisma.encyclopediaTerm.findMany({
+      select: {
+        id: true,
+        term: true,
+        slug: true,
+      },
+    });
 
     console.log(`📊 Encontrados ${terms.length} termos no banco`);
-    
-    let termsToUpdate = [];
-    let correctedSlugs = [];
 
-    // Verificar cada termo
+    const termsToUpdate = [];
+
     for (const term of terms) {
       const normalizedSlug = normalizeSlug(term.term);
-      
       if (term.slug !== normalizedSlug) {
         termsToUpdate.push({
           id: term.id,
           term: term.term,
           currentSlug: term.slug,
-          newSlug: normalizedSlug
+          newSlug: normalizedSlug,
         });
       }
     }
@@ -61,48 +50,51 @@ async function main() {
     }
 
     console.log(`⚠️  Encontrados ${termsToUpdate.length} termos com slugs que precisam ser normalizados:`);
-    
-    // Mostrar os termos que serão atualizados
     termsToUpdate.forEach(term => {
       console.log(`   • "${term.term}": "${term.currentSlug}" → "${term.newSlug}"`);
     });
 
-    // Confirmar atualização
     console.log('\n🔄 Iniciando normalização dos slugs...');
-    
-    // Atualizar os slugs no banco
-    for (const term of termsToUpdate) {
-      const { error: updateError } = await supabase
-        .from('encyclopedia_terms')
-        .update({ slug: term.newSlug })
-        .eq('id', term.id);
+    const correctedSlugs = [];
 
-      if (updateError) {
-        console.error(`❌ Erro ao atualizar "${term.term}": ${updateError.message}`);
-      } else {
+    for (const term of termsToUpdate) {
+      try {
+        await prisma.encyclopediaTerm.update({
+          where: { id: term.id },
+          data: { slug: term.newSlug },
+        });
         console.log(`✅ Atualizado: "${term.term}" → "${term.newSlug}"`);
         correctedSlugs.push(term);
+      } catch (updateError) {
+        console.error(`❌ Erro ao atualizar "${term.term}": ${updateError.message}`);
       }
     }
 
     console.log(`\n🎉 Normalização concluída! ${correctedSlugs.length} slugs foram atualizados.`);
-    
-    // Salvar relatório
-    const report = {
-      timestamp: new Date().toISOString(),
-      totalTerms: terms.length,
-      updatedTerms: correctedSlugs.length,
-      updates: correctedSlugs
-    };
-    
-    fs.writeFileSync('scripts/slug-normalization-report.json', JSON.stringify(report, null, 2));
-    console.log('📋 Relatório salvo em scripts/slug-normalization-report.json');
+
+    if (correctedSlugs.length > 0) {
+      const report = {
+        timestamp: new Date().toISOString(),
+        totalTerms: terms.length,
+        updatedTerms: correctedSlugs.length,
+        updates: correctedSlugs,
+      };
+      
+      const reportPath = path.join('scripts', 'slug-normalization-report.json');
+      fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
+      console.log(`📋 Relatório salvo em ${reportPath}`);
+    }
 
   } catch (error) {
     console.error('❌ Erro durante a execução:', error);
     process.exit(1);
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
-// Executar o script
-main().catch(console.error); 
+main().catch(async (e) => {
+  console.error(e);
+  await prisma.$disconnect();
+  process.exit(1);
+}); 

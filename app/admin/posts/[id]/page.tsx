@@ -12,10 +12,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Save, Eye, Calendar as CalendarIcon, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { createSupabaseClient } from '@/app/lib/supabase/client';
-import { getPostForEdit, updatePostAction } from '../actions';
-import { getCategoriesAction } from '../../categorias/actions';
-import { getTagsAction } from '../../tags/actions';
+
+import { getPostForEdit, updatePostAction, getCategoriesForAdmin, getTagsForAdmin } from '../actions';
 import { AdminFormLayout, SidebarCard } from '@/components/admin/admin-form-layout';
 import { FormField } from '@/components/admin/form-field';
 import { ImageUploader } from '@/components/admin/image-uploader';
@@ -24,6 +22,7 @@ import { useFormValidation } from '@/hooks/use-form-validation';
 import EditorJSComponent from '@/components/admin/EditorJSComponent';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import type { OutputData } from '@editorjs/editorjs';
 
 interface Category {
   id: string;
@@ -60,6 +59,11 @@ function normalizeSlug(text: string): string {
     .replace(/-+/g, '-');
 }
 
+// Helper function para converter null para undefined em erros
+function normalizeError(error: string | null | undefined): string | undefined {
+  return error ?? undefined;
+}
+
 interface EditPostPageProps {
   params: Promise<{ id: string }>;
 }
@@ -70,7 +74,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [supabaseClient, setSupabaseClient] = useState<ReturnType<typeof createSupabaseClient> | null>(null);
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isScheduled, setIsScheduled] = useState(false);
 
@@ -82,7 +86,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
     save,
     isSaving,
     isDirty,
-    lastSaved
+    lastSaved,
   } = useFormValidation<PostFormData>({
     initialData: {
       title: '',
@@ -94,18 +98,18 @@ export default function EditPostPage({ params }: EditPostPageProps) {
       published_at: null,
       category_ids: [],
       tag_ids: [],
-      meta_description: ''
+      meta_description: '',
     },
     validationRules: {
       title: { required: true, minLength: 3, maxLength: 200 },
       slug: { required: true, minLength: 3, maxLength: 200 },
       content: { required: true },
-      excerpt: { maxLength: 500 }
+      excerpt: { maxLength: 500 },
     },
     onSave: async (data) => {
       await handleSave(data, false);
     },
-    autoSaveDelay: 3000
+    autoSaveDelay: 3000,
   });
 
   useEffect(() => {
@@ -115,13 +119,12 @@ export default function EditPostPage({ params }: EditPostPageProps) {
         const id = resolvedParams.id;
         setPostId(id);
 
-        const client = createSupabaseClient();
-        setSupabaseClient(client);
+
 
         const [postResult, categoriesResult, tagsResult] = await Promise.all([
           getPostForEdit(id),
-          getCategoriesAction(),
-          getTagsAction()
+          getCategoriesForAdmin(),
+          getTagsForAdmin(),
         ]);
 
         if (postResult.error) {
@@ -130,8 +133,8 @@ export default function EditPostPage({ params }: EditPostPageProps) {
           return;
         }
 
-        if (categoriesResult.data) setCategories(categoriesResult.data);
-        if (tagsResult.data) setTags(tagsResult.data);
+        setCategories(categoriesResult);
+        setTags(tagsResult);
 
         // Carregar dados do post
         const post = postResult.data!;
@@ -139,13 +142,13 @@ export default function EditPostPage({ params }: EditPostPageProps) {
           title: post.title,
           slug: post.slug,
           content: post.content ? JSON.parse(post.content) : null,
-          excerpt: post.excerpt || '',
+          excerpt: '', // Campo não existe no schema, usar valor padrão
           cover_image_url: post.imageUrl || '',
           status: post.published ? 'published' as const : 'draft' as const,
           published_at: post.createdAt ? new Date(post.createdAt) : null,
           category_ids: post.categories?.map(cat => cat.id.toString()) || [],
           tag_ids: post.tags?.map(tag => tag.id.toString()) || [],
-          meta_description: post.metaDescription || ''
+          meta_description: '', // Campo não existe no schema, usar valor padrão
         };
 
         updateFields(postData);
@@ -158,49 +161,53 @@ export default function EditPostPage({ params }: EditPostPageProps) {
       }
     }
 
-    initializeData();
+    void initializeData();
   }, [params, router, updateFields]);
 
   const handleTitleChange = (title: string) => {
     updateFields({
       title,
-      slug: normalizeSlug(title)
+      slug: normalizeSlug(title),
     });
   };
 
   const handleImageUpload = async (file: File): Promise<string> => {
-    if (!supabaseClient) throw new Error('Supabase client not initialized');
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('folder', 'posts');
 
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${Date.now()}.${fileExt}`;
-    const filePath = `posts/${fileName}`;
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    });
 
-    const { error: uploadError } = await supabaseClient.storage
-      .from('blog-images')
-      .upload(filePath, file);
+    if (!response.ok) {
+      throw new Error('Erro no upload da imagem');
+    }
 
-    if (uploadError) throw uploadError;
-
-    const { data: { publicUrl } } = supabaseClient.storage
-      .from('blog-images')
-      .getPublicUrl(filePath);
-
-    return publicUrl;
+    const { url } = await response.json();
+    return url;
   };
 
   const handleSave = async (data: PostFormData, redirect = true) => {
     try {
       let coverImageUrl = data.cover_image_url;
-      
+
       if (selectedFile) {
         coverImageUrl = await handleImageUpload(selectedFile);
         setSelectedFile(null);
       }
 
       const result = await updatePostAction(postId, {
-        ...data,
+        title: data.title,
+        slug: data.slug,
+        excerpt: data.excerpt,
+        body: JSON.stringify(data.content),
         cover_image_url: coverImageUrl,
-        content: JSON.stringify(data.content)
+        status: data.status,
+        published_at: data.published_at ? data.published_at.toISOString() : null,
+        category_ids: data.category_ids.map(id => parseInt(id, 10)),
+        tag_ids: data.tag_ids.map(id => parseInt(id, 10)),
       });
 
       if (result.error) {
@@ -223,9 +230,9 @@ export default function EditPostPage({ params }: EditPostPageProps) {
     const publishData = {
       ...formData,
       status: 'published' as const,
-      published_at: isScheduled ? formData.published_at : new Date()
+      published_at: isScheduled ? formData.published_at : new Date(),
     };
-    
+
     updateFields(publishData);
     await handleSave(publishData);
   };
@@ -262,7 +269,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
           )}
           <Button
             variant="outline"
-            onClick={() => save()}
+            onClick={() => void save()}
             disabled={isSaving || !isDirty}
           >
             {isSaving ? (
@@ -272,7 +279,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
             )}
             {isSaving ? 'Salvando...' : 'Salvar Rascunho'}
           </Button>
-          <Button onClick={handlePublish} disabled={isSaving}>
+          <Button onClick={() => void handlePublish()} disabled={isSaving}>
             {formData.status === 'published' ? 'Atualizar' : 'Publicar'}
           </Button>
         </div>
@@ -315,8 +322,8 @@ export default function EditPostPage({ params }: EditPostPageProps) {
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full justify-start text-left font-normal",
-                          !formData.published_at && "text-muted-foreground"
+                          'w-full justify-start text-left font-normal',
+                          !formData.published_at && 'text-muted-foreground',
                         )}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
@@ -346,22 +353,20 @@ export default function EditPostPage({ params }: EditPostPageProps) {
           <SidebarCard title="Organização">
             <div className="space-y-4">
               <TagSelector
-                label="Categorias"
-                items={categories.map(cat => ({ id: cat.id, name: cat.name }))}
-                selectedIds={formData.category_ids}
+                selectedValues={formData.category_ids}
                 onChange={(ids) => updateField('category_ids', ids)}
+                options={categories}
                 placeholder="Selecionar categorias"
-                maxItems={3}
+                maxTags={3}
               />
 
               <TagSelector
-                label="Tags"
-                items={tags.map(tag => ({ id: tag.id, name: tag.name }))}
-                selectedIds={formData.tag_ids}
+                selectedValues={formData.tag_ids}
                 onChange={(ids) => updateField('tag_ids', ids)}
+                options={tags}
                 placeholder="Selecionar tags"
                 allowCreate
-                maxItems={10}
+                maxTags={10}
               />
             </div>
           </SidebarCard>
@@ -371,20 +376,23 @@ export default function EditPostPage({ params }: EditPostPageProps) {
             <div className="space-y-4">
               <FormField label="Imagem de capa">
                 <ImageUploader
-                  currentImage={formData.cover_image_url}
-                  onImageSelect={setSelectedFile}
-                  onImageRemove={() => {
-                    updateField('cover_image_url', '');
-                    setSelectedFile(null);
+                  value={formData.cover_image_url}
+                  onChange={(file, url) => {
+                    if (file) {
+                      setSelectedFile(file);
+                    } else {
+                      updateField('cover_image_url', url || '');
+                    }
                   }}
-                  maxSize={5 * 1024 * 1024} // 5MB
+                  onUpload={handleImageUpload}
+                  maxSize={5}
                 />
               </FormField>
 
-              <FormField 
-                label="Resumo" 
+              <FormField
+                label="Resumo"
                 description="Breve descrição do post (máx. 500 caracteres)"
-                error={errors.excerpt}
+                error={normalizeError(errors.excerpt)}
               >
                 <Textarea
                   value={formData.excerpt}
@@ -398,8 +406,8 @@ export default function EditPostPage({ params }: EditPostPageProps) {
                 </div>
               </FormField>
 
-              <FormField 
-                label="Meta Descrição" 
+              <FormField
+                label="Meta Descrição"
                 description="Descrição para SEO (máx. 160 caracteres)"
               >
                 <Textarea
@@ -421,10 +429,10 @@ export default function EditPostPage({ params }: EditPostPageProps) {
       <div className="space-y-6">
         {/* Título e Slug */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField 
-            label="Título" 
-            required 
-            error={errors.title}
+          <FormField
+            label="Título"
+            required
+            error={normalizeError(errors.title)}
           >
             <Input
               value={formData.title}
@@ -433,10 +441,10 @@ export default function EditPostPage({ params }: EditPostPageProps) {
             />
           </FormField>
 
-          <FormField 
-            label="Slug" 
-            required 
-            error={errors.slug}
+          <FormField
+            label="Slug"
+            required
+            error={normalizeError(errors.slug)}
             description="URL amigável do post"
           >
             <Input
@@ -448,16 +456,16 @@ export default function EditPostPage({ params }: EditPostPageProps) {
         </div>
 
         {/* Editor de Conteúdo */}
-        <FormField 
-          label="Conteúdo" 
-          required 
-          error={errors.content}
+        <FormField
+          label="Conteúdo"
+          required
+          error={normalizeError(errors.content)}
         >
           <div className="border rounded-lg">
             <EditorJSComponent
-              value={formData.content}
+              value={formData.content as OutputData}
               onChange={(data) => updateField('content', data)}
-              supabaseClient={supabaseClient}
+
             />
           </div>
         </FormField>

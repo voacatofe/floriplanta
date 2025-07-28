@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Search, BookOpen, ArrowRight, Loader2 } from 'lucide-react';
 import { 
   type EncyclopediaTerm,
-  type EncyclopediaCategory 
+  type EncyclopediaCategory, 
 } from '@/app/lib/encyclopedia';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -24,19 +24,19 @@ interface EncyclopediaClientProps {
 const categoryColors: Record<EncyclopediaCategory, string> = {
   'Saúde': 'bg-brand-green/10 text-brand-green border-brand-green/20',
   'Química': 'bg-blue-100 text-blue-700 border-blue-200',
-  'Legislação': 'bg-brand-purple/10 text-brand-purple border-brand-purple/20'
+  'Legislação': 'bg-brand-purple/10 text-brand-purple border-brand-purple/20',
 };
 
 const categoryIcons: Record<EncyclopediaCategory, string> = {
   'Saúde': '🏥',
   'Química': '⚗️',
-  'Legislação': '⚖️'
+  'Legislação': '⚖️',
 };
 
 const categoryDescriptions: Record<EncyclopediaCategory, string> = {
   'Saúde': 'Termos médicos e terapêuticos relacionados ao uso da cannabis',
   'Química': 'Compostos químicos, cannabinoides e terpenos da cannabis',
-  'Legislação': 'Aspectos legais e regulamentações sobre cannabis no Brasil'
+  'Legislação': 'Aspectos legais e regulamentações sobre cannabis no Brasil',
 };
 
 function TermCard({ term }: { term: EncyclopediaTerm }) {
@@ -69,7 +69,7 @@ function TermCard({ term }: { term: EncyclopediaTerm }) {
 function CategoryFilter({ 
   categories, 
   currentCategory,
-  onCategoryChange 
+  onCategoryChange, 
 }: { 
   categories: { category: EncyclopediaCategory; count: number }[]; 
   currentCategory?: EncyclopediaCategory;
@@ -107,7 +107,7 @@ function CategoryFilter({
 
 function SearchBox({ 
   initialQuery, 
-  onSearch 
+  onSearch, 
 }: { 
   initialQuery?: string; 
   onSearch: (query: string) => void;
@@ -146,7 +146,7 @@ export default function EncyclopediaClient({
   categories,
   category,
   searchQuery,
-  termsPerPage
+  termsPerPage,
 }: EncyclopediaClientProps) {
   const router = useRouter();
   
@@ -199,7 +199,7 @@ export default function EncyclopediaClient({
 
       // Carregar mais quando estiver a 200px do final
       if (scrollTop + clientHeight >= scrollHeight - 200) {
-        loadMoreTerms();
+        void loadMoreTerms();
       }
     };
 
@@ -238,12 +238,12 @@ export default function EncyclopediaClient({
   }, [router, termsPerPage]);
 
   const handleCategoryChange = (newCategory?: EncyclopediaCategory) => {
-    resetAndSearch(newCategory, currentSearchQuery);
+    void resetAndSearch(newCategory, currentSearchQuery);
   };
 
   const handleSearch = (query: string) => {
     const searchQuery = query.trim() || undefined;
-    resetAndSearch(currentCategory, searchQuery);
+    void resetAndSearch(currentCategory, searchQuery);
   };
 
   return (
@@ -340,7 +340,7 @@ export default function EncyclopediaClient({
                 Tente ajustar sua busca por termos relacionados à cannabis ou remover filtros
               </p>
               <button
-                onClick={() => resetAndSearch(undefined, undefined)}
+                onClick={() => void resetAndSearch(undefined, undefined)}
                 className="inline-flex items-center px-6 py-3 bg-brand-green text-white rounded-xl hover:bg-brand-hover-green transition-colors font-inter font-medium"
               >
                 Ver todos os termos canábicos

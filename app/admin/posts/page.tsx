@@ -9,7 +9,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge'; // Para exibir o status
 import { PlusCircle, Edit, Eye } from 'lucide-react';
 import DeletePostButton from '@/components/admin/DeletePostButton';
@@ -39,7 +39,7 @@ export default async function AdminPostsPage({ searchParams }: AdminPostsPagePro
   const currentPage = Number(resolvedSearchParams?.page) || 1;
   const { posts, totalCount } = await getPosts({ 
     page: currentPage, 
-    published: 'all' // Buscar todos os posts (publicados e não publicados) para o admin
+    published: 'all', // Buscar todos os posts (publicados e não publicados) para o admin
   });
 
   const totalPages = Math.ceil(totalCount / POSTS_PER_PAGE);
@@ -91,12 +91,8 @@ export default async function AdminPostsPage({ searchParams }: AdminPostsPagePro
                     </TableCell>
                     <TableCell>{formatDate(post.published ? post.createdAt.toISOString() : post.updatedAt.toISOString())}</TableCell>
                     <TableCell className="text-right space-x-1">
-                      <Button variant="ghost" size="sm" asChild title="Ver Post">
-                        <Link href={`/blog/${post.slug}`} target="_blank"><Eye className="h-4 w-4" /></Link>
-                      </Button>
-                      <Button variant="ghost" size="sm" asChild title="Editar Post">
-                        <Link href={`/admin/posts/${post.id}`}><Edit className="h-4 w-4" /></Link>
-                      </Button>
+                      <Button variant="ghost" size="sm" asChild title="Ver Post"><Link href={`/blog/${post.slug}`} target="_blank"><Eye className="h-4 w-4" /></Link></Button>
+                      <Button variant="ghost" size="sm" asChild title="Editar Post"><Link href={`/admin/posts/${post.id}`}><Edit className="h-4 w-4" /></Link></Button>
                       <DeletePostButton postId={post.id} postTitle={post.title} />
                     </TableCell>
                   </TableRow>

@@ -9,7 +9,7 @@ export default function SignOutButton() {
     <Button 
       variant="ghost" 
       className="w-full justify-start text-left hover:bg-red-700 dark:hover:bg-red-900 hover:text-white dark:hover:text-white"
-      onClick={() => signOut({ callbackUrl: '/admin/login' })}
+      onClick={() => void signOut({ callbackUrl: '/admin/login' })}
     >
       <LogOut size={18} className="mr-3" />
       <span>Sair</span>

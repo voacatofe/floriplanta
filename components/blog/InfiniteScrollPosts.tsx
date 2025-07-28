@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState, useEffect, useCallback } from 'react';
 import { useInView } from 'react-intersection-observer';
@@ -17,7 +17,7 @@ export default function InfiniteScrollPosts({
   initialPosts, 
   totalCount,
   categorySlug,
-  searchQuery 
+  searchQuery, 
 }: InfiniteScrollPostsProps) {
   const [posts, setPosts] = useState<PostWithRelations[]>(initialPosts);
   const [page, setPage] = useState(2);
@@ -40,7 +40,7 @@ export default function InfiniteScrollPosts({
       const params = new URLSearchParams({
         page: page.toString(),
         ...(categorySlug && { categoria: categorySlug }),
-        ...(searchQuery && { busca: searchQuery })
+        ...(searchQuery && { busca: searchQuery }),
       });
       
       const response = await fetch(`/api/blog/posts?${params}`);

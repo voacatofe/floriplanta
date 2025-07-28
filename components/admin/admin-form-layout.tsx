@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactNode } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, LucideIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
@@ -26,7 +26,7 @@ export function AdminFormLayout({
   actions,
   children,
   sidebar,
-  className
+  className,
 }: AdminFormLayoutProps) {
   return (
     <div className={cn('container mx-auto px-4 py-8', className)}>
@@ -84,13 +84,17 @@ interface SidebarCardProps {
   title: string;
   children: ReactNode;
   className?: string;
+  icon?: LucideIcon;
 }
 
-export function SidebarCard({ title, children, className }: SidebarCardProps) {
+export function SidebarCard({ title, children, className, icon: Icon }: SidebarCardProps) {
   return (
     <Card className={className}>
       <CardHeader className="pb-3">
-        <CardTitle className="text-base">{title}</CardTitle>
+        <CardTitle className="text-base flex items-center">
+          {Icon && <Icon className="h-4 w-4 mr-2" />}
+          {title}
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {children}

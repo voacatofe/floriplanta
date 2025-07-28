@@ -7,7 +7,7 @@ import {
   getRelatedTerms, 
   generateTermJsonLd,
   processDefinitionWithLinks,
-  type EncyclopediaTerm 
+  type EncyclopediaTerm, 
 } from '@/app/lib/encyclopedia';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -22,13 +22,13 @@ interface TermPageProps {
 const categoryColors = {
   'Saúde': 'bg-brand-green/10 text-brand-green border-brand-green/20',
   'Química': 'bg-blue-100 text-blue-700 border-blue-200',
-  'Legislação': 'bg-brand-purple/10 text-brand-purple border-brand-purple/20'
+  'Legislação': 'bg-brand-purple/10 text-brand-purple border-brand-purple/20',
 };
 
 const categoryIcons = {
   'Saúde': '🏥',
   'Química': '⚗️',
-  'Legislação': '⚖️'
+  'Legislação': '⚖️',
 };
 
 // Gerar metadata dinâmica para SEO
@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: TermPageProps): Promise<Metad
   if (!term) {
     return {
       title: 'Termo não encontrado | Floriplanta',
-      description: 'O termo solicitado não foi encontrado na nossa enciclopédia.'
+      description: 'O termo solicitado não foi encontrado na nossa enciclopédia.',
     };
   }
 
@@ -58,12 +58,12 @@ export async function generateMetadata({ params }: TermPageProps): Promise<Metad
       type: 'article',
       locale: 'pt_BR',
       url: `${process.env.NEXT_PUBLIC_SITE_URL}/enciclopedia/${term.slug}`,
-      siteName: 'Floriplanta'
+      siteName: 'Floriplanta',
     },
     twitter: {
       card: 'summary_large_image',
       title: `O que é ${term.term}?`,
-      description
+      description,
     },
     robots: {
       index: true,
@@ -75,7 +75,7 @@ export async function generateMetadata({ params }: TermPageProps): Promise<Metad
         'max-image-preview': 'large',
         'max-snippet': -1,
       },
-    }
+    },
   };
 }
 

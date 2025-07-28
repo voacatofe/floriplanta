@@ -1,38 +1,38 @@
-"use client"
+'use client';
 
-import { useState, useEffect, useRef } from "react"
-import Link from "next/link"
-import Image from 'next/image'
-import { Menu, X, User } from "lucide-react"
-import { useScrollPosition } from "@/hooks/useScrollPosition"
+import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { Menu, X, User } from 'lucide-react';
+import { useScrollPosition } from '@/hooks/useScrollPosition';
 
 export default function FloatingPillMenu() {
-  const { isScrolled } = useScrollPosition()
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const menuRef = useRef<HTMLDivElement>(null)
+  const { isScrolled } = useScrollPosition();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   // Fechar menu ao clicar fora
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsMobileMenuOpen(false)
+        setIsMobileMenuOpen(false);
       }
     }
 
     if (isMobileMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isMobileMenuOpen])
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMobileMenuOpen]);
 
   const menuItems = [
-    { label: "Sobre Nós", href: "/sobre" },
-    { label: "Cannabis Medicinal", href: "/cannabis" },
-    { label: "Contato", href: "/contato" },
-  ]
+    { label: 'Sobre Nós', href: '/sobre' },
+    { label: 'Cannabis Medicinal', href: '/cannabis' },
+    { label: 'Contato', href: '/contato' },
+  ];
 
   return (
     <>
@@ -40,14 +40,14 @@ export default function FloatingPillMenu() {
       <nav
         ref={menuRef}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${
-          isScrolled ? "px-6 pt-4" : "px-0 pt-0"
+          isScrolled ? 'px-6 pt-4' : 'px-0 pt-0'
         }`}
       >
         <div
           className={`flex items-center justify-between backdrop-blur-md transition-all duration-500 ease-in-out ${
             isScrolled
-              ? "bg-white/80 border border-brand-purple/20 rounded-full px-6 py-3 mx-auto max-w-4xl shadow-lg shadow-black/5"
-              : "bg-transparent border-0 px-8 py-6 mx-0 max-w-none"
+              ? 'bg-white/80 border border-brand-purple/20 rounded-full px-6 py-3 mx-auto max-w-4xl shadow-lg shadow-black/5'
+              : 'bg-transparent border-0 px-8 py-6 mx-0 max-w-none'
           }`}
         >
           {/* Logo */}
@@ -100,12 +100,12 @@ export default function FloatingPillMenu() {
         {/* Mobile Menu */}
         <div
           className={`md:hidden overflow-hidden transition-all duration-400 ease-in-out ${
-            isMobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+            isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
           }`}
         >
           <div
             className={`mt-2 backdrop-blur-md border border-brand-purple/20 rounded-2xl p-6 mx-6 mb-4 transition-all duration-300 ease-in-out ${
-              isScrolled ? "bg-white/80" : "bg-white/90"
+              isScrolled ? 'bg-white/80' : 'bg-white/90'
             }`}
           >
             <div className="space-y-3">
@@ -138,5 +138,5 @@ export default function FloatingPillMenu() {
         </div>
       </nav>
     </>
-  )
+  );
 } 

@@ -21,7 +21,7 @@ export function FormField({
   error,
   description,
   children,
-  className
+  className,
 }: FormFieldProps) {
   return (
     <div className={cn('space-y-2', className)}>

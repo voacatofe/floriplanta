@@ -2,8 +2,8 @@
 // import { MetricsCards } from "./_components/dashboard/MetricsCards";
 // import { PostsChart } from "./_components/dashboard/PostsChart";
 // import { RecentPosts } from "./_components/dashboard/RecentPosts";
-import { Suspense } from "react";
-import { Loader2 } from "lucide-react";
+import { Suspense } from 'react';
+import { Loader2 } from 'lucide-react';
 
 // Componente de loading
 function LoadingComponent() {

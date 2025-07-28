@@ -2,38 +2,38 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-import Footer from "@/components/layout/Footer";
+import Footer from '@/components/layout/Footer';
 import { ShoppingBag, Star, Shirt, Coffee, Package, Info, CreditCard, Truck, RotateCcw, HelpCircle } from 'lucide-react'; // Icons
 
 // Placeholder data for products - Replace with actual data later
 const featuredProducts = [
   {
-    slug: "camiseta-logo-floriplanta",
-    name: "Camiseta Logo Floriplanta",
-    image: "/images/placeholder-merch-1.jpg", // Replace with actual image
-    price: "R$ 69,90",
-    category: "Camisetas"
+    slug: 'camiseta-logo-floriplanta',
+    name: 'Camiseta Logo Floriplanta',
+    image: '/images/placeholder-merch-1.jpg', // Replace with actual image
+    price: 'R$ 69,90',
+    category: 'Camisetas',
   },
   {
-    slug: "caneca-cultivando-esperanca",
-    name: "Caneca Cultivando Esperança",
-    image: "/images/placeholder-merch-2.jpg", // Replace with actual image
-    price: "R$ 45,00",
-    category: "Canecas e Copos"
+    slug: 'caneca-cultivando-esperanca',
+    name: 'Caneca Cultivando Esperança',
+    image: '/images/placeholder-merch-2.jpg', // Replace with actual image
+    price: 'R$ 45,00',
+    category: 'Canecas e Copos',
   },
   {
-    slug: "ecobag-floriplanta",
-    name: "Ecobag Floriplanta",
-    image: "/images/placeholder-merch-3.jpg", // Replace with actual image
-    price: "R$ 35,00",
-    category: "Acessórios"
+    slug: 'ecobag-floriplanta',
+    name: 'Ecobag Floriplanta',
+    image: '/images/placeholder-merch-3.jpg', // Replace with actual image
+    price: 'R$ 35,00',
+    category: 'Acessórios',
   },
 ];
 
 const categories = [
-  { name: "Camisetas", slug: "camisetas", icon: Shirt },
-  { name: "Canecas e Copos", slug: "canecas-copos", icon: Coffee },
-  { name: "Acessórios", slug: "acessorios", icon: Package },
+  { name: 'Camisetas', slug: 'camisetas', icon: Shirt },
+  { name: 'Canecas e Copos', slug: 'canecas-copos', icon: Coffee },
+  { name: 'Acessórios', slug: 'acessorios', icon: Package },
   // Add more categories as needed
 ];
 

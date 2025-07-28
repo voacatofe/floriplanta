@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Footer from "@/components/layout/Footer";
+import Footer from '@/components/layout/Footer';
 import { MapPin, Mail, Send, Instagram, MessageCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useGTM } from '@/hooks/useGTM';
@@ -11,7 +11,7 @@ import {
   CONTACT_FORM_ID,
   FIELD_NAMES,
   FIELD_IDS,
-  type ContactFormData
+  type ContactFormData,
 } from '@/app/lib/forms.config';
 
 export default function ContatoPage() {
@@ -50,7 +50,7 @@ export default function ContatoPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!formData[FIELD_NAMES.CONSENT]) {
-      toast.error("Você precisa concordar com os termos para continuar.");
+      toast.error('Você precisa concordar com os termos para continuar.');
       return;
     }
     setIsSubmitting(true);
@@ -59,7 +59,7 @@ export default function ContatoPage() {
     trackFormSubmit(CONTACT_FORM_ID, {
       [FIELD_NAMES.FORM_LOCATION]: 'contact-page',
       [FIELD_NAMES.SUBJECT]: formData[FIELD_NAMES.SUBJECT],
-      has_phone: formData[FIELD_NAMES.PHONE] ? 'yes' : 'no'
+      has_phone: formData[FIELD_NAMES.PHONE] ? 'yes' : 'no',
     });
 
     try {
@@ -122,7 +122,7 @@ export default function ContatoPage() {
               <h2 className="font-futuru font-bold text-brand-purple text-2xl lg:text-3xl mb-6">Envie sua Mensagem</h2>
               <form 
                 id={CONTACT_FORM_ID}
-                onSubmit={handleSubmit} 
+                onSubmit={(e) => void handleSubmit(e)} 
                 className="space-y-4 bg-white p-6 sm:p-8 rounded-xl shadow-md border border-gray-100"
               >
                 <div>
@@ -210,7 +210,7 @@ export default function ContatoPage() {
                     type="submit"
                     name="submit" 
                     disabled={isSubmitting || !formData[FIELD_NAMES.CONSENT]}
-                    className={`w-full inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-brand-purple hover:bg-brand-hover-purple focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-purple disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300`}
+                    className={'w-full inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-brand-purple hover:bg-brand-hover-purple focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-purple disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300'}
                   >
                     {isSubmitting ? 'Enviando...' : 'Enviar Mensagem'}
                     <Send className="w-5 h-5 ml-2" />

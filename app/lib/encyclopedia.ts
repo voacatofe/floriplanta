@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createSupabaseServerClient } from './supabase/server';
+import { PrismaClient } from '@/lib/generated/prisma';
 import type { 
   DefinedTermSet, 
   Organization, 
@@ -7,10 +7,20 @@ import type {
   Question, 
   Answer, 
   Thing,
-  URL 
+  URL, 
 } from 'schema-dts'; 
 
 export type EncyclopediaCategory = 'Saúde' | 'Química' | 'Legislação';
+
+// Função helper para converter string para EncyclopediaCategory com validação
+export function toEncyclopediaCategory(category: string): EncyclopediaCategory {
+  const validCategories: EncyclopediaCategory[] = ['Saúde', 'Química', 'Legislação'];
+  if (validCategories.includes(category as EncyclopediaCategory)) {
+    return category as EncyclopediaCategory;
+  }
+  // Fallback para categoria padrão se a string não for válida
+  return 'Saúde';
+}
 
 export interface EncyclopediaTerm {
   id: string;
@@ -42,184 +52,109 @@ export function normalizeSlug(text: string): string {
     .replace(/-+/g, '-');            // Substitui múltiplos hífens por um só
 }
 
-// Função para buscar todos os termos
+// Função helper para converter dados do Prisma para EncyclopediaTerm
+function convertPrismaToEncyclopediaTerm(prismaData: any): EncyclopediaTerm {
+  return {
+    ...prismaData,
+    category: toEncyclopediaCategory(prismaData.category),
+    created_at: prismaData.created_at.toISOString(),
+    updated_at: prismaData.updated_at.toISOString(),
+  };
+}
+
+const prisma = new PrismaClient();
+
 export async function getAllTerms(
   page = 1,
   pageSize = 20,
   category?: EncyclopediaCategory,
-  searchQuery?: string
+  searchQuery?: string,
 ): Promise<EncyclopediaSearchResult> {
-  const supabase = await createSupabaseServerClient();
-  
-  let query = (supabase as any)
-    .from('encyclopedia_terms')
-    .select('*', { count: 'exact' })
-    .eq('is_active', true)
-    .order('term');
+  const where: any = { is_active: true };
 
   if (category) {
-    query = query.eq('category', category);
+    where.category = category;
   }
 
   if (searchQuery) {
-    query = query.or(`term.ilike.%${searchQuery}%,definition.ilike.%${searchQuery}%`);
+    where.OR = [
+      { term: { contains: searchQuery, mode: 'insensitive' } },
+      { definition: { contains: searchQuery, mode: 'insensitive' } },
+    ];
   }
 
-  const from = (page - 1) * pageSize;
-  const to = from + pageSize - 1;
-  query = query.range(from, to);
+  const totalCount = await prisma.encyclopediaTerm.count({ where });
 
-  const { data: terms, error, count } = await query;
-
-  if (error) {
-    console.error('Erro ao buscar termos:', error);
-    return { terms: [], totalCount: 0, categories: [] };
-  }
-
-  // Buscar contagem por categoria
-  const { data: categoryData } = await (supabase as any)
-    .from('encyclopedia_terms')
-    .select('category')
-    .eq('is_active', true);
-
-  const categoryCounts: Record<string, number> = {};
-  categoryData?.forEach((term: any) => {
-    categoryCounts[term.category] = (categoryCounts[term.category] || 0) + 1;
+  const terms = await prisma.encyclopediaTerm.findMany({
+    where,
+    skip: (page - 1) * pageSize,
+    take: pageSize,
+    orderBy: { term: 'asc' },
   });
 
-  const categories = Object.entries(categoryCounts).map(([category, count]) => ({ 
-    category: category as EncyclopediaCategory, 
-    count: count as number
+  // Buscar contagem por categoria
+  const categoryCountsResult = await prisma.encyclopediaTerm.groupBy({
+    by: ['category'],
+    _count: {
+      category: true,
+    },
+    where: { is_active: true },
+  });
+  
+  const categories = categoryCountsResult.map((item: { category: string; _count: { category: number } }) => ({
+    category: toEncyclopediaCategory(item.category),
+    count: item._count.category,
   }));
-
+  
   return {
-    terms: terms || [],
-    totalCount: count || 0,
-    categories
+    terms: terms.map(convertPrismaToEncyclopediaTerm),
+    totalCount,
+    categories,
   };
 }
 
-// Função para buscar termo por slug
 export async function getTermBySlug(slug: string): Promise<EncyclopediaTerm | null> {
-  const supabase = await createSupabaseServerClient();
-  
-  // Normalizar o slug para busca consistente
   const normalizedSlug = normalizeSlug(slug);
   
-  const { data, error } = await (supabase as any)
-    .from('encyclopedia_terms')
-    .select('*')
-    .eq('slug', normalizedSlug)
-    .eq('is_active', true)
-    .single();
+  const term = await prisma.encyclopediaTerm.findUnique({
+    where: { slug: normalizedSlug, is_active: true },
+  });
 
-  if (error) {
-    console.error('Erro ao buscar termo:', error);
-    return null;
-  }
-
-  return data;
+  return term ? convertPrismaToEncyclopediaTerm(term) : null;
 }
 
-// Função para buscar termos relacionados (MODIFICADA para buscar por SLUGS)
+// Função para buscar termos relacionados
 export async function getRelatedTerms(relatedSlugs: string[]): Promise<EncyclopediaTerm[]> {
   if (!relatedSlugs || relatedSlugs.length === 0) {
     return [];
   }
-
-  const supabase = await createSupabaseServerClient();
   
-  const { data, error } = await (supabase as any)
-    .from('encyclopedia_terms')
-    .select('*')
-    .in('slug', relatedSlugs) // Alterado de 'term' para 'slug'
-    .eq('is_active', true)
-    .order('term');
+  const terms = await prisma.encyclopediaTerm.findMany({
+    where: {
+      slug: { in: relatedSlugs },
+      is_active: true,
+    },
+    orderBy: { term: 'asc' },
+  });
 
-  if (error) {
-    console.error('Erro ao buscar termos relacionados por slugs:', error);
-    return [];
-  }
-
-  return data || [];
-}
-
-// Função para buscar termo por nome exato (útil para links)
-export async function getTermByName(termName: string): Promise<EncyclopediaTerm | null> {
-  const supabase = await createSupabaseServerClient();
-  
-  const { data, error } = await (supabase as any)
-    .from('encyclopedia_terms')
-    .select('*')
-    .eq('term', termName)
-    .eq('is_active', true)
-    .single();
-
-  if (error) {
-    return null; // Termo não encontrado
-  }
-
-  return data;
-}
-
-// Função para buscar múltiplos termos por nome (para validação)
-export async function getTermsByNames(termNames: string[]): Promise<EncyclopediaTerm[]> {
-  if (!termNames || termNames.length === 0) {
-    return [];
-  }
-
-  const supabase = await createSupabaseServerClient();
-  
-  const { data, error } = await (supabase as any)
-    .from('encyclopedia_terms')
-    .select('*')
-    .in('term', termNames)
-    .eq('is_active', true);
-
-  if (error) {
-    console.error('Erro ao buscar termos por nomes:', error);
-    return [];
-  }
-
-  return data || [];
+  return terms.map(convertPrismaToEncyclopediaTerm);
 }
 
 export async function searchTerms(query: string): Promise<EncyclopediaTerm[]> {
-  const supabase = await createSupabaseServerClient();
-  
-  // Busca simples por nome e definição
-  const { data, error } = await (supabase as any)
-    .from('encyclopedia_terms')
-    .select('*')
-    .or(`term.ilike.%${query}%,definition.ilike.%${query}%`)
-    .eq('is_active', true)
-    .limit(10);
+  if (!query) return [];
 
-  if (error) {
-    console.error('Erro na busca:', error);
-    return [];
-  }
+  const terms = await prisma.encyclopediaTerm.findMany({
+    where: {
+      is_active: true,
+      OR: [
+        { term: { contains: query, mode: 'insensitive' } },
+        { definition: { contains: query, mode: 'insensitive' } },
+      ],
+    },
+    take: 10,
+  });
 
-  return data || [];
-}
-
-// Função para buscar por categoria
-export async function getTermsByCategory(category: EncyclopediaCategory): Promise<EncyclopediaTerm[]> {
-  const supabase = await createSupabaseServerClient();
-  
-  const { data, error } = await (supabase as any)
-    .from('encyclopedia_terms')
-    .select('*')
-    .eq('category', category)
-    .eq('is_active', true)
-    .order('term');
-
-  if (error) {
-    console.error('Erro ao buscar termos por categoria:', error);
-    return [];
-  }
-
-  return data || [];
+  return terms.map(convertPrismaToEncyclopediaTerm);
 }
 
 // Função para converter texto com links automáticos
@@ -237,7 +172,7 @@ export function processDefinitionWithLinks(definition: string, relatedTerms: Enc
     const regex = new RegExp(`\\b${relatedTerm.term}\\b`, 'gi');
     processedDefinition = processedDefinition.replace(
       regex, 
-      `<a href="/enciclopedia/${relatedTerm.slug}" class="text-brand-green hover:text-brand-hover-green underline transition-colors">${relatedTerm.term}</a>`
+      `<a href="/enciclopedia/${relatedTerm.slug}" class="text-brand-green hover:text-brand-hover-green underline transition-colors">${relatedTerm.term}</a>`,
     );
   });
   
@@ -255,14 +190,14 @@ export function generateTermJsonLd(term: EncyclopediaTerm, relatedTerms: Encyclo
       '@type': 'DefinedTermSet' as const,
       name: 'Enciclopédia Canábica - Floriplanta',
       description: 'Glossário completo de termos relacionados à cannabis medicinal, química e legislação',
-      url: `${process.env.NEXT_PUBLIC_SITE_URL}/enciclopedia`
+      url: `${process.env.NEXT_PUBLIC_SITE_URL}/enciclopedia`,
     } as DefinedTermSet,
     category: term.category,
     url: `${process.env.NEXT_PUBLIC_SITE_URL}/enciclopedia/${term.slug}`,
     publisher: {
       '@type': 'Organization' as const,
       name: 'Floriplanta',
-      url: process.env.NEXT_PUBLIC_SITE_URL
+      url: process.env.NEXT_PUBLIC_SITE_URL,
     } as Organization,
     mainEntity: {
       '@type': 'FAQPage' as const,
@@ -271,16 +206,16 @@ export function generateTermJsonLd(term: EncyclopediaTerm, relatedTerms: Encyclo
         name: `O que é ${term.term}?`,
         acceptedAnswer: {
           '@type': 'Answer' as const,
-          text: term.definition
-        } as Answer
-      } as Question]
+          text: term.definition,
+        } as Answer,
+      } as Question],
     } as FAQPage,
-    seeAlso: undefined as URL[] | undefined
+    seeAlso: undefined as URL[] | undefined,
   };
 
   if (relatedTerms.length > 0) {
     termJsonLd.seeAlso = relatedTerms.map(
-      (related) => `${process.env.NEXT_PUBLIC_SITE_URL}/enciclopedia/${related.slug}` as URL
+      (related) => `${process.env.NEXT_PUBLIC_SITE_URL}/enciclopedia/${related.slug}` as URL,
     );
   }
   
@@ -303,15 +238,15 @@ export function generateEncyclopediaJsonLd(totalTerms: number, categories: { cat
       '@type': 'Organization' as const,
       name: 'Floriplanta',
       url: process.env.NEXT_PUBLIC_SITE_URL,
-      logo: `${process.env.NEXT_PUBLIC_SITE_URL}/logo.png` 
+      logo: `${process.env.NEXT_PUBLIC_SITE_URL}/logo.png`, 
     } as Organization,
     keywords: ['cannabis medicinal', 'CBD', 'THC', 'canabinoides', 'terpenos', 'legislação cannabis', 'cannabis Brasil'].join(', '),
     numberOfItems: totalTerms,
     about: categories.map(cat => ({
       '@type': 'Thing' as const,
       name: cat.category,
-      description: `${cat.count} termos relacionados a ${cat.category.toLowerCase()}`
-    } as Thing))
+      description: `${cat.count} termos relacionados a ${cat.category.toLowerCase()}`,
+    } as Thing)),
   };
   return encyclopediaJsonLd;
-} 
+}

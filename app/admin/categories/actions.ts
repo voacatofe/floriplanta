@@ -23,7 +23,7 @@ export async function createCategoryAction(data: { name: string; slug: string; d
     // Verificar slug existente
     const existing = await prisma.category.findUnique({
       where: { slug: data.slug },
-      select: { id: true }
+      select: { id: true },
     });
     
     if (existing) {
@@ -34,7 +34,7 @@ export async function createCategoryAction(data: { name: string; slug: string; d
       data: {
         name: data.name,
         slug: data.slug,
-      }
+      },
     });
 
     revalidatePath('/admin/categories');
@@ -53,7 +53,7 @@ export async function deleteCategoryAction(id: string) {
 
   try {
     await prisma.category.delete({
-      where: { id }
+      where: { id },
     });
 
     revalidatePath('/admin/categories');

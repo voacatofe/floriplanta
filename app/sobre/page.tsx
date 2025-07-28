@@ -1,81 +1,81 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import Footer from "@/components/layout/Footer";
+import Footer from '@/components/layout/Footer';
 import { Users, Heart, BookOpen, Scale, Handshake, Target, Eye, FileText } from 'lucide-react';
 
 // Dados reais da diretoria da Floriplanta
 const diretores = [
   { 
-    name: "Isadora Malohlava", 
-    role: "Presidente", 
-    image: "/Diretores/Isadora Malohlava - Presidente.jpg",
-    gradientFrom: "from-brand-purple/20",
-    gradientTo: "to-brand-hover-purple/30",
+    name: 'Isadora Malohlava', 
+    role: 'Presidente', 
+    image: '/Diretores/Isadora Malohlava - Presidente.jpg',
+    gradientFrom: 'from-brand-purple/20',
+    gradientTo: 'to-brand-hover-purple/30',
   },
   { 
-    name: "Leonardo Penna", 
-    role: "Vice-Presidente", 
-    image: "/Diretores/Leonardo Penna - Vice presidente.jpg",
-    gradientFrom: "from-brand-light-green/40",
-    gradientTo: "to-brand-purple/20",
+    name: 'Leonardo Penna', 
+    role: 'Vice-Presidente', 
+    image: '/Diretores/Leonardo Penna - Vice presidente.jpg',
+    gradientFrom: 'from-brand-light-green/40',
+    gradientTo: 'to-brand-purple/20',
   },
   { 
-    name: "Rodrigo Amorim", 
-    role: "Tesoureiro e Arquiteto", 
-    image: "/Diretores/Rodrigo Amorim - Tesoureiro e Arquiteto.jpg",
-    gradientFrom: "from-brand-hover-purple/20",
-    gradientTo: "to-brand-light-green/40",
+    name: 'Rodrigo Amorim', 
+    role: 'Tesoureiro e Arquiteto', 
+    image: '/Diretores/Rodrigo Amorim - Tesoureiro e Arquiteto.jpg',
+    gradientFrom: 'from-brand-hover-purple/20',
+    gradientTo: 'to-brand-light-green/40',
   },
   { 
-    name: "Dr. Rodolfo Hellmann", 
-    role: "Diretor Médico e Psiquiatra", 
-    image: "/Diretores/Rodolfo Hellmann - Diretor médico e médico psiquiatra.jpg",
-    gradientFrom: "from-brand-purple/30",
-    gradientTo: "to-brand-hover-purple/20",
+    name: 'Dr. Rodolfo Hellmann', 
+    role: 'Diretor Médico e Psiquiatra', 
+    image: '/Diretores/Rodolfo Hellmann - Diretor médico e médico psiquiatra.jpg',
+    gradientFrom: 'from-brand-purple/30',
+    gradientTo: 'to-brand-hover-purple/20',
   },
   { 
-    name: "Paula Machinski", 
-    role: "Farmacêutica", 
-    image: "/Diretores/Paula Machinski - Farmaceutica.jpg",
-    gradientFrom: "from-brand-light-green/50",
-    gradientTo: "to-brand-purple/30",
+    name: 'Paula Machinski', 
+    role: 'Farmacêutica', 
+    image: '/Diretores/Paula Machinski - Farmaceutica.jpg',
+    gradientFrom: 'from-brand-light-green/50',
+    gradientTo: 'to-brand-purple/30',
   },
   { 
-    name: "Vinícius Gomes", 
-    role: "Engenheiro Químico", 
-    image: "/Diretores/Vinicius Gomes - Engenheiro quimico.jpg",
-    gradientFrom: "from-brand-hover-purple/30",
-    gradientTo: "to-brand-light-green/30",
+    name: 'Vinícius Gomes', 
+    role: 'Engenheiro Químico', 
+    image: '/Diretores/Vinicius Gomes - Engenheiro quimico.jpg',
+    gradientFrom: 'from-brand-hover-purple/30',
+    gradientTo: 'to-brand-light-green/30',
   },
   { 
-    name: "Jade Macedo", 
-    role: "Gestora de Projetos", 
-    image: "/Diretores/Jade Macedo - Gestora de projeots.jpg",
-    gradientFrom: "from-brand-purple/20",
-    gradientTo: "to-brand-hover-purple/40",
+    name: 'Jade Macedo', 
+    role: 'Gestora de Projetos', 
+    image: '/Diretores/Jade Macedo - Gestora de projeots.jpg',
+    gradientFrom: 'from-brand-purple/20',
+    gradientTo: 'to-brand-hover-purple/40',
   },
   { 
-    name: "Bruna Pfiffer", 
-    role: "Diretora Jurídica", 
-    image: "/Diretores/Bruna pfiffer - Diretora Juridica Floriplanta.jpg",
-    gradientFrom: "from-brand-light-green/30",
-    gradientTo: "to-brand-purple/40",
+    name: 'Bruna Pfiffer', 
+    role: 'Diretora Jurídica', 
+    image: '/Diretores/Bruna pfiffer - Diretora Juridica Floriplanta.jpg',
+    gradientFrom: 'from-brand-light-green/30',
+    gradientTo: 'to-brand-purple/40',
   },
   { 
-    name: "Daniel Pontes", 
-    role: "Financeiro", 
-    image: "/Diretores/Daniel Pontes - Financeiro.jpg",
-    gradientFrom: "from-brand-purple/20",
-    gradientTo: "to-brand-hover-purple/30",
-  }
+    name: 'Daniel Pontes', 
+    role: 'Financeiro', 
+    image: '/Diretores/Daniel Pontes - Financeiro.jpg',
+    gradientFrom: 'from-brand-purple/20',
+    gradientTo: 'to-brand-hover-purple/30',
+  },
 ];
 
 const partners = [
-  { name: "Logo Parceiro 1", link: "#", image: "/placeholder-partner-1.png" },
-  { name: "Logo Parceiro 2", link: "#", image: "/placeholder-partner-2.png" },
-  { name: "Logo Parceiro 3", link: "#", image: "/placeholder-partner-3.png" },
-  { name: "Logo Parceiro 4", link: "#", image: "/placeholder-partner-4.png" },
+  { name: 'Logo Parceiro 1', link: '#', image: '/placeholder-partner-1.png' },
+  { name: 'Logo Parceiro 2', link: '#', image: '/placeholder-partner-2.png' },
+  { name: 'Logo Parceiro 3', link: '#', image: '/placeholder-partner-3.png' },
+  { name: 'Logo Parceiro 4', link: '#', image: '/placeholder-partner-4.png' },
 ];
 
 export default function SobreNosPage() {
@@ -153,11 +153,11 @@ export default function SobreNosPage() {
           {/* Valores Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
             {[ 
-              { icon: Heart, title: "Empatia", text: "Colocamo-nos no lugar de cada paciente, oferecendo escuta ativa, acolhimento e suporte humanizado.", iconBg: "bg-brand-hover-purple/15" },
-              { icon: BookOpen, title: "Educação", text: "Combatemos a desinformação com conhecimento científico sólido, promovendo a conscientização.", iconBg: "bg-brand-light-green/50" },
-              { icon: Users, title: "Inclusão", text: "Lutamos para que todos que necessitam tenham acesso justo e equitativo ao tratamento.", iconBg: "bg-brand-hover-purple/15" },
-              { icon: Scale, title: "Responsabilidade", text: "Atuamos com ética, transparência e compromisso inabalável com nossos associados e a sociedade.", iconBg: "bg-brand-light-green/50" },
-              { icon: Handshake, title: "Justiça Social", text: "Advogamos por políticas públicas que garantam os direitos dos pacientes e removam barreiras ao acesso.", iconBg: "bg-brand-hover-purple/15" },
+              { icon: Heart, title: 'Empatia', text: 'Colocamo-nos no lugar de cada paciente, oferecendo escuta ativa, acolhimento e suporte humanizado.', iconBg: 'bg-brand-hover-purple/15' },
+              { icon: BookOpen, title: 'Educação', text: 'Combatemos a desinformação com conhecimento científico sólido, promovendo a conscientização.', iconBg: 'bg-brand-light-green/50' },
+              { icon: Users, title: 'Inclusão', text: 'Lutamos para que todos que necessitam tenham acesso justo e equitativo ao tratamento.', iconBg: 'bg-brand-hover-purple/15' },
+              { icon: Scale, title: 'Responsabilidade', text: 'Atuamos com ética, transparência e compromisso inabalável com nossos associados e a sociedade.', iconBg: 'bg-brand-light-green/50' },
+              { icon: Handshake, title: 'Justiça Social', text: 'Advogamos por políticas públicas que garantam os direitos dos pacientes e removam barreiras ao acesso.', iconBg: 'bg-brand-hover-purple/15' },
             ].map((value, index) => (
               <div 
                 key={index}

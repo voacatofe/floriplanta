@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import Footer from "@/components/layout/Footer";
+import Footer from '@/components/layout/Footer';
 import { Droplet, Leaf, FileText, User, AlertTriangle, UserCheck, UserPlus } from 'lucide-react'; // Icons
 
 export default function OleoMarePage() {

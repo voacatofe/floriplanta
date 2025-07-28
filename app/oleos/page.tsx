@@ -1,34 +1,34 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import Footer from "@/components/layout/Footer";
+import Footer from '@/components/layout/Footer';
 import { Droplet, AlertTriangle, UserPlus } from 'lucide-react'; // Icons
 
 const oilTypes = [
   {
-    name: "Terral",
-    title: "Óleo CBD Full Spectrum - Terral",
-    description: "Assim como o vento terral acalma o mar, nosso óleo Terral, rico em Canabidiol (CBD) Full Spectrum, traz relaxamento e equilíbrio. Ideal para auxiliar no manejo da ansiedade, inflamações e na busca por bem-estar geral.",
-    concentration: "20mg/mL de Canabinoides Totais (predominantemente CBD)",
-    image: "/images/products/oleo-terral-cbd.jpg",
-    link: "/oleos/terral" // Link to individual page
+    name: 'Terral',
+    title: 'Óleo CBD Full Spectrum - Terral',
+    description: 'Assim como o vento terral acalma o mar, nosso óleo Terral, rico em Canabidiol (CBD) Full Spectrum, traz relaxamento e equilíbrio. Ideal para auxiliar no manejo da ansiedade, inflamações e na busca por bem-estar geral.',
+    concentration: '20mg/mL de Canabinoides Totais (predominantemente CBD)',
+    image: '/images/products/oleo-terral-cbd.jpg',
+    link: '/oleos/terral', // Link to individual page
   },
   {
-    name: "Swell",
-    title: "Óleo THC Full Spectrum - Swell",
-    description: "Com a potência e energia das grandes ondulações (swell), nosso óleo Swell, rico em Tetrahidrocanabinol (THC) Full Spectrum, alinha-se a um efeito mais estimulante e expansivo. Indicado sob prescrição para condições como dor crônica e falta de apetite.",
-    concentration: "20mg/mL de Canabinoides Totais (predominantemente THC)",
-    image: "/images/products/oleo-swell-thc.jpg",
-    link: "/oleos/swell" // Link to individual page
+    name: 'Swell',
+    title: 'Óleo THC Full Spectrum - Swell',
+    description: 'Com a potência e energia das grandes ondulações (swell), nosso óleo Swell, rico em Tetrahidrocanabinol (THC) Full Spectrum, alinha-se a um efeito mais estimulante e expansivo. Indicado sob prescrição para condições como dor crônica e falta de apetite.',
+    concentration: '20mg/mL de Canabinoides Totais (predominantemente THC)',
+    image: '/images/products/oleo-swell-thc.jpg',
+    link: '/oleos/swell', // Link to individual page
   },
   {
-    name: "Maré",
-    title: "Óleo Balanceado THC | CBD Full Spectrum - Maré",
-    description: "Como o fluxo da maré que alterna entre alta e baixa, nosso óleo Maré busca o equilíbrio entre forças complementares. Com proporção balanceada de THC e CBD Full Spectrum (1:1), promove a sinergia entre os canabinoides.",
-    concentration: "20mg/mL de Canabinoides Totais (Aprox. 10mg/mL THC + 10mg/mL CBD)",
-    image: "/images/products/oleo-mare-balanceado.jpg",
-    link: "/oleos/mare" // Link to individual page
-  }
+    name: 'Maré',
+    title: 'Óleo Balanceado THC | CBD Full Spectrum - Maré',
+    description: 'Como o fluxo da maré que alterna entre alta e baixa, nosso óleo Maré busca o equilíbrio entre forças complementares. Com proporção balanceada de THC e CBD Full Spectrum (1:1), promove a sinergia entre os canabinoides.',
+    concentration: '20mg/mL de Canabinoides Totais (Aprox. 10mg/mL THC + 10mg/mL CBD)',
+    image: '/images/products/oleo-mare-balanceado.jpg',
+    link: '/oleos/mare', // Link to individual page
+  },
 ];
 
 export default function NossosOleosPage() {

@@ -55,6 +55,11 @@ function normalizeSlug(text: string): string {
     .replace(/-+/g, '-');
 }
 
+// Helper function para converter null para undefined em erros
+function normalizeError(error: string | null | undefined): string | undefined {
+  return error ?? undefined;
+}
+
 export default function EditTermPage({ params }: { params: Promise<{ id: string }> }) {
   const [resolvedParams, setResolvedParams] = useState<{ id: string } | null>(null);
   const router = useRouter();
@@ -74,7 +79,7 @@ export default function EditTermPage({ params }: { params: Promise<{ id: string 
     save,
     isSaving,
     isDirty,
-    lastSaved
+    lastSaved,
   } = useFormValidation<TermFormData>({
     initialData: {
       term: '',
@@ -83,29 +88,31 @@ export default function EditTermPage({ params }: { params: Promise<{ id: string 
       category: 'Saúde',
       related_terms: [],
       meta_description: '',
-      is_active: true
+      is_active: true,
     },
     validationRules: {
       term: { required: true, minLength: 2, maxLength: 100 },
       slug: { required: true, minLength: 2, maxLength: 100 },
       definition: { required: true, minLength: 10, maxLength: 2000 },
-      meta_description: { maxLength: 160 }
+      meta_description: { maxLength: 160 },
     },
     onSave: async (data) => {
       await handleSave(data, false);
     },
-    autoSaveDelay: 3000
+    autoSaveDelay: 3000,
   });
 
   // Resolver params assíncronos
   useEffect(() => {
-    params.then(setResolvedParams);
+    void params.then(setResolvedParams);
   }, [params]);
 
   useEffect(() => {
     if (!resolvedParams) return;
 
     async function loadData() {
+      if (!resolvedParams) return; // Adicionar verificação extra
+
       try {
         // Carregar dados do termo
         const termResult = await getTermForEdit(resolvedParams.id);
@@ -117,7 +124,7 @@ export default function EditTermPage({ params }: { params: Promise<{ id: string 
         if (termResult.data) {
           const data = termResult.data;
           setTermData(data);
-          
+
           // Atualizar dados do formulário
           updateFields({
             term: data.term,
@@ -126,7 +133,7 @@ export default function EditTermPage({ params }: { params: Promise<{ id: string 
             category: data.category as EncyclopediaCategory,
             related_terms: data.related_terms || [],
             meta_description: data.meta_description || '',
-            is_active: data.is_active
+            is_active: data.is_active,
           });
         }
 
@@ -149,14 +156,14 @@ export default function EditTermPage({ params }: { params: Promise<{ id: string 
       }
     }
 
-    loadData();
+    void loadData();
   }, [resolvedParams, updateFields]);
 
   useEffect(() => {
     if (newRelatedTerm.trim()) {
-      const filtered = availableTerms.filter(term => 
+      const filtered = availableTerms.filter(term =>
         term.term.toLowerCase().includes(newRelatedTerm.toLowerCase()) &&
-        !formData.related_terms.includes(term.term)
+        !formData.related_terms.includes(term.term),
       );
       setFilteredTerms(filtered);
     } else {
@@ -167,7 +174,7 @@ export default function EditTermPage({ params }: { params: Promise<{ id: string 
   const handleTermChange = (value: string) => {
     updateFields({
       term: value,
-      slug: normalizeSlug(value)
+      slug: normalizeSlug(value),
     });
   };
 
@@ -194,7 +201,7 @@ export default function EditTermPage({ params }: { params: Promise<{ id: string 
         category: data.category,
         related_terms: data.related_terms,
         meta_description: data.meta_description,
-        is_active: data.is_active
+        is_active: data.is_active,
       });
 
       if (result.error) {
@@ -247,7 +254,7 @@ export default function EditTermPage({ params }: { params: Promise<{ id: string 
           )}
           <Button
             variant="outline"
-            onClick={() => save()}
+            onClick={() => void save()}
             disabled={isSaving || !isDirty}
           >
             {isSaving ? (
@@ -258,16 +265,16 @@ export default function EditTermPage({ params }: { params: Promise<{ id: string 
             {isSaving ? 'Salvando...' : 'Salvar Rascunho'}
           </Button>
           {formData.is_active ? (
-            <Button 
-              variant="outline" 
-              onClick={handleUnpublish} 
+            <Button
+              variant="outline"
+              onClick={() => void handleUnpublish()}
               disabled={isSaving}
             >
               <Eye className="h-4 w-4 mr-2" />
               Despublicar
             </Button>
           ) : (
-            <Button onClick={handlePublish} disabled={isSaving}>
+            <Button onClick={() => void handlePublish()} disabled={isSaving}>
               <BookOpen className="h-4 w-4 mr-2" />
               Publicar Termo
             </Button>
@@ -436,10 +443,10 @@ export default function EditTermPage({ params }: { params: Promise<{ id: string 
       <div className="space-y-6">
         {/* Termo e Slug */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField 
-            label="Termo" 
-            required 
-            error={errors.term}
+          <FormField
+            label="Termo"
+            required
+            error={normalizeError(errors.term)}
           >
             <Input
               value={formData.term}
@@ -448,10 +455,10 @@ export default function EditTermPage({ params }: { params: Promise<{ id: string 
             />
           </FormField>
 
-          <FormField 
-            label="Slug" 
-            required 
-            error={errors.slug}
+          <FormField
+            label="Slug"
+            required
+            error={normalizeError(errors.slug)}
             description="URL amigável do termo"
           >
             <Input
@@ -463,10 +470,10 @@ export default function EditTermPage({ params }: { params: Promise<{ id: string 
         </div>
 
         {/* Definição */}
-        <FormField 
-          label="Definição" 
-          required 
-          error={errors.definition}
+        <FormField
+          label="Definição"
+          required
+          error={normalizeError(errors.definition)}
           description="Explicação detalhada do termo"
         >
           <Textarea
@@ -482,9 +489,9 @@ export default function EditTermPage({ params }: { params: Promise<{ id: string 
         </FormField>
 
         {/* Meta Descrição */}
-        <FormField 
-          label="Meta Descrição" 
-          error={errors.meta_description}
+        <FormField
+          label="Meta Descrição"
+          error={normalizeError(errors.meta_description)}
           description="Descrição para SEO (máx. 160 caracteres)"
         >
           <Textarea

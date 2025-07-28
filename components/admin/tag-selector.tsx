@@ -31,7 +31,7 @@ export function TagSelector({
   className,
   maxTags,
   allowCreate = false,
-  onCreate
+  onCreate,
 }: TagSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -41,7 +41,7 @@ export function TagSelector({
 
   const filteredOptions = options.filter(option => 
     !selectedValues.includes(option.id) &&
-    option.name.toLowerCase().includes(searchTerm.toLowerCase())
+    option.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const canCreate = allowCreate && 

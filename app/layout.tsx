@@ -8,7 +8,7 @@ import ConditionalMenu from '@/components/layout/ConditionalMenu';
 import GTMInitializer from '@/components/GTMInitializer';
 import HydrationWarningSupressor from '@/components/HydrationWarningSupressor';
 import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import AuthProvider from './context/AuthProvider'; // Adicionado
 
 // Definições das fontes já estão em app/styles/fonts.ts

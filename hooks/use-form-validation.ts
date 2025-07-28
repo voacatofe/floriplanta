@@ -1,7 +1,31 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { debounce } from 'lodash';
+import { useState, useEffect, useCallback, useRef } from 'react';
+
+// Debounce implementation that returns an object with exec and cancel methods
+function debounce<F extends (...args: Parameters<F>) => void>(
+  func: F,
+  wait: number,
+): { exec: (...args: Parameters<F>) => void; cancel: () => void } {
+  let timeout: NodeJS.Timeout | null = null;
+
+  const debounced = (...args: Parameters<F>) => {
+    if (timeout) {
+      clearTimeout(timeout);
+    }
+    timeout = setTimeout(() => {
+      func(...args);
+    }, wait);
+  };
+
+  const cancel = () => {
+    if (timeout) {
+      clearTimeout(timeout);
+    }
+  };
+
+  return { exec: debounced, cancel };
+}
 
 type ValidationRule<T> = {
   required?: boolean;
@@ -16,7 +40,7 @@ type ValidationRules<T> = {
 };
 
 type ValidationErrors<T> = {
-  [K in keyof T]?: string;
+  [K in keyof T]?: string | null;
 };
 
 interface UseFormValidationOptions<T> {
@@ -32,7 +56,7 @@ export function useFormValidation<T extends Record<string, any>>({
   validationRules = {},
   onSave,
   autoSaveDelay = 2000,
-  validateOnChange = true
+  validateOnChange = true,
 }: UseFormValidationOptions<T>) {
   const [data, setData] = useState<T>(initialData);
   const [errors, setErrors] = useState<ValidationErrors<T>>({});
@@ -92,7 +116,7 @@ export function useFormValidation<T extends Record<string, any>>({
   }, [data, validateField, validationRules]);
 
   // Auto-save debounced
-  const debouncedSave = useCallback(
+  const debouncedSave = useRef(
     debounce(async (dataToSave: T) => {
       if (!onSave || !isDirty) return;
       
@@ -107,8 +131,7 @@ export function useFormValidation<T extends Record<string, any>>({
         setIsSaving(false);
       }
     }, autoSaveDelay),
-    [onSave, isDirty, autoSaveDelay]
-  );
+  ).current;
 
   // Atualizar campo
   const updateField = useCallback((key: keyof T, value: any) => {
@@ -120,7 +143,7 @@ export function useFormValidation<T extends Record<string, any>>({
       const error = validateField(key, value);
       setErrors(prev => ({
         ...prev,
-        [key]: error
+        [key]: error,
       }));
     }
   }, [validateField, validateOnChange]);
@@ -174,7 +197,7 @@ export function useFormValidation<T extends Record<string, any>>({
   // Auto-save effect
   useEffect(() => {
     if (isDirty && onSave) {
-      debouncedSave(data);
+      debouncedSave.exec(data);
     }
     return () => {
       debouncedSave.cancel();
@@ -182,7 +205,7 @@ export function useFormValidation<T extends Record<string, any>>({
   }, [data, isDirty, debouncedSave, onSave]);
 
   // Computed values
-  const isValid = Object.keys(errors).length === 0;
+  const isValid = Object.values(errors).every(error => !error);
   const hasChanges = isDirty;
 
   return {
@@ -203,6 +226,6 @@ export function useFormValidation<T extends Record<string, any>>({
     updateFields,
     validateAll,
     reset,
-    save
+    save,
   };
 }

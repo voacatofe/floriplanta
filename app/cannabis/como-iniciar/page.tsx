@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 
-import Footer from "@/components/layout/Footer";
+import Footer from '@/components/layout/Footer';
 import { PlayCircle, Stethoscope, FileText, Truck, Pill, Droplet, Cloud, Hand, TrendingUp, ListChecks, AlertTriangle, ShieldCheck, LucideIcon } from 'lucide-react'; // Adicionado LucideIcon
 
 // Definindo interfaces para tipagem correta
@@ -33,13 +33,13 @@ interface Step {
 // Component for sidebar navigation
 const CannabisSidebarNav = () => {
   const navItems = [
-    { title: "Visão Geral", href: "/cannabis" },
-    { title: "O que é?", href: "/cannabis/o-que-e" },
-    { title: "Benefícios", href: "/cannabis/beneficios" },
-    { title: "Como Iniciar", href: "/cannabis/como-iniciar" },
-    { title: "Pesquisas", href: "/cannabis/pesquisas" },
-    { title: "Mitos e Verdades", href: "/cannabis/mitos-e-verdades" },
-    { title: "Legislação", href: "/cannabis/legislacao" },
+    { title: 'Visão Geral', href: '/cannabis' },
+    { title: 'O que é?', href: '/cannabis/o-que-e' },
+    { title: 'Benefícios', href: '/cannabis/beneficios' },
+    { title: 'Como Iniciar', href: '/cannabis/como-iniciar' },
+    { title: 'Pesquisas', href: '/cannabis/pesquisas' },
+    { title: 'Mitos e Verdades', href: '/cannabis/mitos-e-verdades' },
+    { title: 'Legislação', href: '/cannabis/legislacao' },
   ];
 
   return (
@@ -68,61 +68,61 @@ const CannabisSidebarNav = () => {
 const steps: Step[] = [
   {
     icon: Stethoscope,
-    title: "Consulte um Médico Prescritor",
-    text: "Este é o passo mais importante. Apenas um médico pode avaliar sua condição, indicar se a cannabis medicinal é apropriada, definir a formulação (CBD, THC, proporções), via de administração e dosagem inicial. Procure profissionais com experiência na área.",
+    title: 'Consulte um Médico Prescritor',
+    text: 'Este é o passo mais importante. Apenas um médico pode avaliar sua condição, indicar se a cannabis medicinal é apropriada, definir a formulação (CBD, THC, proporções), via de administração e dosagem inicial. Procure profissionais com experiência na área.',
     links: [
       // { text: "Encontre Profissionais Parceiros", href: "/medicos" } // Link to be added when page exists
-    ]
+    ],
   },
   {
     icon: FileText,
-    title: "Obtenha a Prescrição Médica",
-    text: "A receita é essencial e deve conter detalhes como nome do paciente, produto (composição), posologia e quantidade necessária."
+    title: 'Obtenha a Prescrição Médica',
+    text: 'A receita é essencial e deve conter detalhes como nome do paciente, produto (composição), posologia e quantidade necessária.',
   },
   {
     icon: Truck, // Changed icon to represent access/delivery
-    title: "Escolha a Via de Acesso ao Produto",
-    text: "Existem diferentes formas de obter o produto legalmente:",
+    title: 'Escolha a Via de Acesso ao Produto',
+    text: 'Existem diferentes formas de obter o produto legalmente:',
     subpoints: [
-      { title: "Importação (Via Anvisa)", text: "Pacientes podem importar produtos mediante autorização da Anvisa (processo envolve cadastro, envio da receita e laudo).", link: { text: "Guia Anvisa", href: "https://www.in.gov.br/en/web/dou/-/resolucao-rdc-n-660-de-30-de-marco-de-2022-389908959" } },
-      { title: "Associações de Pacientes", text: "Associações como a Floriplanta podem fornecer instruções personalizadas e facilitar o acesso, mediante prescrição.", link: { text: "Associe-se", href: "/associar" } },
-      { title: "Farmácias (Produtos Aprovados)", text: "Alguns produtos específicos estão disponíveis em farmácias, geralmente com custo elevado." },
-      { title: "Habeas Corpus para Cultivo", text: "Autorização judicial para cultivo medicinal é possível em casos específicos, exigindo assessoria jurídica.", link: { text: "Saiba mais em Legislação", href: "/cannabis/legislacao" } }
-    ]
+      { title: 'Importação (Via Anvisa)', text: 'Pacientes podem importar produtos mediante autorização da Anvisa (processo envolve cadastro, envio da receita e laudo).', link: { text: 'Guia Anvisa', href: 'https://www.in.gov.br/en/web/dou/-/resolucao-rdc-n-660-de-30-de-marco-de-2022-389908959' } },
+      { title: 'Associações de Pacientes', text: 'Associações como a Floriplanta podem fornecer instruções personalizadas e facilitar o acesso, mediante prescrição.', link: { text: 'Associe-se', href: '/associar' } },
+      { title: 'Farmácias (Produtos Aprovados)', text: 'Alguns produtos específicos estão disponíveis em farmácias, geralmente com custo elevado.' },
+      { title: 'Habeas Corpus para Cultivo', text: 'Autorização judicial para cultivo medicinal é possível em casos específicos, exigindo assessoria jurídica.', link: { text: 'Saiba mais em Legislação', href: '/cannabis/legislacao' } },
+    ],
   },
   {
     icon: Pill, // Changed icon to represent administration methods
-    title: "Entenda as Vias de Administração",
-    text: "A forma como você utiliza o produto influencia o início e a duração do efeito:",
+    title: 'Entenda as Vias de Administração',
+    text: 'A forma como você utiliza o produto influencia o início e a duração do efeito:',
     subpoints: [
-      { title: "Oral/Sublingual (Óleos, Tinturas, Cápsulas)", icon: Droplet, text: "Efeito mais duradouro, início de ação em 30-90 minutos." },
-      { title: "Inalatória (Vaporização)", icon: Cloud, text: "Efeito rápido (minutos), útil para alívio imediato, duração menor. Requer vaporizador." },
-      { title: "Tópica (Cremes, Pomadas)", icon: Hand, text: "Ação localizada na pele/músculos, sem efeitos sistêmicos significativos." }
-    ]
+      { title: 'Oral/Sublingual (Óleos, Tinturas, Cápsulas)', icon: Droplet, text: 'Efeito mais duradouro, início de ação em 30-90 minutos.' },
+      { title: 'Inalatória (Vaporização)', icon: Cloud, text: 'Efeito rápido (minutos), útil para alívio imediato, duração menor. Requer vaporizador.' },
+      { title: 'Tópica (Cremes, Pomadas)', icon: Hand, text: 'Ação localizada na pele/músculos, sem efeitos sistêmicos significativos.' },
+    ],
   },
   {
     icon: TrendingUp,
-    title: "Comece com Doses Baixas e Ajuste Gradualmente",
-    text: "A dosagem ideal varia. Siga a orientação médica: 'Start Low, Go Slow'. Inicie com doses baixas, aumentando gradualmente conforme resposta e tolerância, até encontrar a dose mínima eficaz."
+    title: 'Comece com Doses Baixas e Ajuste Gradualmente',
+    text: "A dosagem ideal varia. Siga a orientação médica: 'Start Low, Go Slow'. Inicie com doses baixas, aumentando gradualmente conforme resposta e tolerância, até encontrar a dose mínima eficaz.",
   },
   {
     icon: ListChecks,
-    title: "Monitore os Efeitos",
-    text: "Mantenha um diário para registrar dose, horários, efeitos percebidos (positivos e negativos) e intensidade dos sintomas. Isso ajudará o médico a ajustar o tratamento.",
+    title: 'Monitore os Efeitos',
+    text: 'Mantenha um diário para registrar dose, horários, efeitos percebidos (positivos e negativos) e intensidade dos sintomas. Isso ajudará o médico a ajustar o tratamento.',
     links: [
       // { text: "Baixar Modelo de Diário (PDF)", href: "#" } // Link to be added
-    ]
+    ],
   },
   {
     icon: AlertTriangle,
-    title: "Esteja Ciente dos Possíveis Efeitos Adversos",
-    text: "Embora geralmente bem tolerada, a cannabis pode causar efeitos colaterais, especialmente com THC (tontura, boca seca, sonolência, alterações de humor, taquicardia). O CBD é menos propenso a causar efeitos adversos. Comunique qualquer efeito indesejado ao seu médico."
+    title: 'Esteja Ciente dos Possíveis Efeitos Adversos',
+    text: 'Embora geralmente bem tolerada, a cannabis pode causar efeitos colaterais, especialmente com THC (tontura, boca seca, sonolência, alterações de humor, taquicardia). O CBD é menos propenso a causar efeitos adversos. Comunique qualquer efeito indesejado ao seu médico.',
   },
   {
     icon: ShieldCheck,
-    title: "Qualidade e Segurança",
-    text: "Certifique-se de que o produto utilizado tenha controle de qualidade e laudos de análise que comprovem sua composição (concentração de canabinoides) e ausência de contaminantes."
-  }
+    title: 'Qualidade e Segurança',
+    text: 'Certifique-se de que o produto utilizado tenha controle de qualidade e laudos de análise que comprovem sua composição (concentração de canabinoides) e ausência de contaminantes.',
+  },
 ];
 
 export default function ComoIniciarPage() {

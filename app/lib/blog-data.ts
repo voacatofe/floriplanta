@@ -32,7 +32,7 @@ export async function getPosts(
     categorySlug?: string;
     searchQuery?: string;
     published?: boolean | 'all';
-  } = {}
+  } = {},
 ): Promise<{ posts: PostWithRelations[]; totalCount: number }> {
   const { page = 1, categorySlug, searchQuery, published = true } = options;
 
@@ -127,6 +127,18 @@ export async function getAllTags(): Promise<Tag[]> {
     orderBy: {
       name: 'asc',
     },
+  });
+}
+
+export async function getTagBySlug(slug: string): Promise<Tag | null> {
+  return prisma.tag.findUnique({
+    where: { slug },
+  });
+}
+
+export async function getCategoryBySlug(slug: string): Promise<Category | null> {
+  return prisma.category.findUnique({
+    where: { slug },
   });
 }
 

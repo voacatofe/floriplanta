@@ -1,19 +1,19 @@
 import React from 'react';
 import Link from 'next/link';
 
-import Footer from "@/components/layout/Footer";
+import Footer from '@/components/layout/Footer';
 import { FlaskConical, BookOpen, Database, Link as LinkIcon } from 'lucide-react'; // Example icons
 
 // Reusable Sidebar Component
 const CannabisSidebarNav = () => {
   const navItems = [
-    { title: "Visão Geral", href: "/cannabis" },
-    { title: "O que é?", href: "/cannabis/o-que-e" },
-    { title: "Benefícios", href: "/cannabis/beneficios" },
-    { title: "Como Iniciar", href: "/cannabis/como-iniciar" },
-    { title: "Pesquisas", href: "/cannabis/pesquisas" },
-    { title: "Mitos e Verdades", href: "/cannabis/mitos-e-verdades" },
-    { title: "Legislação", href: "/cannabis/legislacao" },
+    { title: 'Visão Geral', href: '/cannabis' },
+    { title: 'O que é?', href: '/cannabis/o-que-e' },
+    { title: 'Benefícios', href: '/cannabis/beneficios' },
+    { title: 'Como Iniciar', href: '/cannabis/como-iniciar' },
+    { title: 'Pesquisas', href: '/cannabis/pesquisas' },
+    { title: 'Mitos e Verdades', href: '/cannabis/mitos-e-verdades' },
+    { title: 'Legislação', href: '/cannabis/legislacao' },
   ];
 
   return (
@@ -42,40 +42,40 @@ const CannabisSidebarNav = () => {
 // Placeholder data for research links - Replace with actual curated links
 const researchAreas = [
   {
-    area: "Dor Crônica",
+    area: 'Dor Crônica',
     studies: [
-      { title: "Estudo/Revisão sobre Dor Neuropática", summary: "Breve resumo do estudo 1...", link: "#" },
-      { title: "Estudo/Revisão sobre Fibromialgia", summary: "Breve resumo do estudo 2...", link: "#" },
-    ]
+      { title: 'Estudo/Revisão sobre Dor Neuropática', summary: 'Breve resumo do estudo 1...', link: '#' },
+      { title: 'Estudo/Revisão sobre Fibromialgia', summary: 'Breve resumo do estudo 2...', link: '#' },
+    ],
   },
   {
-    area: "Epilepsia",
+    area: 'Epilepsia',
     studies: [
-      { title: "Ensaio Clínico sobre CBD em Síndrome de Dravet", summary: "Breve resumo do estudo 1...", link: "#" },
-      { title: "Revisão Sistemática sobre Canabinoides em Epilepsia Refratária", summary: "Breve resumo do estudo 2...", link: "#" },
-    ]
+      { title: 'Ensaio Clínico sobre CBD em Síndrome de Dravet', summary: 'Breve resumo do estudo 1...', link: '#' },
+      { title: 'Revisão Sistemática sobre Canabinoides em Epilepsia Refratária', summary: 'Breve resumo do estudo 2...', link: '#' },
+    ],
   },
   {
-    area: "Esclerose Múltipla",
+    area: 'Esclerose Múltipla',
     studies: [
-      { title: "Estudo sobre Sativex/Mevatyl para Espasticidade", summary: "Breve resumo do estudo 1...", link: "#" },
-    ]
+      { title: 'Estudo sobre Sativex/Mevatyl para Espasticidade', summary: 'Breve resumo do estudo 1...', link: '#' },
+    ],
   },
   {
-    area: "Ansiedade",
+    area: 'Ansiedade',
     studies: [
-      { title: "Revisão sobre CBD para Transtornos de Ansiedade", summary: "Breve resumo do estudo 1...", link: "#" },
-    ]
+      { title: 'Revisão sobre CBD para Transtornos de Ansiedade', summary: 'Breve resumo do estudo 1...', link: '#' },
+    ],
   },
   // Add more areas (Oncologia, Neurologia, Psiquiatria, etc.) and studies
 ];
 
 const usefulLinks = [
-  { title: "PubMed", description: "Principal base de dados de literatura biomédica.", link: "https://pubmed.ncbi.nlm.nih.gov/?term=cannabis+medicinal" },
-  { title: "SciELO", description: "Biblioteca eletrônica com periódicos científicos da América Latina.", link: "https://search.scielo.org/?q=cannabis+medicinal" },
-  { title: "ClinicalTrials.gov", description: "Registro de ensaios clínicos conduzidos globalmente.", link: "https://clinicaltrials.gov/ct2/results?cond=Cannabis&term=&cntry=&state=&city=&dist=" },
-  { title: "SBEC", description: "Sociedade Brasileira de Estudos da Cannabis.", link: "#" }, // Add actual link if available
-  { title: "IACM", description: "Associação Internacional para Canabinoides como Medicamento.", link: "https://www.cannabis-med.org/" },
+  { title: 'PubMed', description: 'Principal base de dados de literatura biomédica.', link: 'https://pubmed.ncbi.nlm.nih.gov/?term=cannabis+medicinal' },
+  { title: 'SciELO', description: 'Biblioteca eletrônica com periódicos científicos da América Latina.', link: 'https://search.scielo.org/?q=cannabis+medicinal' },
+  { title: 'ClinicalTrials.gov', description: 'Registro de ensaios clínicos conduzidos globalmente.', link: 'https://clinicaltrials.gov/ct2/results?cond=Cannabis&term=&cntry=&state=&city=&dist=' },
+  { title: 'SBEC', description: 'Sociedade Brasileira de Estudos da Cannabis.', link: '#' }, // Add actual link if available
+  { title: 'IACM', description: 'Associação Internacional para Canabinoides como Medicamento.', link: 'https://www.cannabis-med.org/' },
 ];
 
 export default function PesquisasPage() {

@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import Footer from "@/components/layout/Footer";
+import Footer from '@/components/layout/Footer';
 
 export default function Associado() {
   return (

@@ -1,4 +1,4 @@
-"use client"; 
+'use client'; 
 
 import { useState, useEffect } from 'react';
 import { Link as LinkIcon, Facebook, Twitter, Linkedin, Check } from 'lucide-react';

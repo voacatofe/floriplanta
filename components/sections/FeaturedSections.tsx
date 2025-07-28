@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import Link from 'next/link';
@@ -6,31 +6,31 @@ import { BookOpen, Users, Stethoscope/* , Droplet */ } from 'lucide-react'; // E
 
 const sections = [
   {
-    title: "Cannabis Medicinal: Entenda",
-    text: "Acesse informações confiáveis sobre benefícios, indicações, pesquisas científicas e como iniciar o tratamento com segurança.",
+    title: 'Cannabis Medicinal: Entenda',
+    text: 'Acesse informações confiáveis sobre benefícios, indicações, pesquisas científicas e como iniciar o tratamento com segurança.',
     icon: BookOpen,
-    link: "/cannabis",
-    buttonText: "Explore o Centro de Informação",
-    bgColor: "bg-brand-hover-purple/10",
-    iconColor: "text-brand-hover-purple"
+    link: '/cannabis',
+    buttonText: 'Explore o Centro de Informação',
+    bgColor: 'bg-brand-hover-purple/10',
+    iconColor: 'text-brand-hover-purple',
   },
   {
-    title: "Associe-se à Floriplanta",
-    text: "Junte-se à nossa comunidade, tenha acesso a benefícios exclusivos, incluindo nossos óleos, e fortaleça a luta pelo acesso à cannabis medicinal.",
+    title: 'Associe-se à Floriplanta',
+    text: 'Junte-se à nossa comunidade, tenha acesso a benefícios exclusivos, incluindo nossos óleos, e fortaleça a luta pelo acesso à cannabis medicinal.',
     icon: Users,
-    link: "/associar",
-    buttonText: "Veja Como se Associar",
-    bgColor: "bg-brand-light-green/40",
-    iconColor: "text-green-800"
+    link: '/associar',
+    buttonText: 'Veja Como se Associar',
+    bgColor: 'bg-brand-light-green/40',
+    iconColor: 'text-green-800',
   },
   {
-    title: "Médicos e Profissionais de Saúde",
-    text: "Encontre recursos científicos, informações sobre prescrição e como colaborar com a Floriplanta para apoiar seus pacientes.",
+    title: 'Médicos e Profissionais de Saúde',
+    text: 'Encontre recursos científicos, informações sobre prescrição e como colaborar com a Floriplanta para apoiar seus pacientes.',
     icon: Stethoscope,
-    link: "/medicos", // Assuming this page will be created
-    buttonText: "Acesse a Área Médica",
-    bgColor: "bg-brand-hover-purple/10",
-    iconColor: "text-brand-hover-purple"
+    link: '/medicos', // Assuming this page will be created
+    buttonText: 'Acesse a Área Médica',
+    bgColor: 'bg-brand-hover-purple/10',
+    iconColor: 'text-brand-hover-purple',
   },
 /*   {
     title: "Conheça Nossos Óleos",

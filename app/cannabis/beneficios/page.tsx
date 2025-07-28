@@ -1,20 +1,20 @@
 import React from 'react';
 import Link from 'next/link'; // For linking to sources
 
-import Footer from "@/components/layout/Footer";
+import Footer from '@/components/layout/Footer';
 import { HeartPulse, Brain, Bone, Wind, Smile, Utensils, Activity, Users, ShieldCheck, AlertTriangle } from 'lucide-react'; // Example icons
 
 // Reusable Sidebar Component (assuming it's in a shared location or copied)
 // For simplicity, copying the definition here. Ideally, import from a shared components folder.
 const CannabisSidebarNav = () => {
   const navItems = [
-    { title: "Visão Geral", href: "/cannabis" },
-    { title: "O que é?", href: "/cannabis/o-que-e" },
-    { title: "Benefícios", href: "/cannabis/beneficios" },
-    { title: "Como Iniciar", href: "/cannabis/como-iniciar" },
-    { title: "Pesquisas", href: "/cannabis/pesquisas" },
-    { title: "Mitos e Verdades", href: "/cannabis/mitos-e-verdades" },
-    { title: "Legislação", href: "/cannabis/legislacao" },
+    { title: 'Visão Geral', href: '/cannabis' },
+    { title: 'O que é?', href: '/cannabis/o-que-e' },
+    { title: 'Benefícios', href: '/cannabis/beneficios' },
+    { title: 'Como Iniciar', href: '/cannabis/como-iniciar' },
+    { title: 'Pesquisas', href: '/cannabis/pesquisas' },
+    { title: 'Mitos e Verdades', href: '/cannabis/mitos-e-verdades' },
+    { title: 'Legislação', href: '/cannabis/legislacao' },
   ];
 
   return (
@@ -44,51 +44,51 @@ const CannabisSidebarNav = () => {
 const conditions = [
   {
     icon: Bone,
-    title: "Dor Crônica",
-    text: "Canabinoides como CBD e THC podem modular a percepção da dor, sendo úteis em dores neuropáticas, oncológicas, fibromialgia e outras condições dolorosas persistentes.",
-    sourceLink: "#" // Add link to study/review
+    title: 'Dor Crônica',
+    text: 'Canabinoides como CBD e THC podem modular a percepção da dor, sendo úteis em dores neuropáticas, oncológicas, fibromialgia e outras condições dolorosas persistentes.',
+    sourceLink: '#', // Add link to study/review
   },
   {
     icon: Brain, // Changed icon
-    title: "Epilepsia",
-    text: "O CBD, especialmente em formulações purificadas, é aprovado para tratar formas raras e graves de epilepsia infantil (Síndromes de Dravet e Lennox-Gastaut), reduzindo significativamente a frequência das crises.",
-    sourceLink: "#" // Add link to study/review
+    title: 'Epilepsia',
+    text: 'O CBD, especialmente em formulações purificadas, é aprovado para tratar formas raras e graves de epilepsia infantil (Síndromes de Dravet e Lennox-Gastaut), reduzindo significativamente a frequência das crises.',
+    sourceLink: '#', // Add link to study/review
   },
   {
     icon: Activity, // Changed icon
-    title: "Esclerose Múltipla",
-    text: "Combinações de THC e CBD (como o Sativex/Mevatyl) são eficazes na redução da espasticidade muscular e da dor associada à condição.",
-    sourceLink: "#" // Add link to study/review
+    title: 'Esclerose Múltipla',
+    text: 'Combinações de THC e CBD (como o Sativex/Mevatyl) são eficazes na redução da espasticidade muscular e da dor associada à condição.',
+    sourceLink: '#', // Add link to study/review
   },
   {
     icon: Smile,
-    title: "Transtornos de Ansiedade e TEPT",
-    text: "O CBD possui propriedades ansiolíticas, ajudando a reduzir sintomas de ansiedade generalizada, ansiedade social e TEPT, além de melhorar a qualidade do sono.",
-    sourceLink: "#" // Add link to study/review
+    title: 'Transtornos de Ansiedade e TEPT',
+    text: 'O CBD possui propriedades ansiolíticas, ajudando a reduzir sintomas de ansiedade generalizada, ansiedade social e TEPT, além de melhorar a qualidade do sono.',
+    sourceLink: '#', // Add link to study/review
   },
   {
     icon: Wind, // Changed icon
-    title: "Náuseas e Vômitos (Quimioterapia)",
-    text: "O THC é um antiemético eficaz, ajudando pacientes oncológicos a controlar náuseas e vômitos durante a quimioterapia.",
-    sourceLink: "#" // Add link to study/review
+    title: 'Náuseas e Vômitos (Quimioterapia)',
+    text: 'O THC é um antiemético eficaz, ajudando pacientes oncológicos a controlar náuseas e vômitos durante a quimioterapia.',
+    sourceLink: '#', // Add link to study/review
   },
   {
     icon: Utensils,
-    title: "Perda de Apetite e Caquexia",
-    text: "O THC pode estimular o apetite, sendo útil para pacientes com perda de peso associada ao câncer, HIV/AIDS ou outras condições.",
-    sourceLink: "#" // Add link to study/review
+    title: 'Perda de Apetite e Caquexia',
+    text: 'O THC pode estimular o apetite, sendo útil para pacientes com perda de peso associada ao câncer, HIV/AIDS ou outras condições.',
+    sourceLink: '#', // Add link to study/review
   },
   {
     icon: ShieldCheck, // Changed icon
-    title: "Doenças Inflamatórias Intestinais",
-    text: "Canabinoides demonstram potencial anti-inflamatório no trato gastrointestinal (Crohn, Colite Ulcerativa), podendo auxiliar no manejo dos sintomas.",
-    sourceLink: "#" // Add link to study/review
+    title: 'Doenças Inflamatórias Intestinais',
+    text: 'Canabinoides demonstram potencial anti-inflamatório no trato gastrointestinal (Crohn, Colite Ulcerativa), podendo auxiliar no manejo dos sintomas.',
+    sourceLink: '#', // Add link to study/review
   },
   {
     icon: Users, // Changed icon
-    title: "Transtorno do Espectro Autista (TEA)",
-    text: "Estudos preliminares sugerem que o CBD pode ajudar a melhorar sintomas como irritabilidade, hiperatividade e problemas de comunicação em alguns pacientes com TEA.",
-    sourceLink: "#" // Add link to study/review
+    title: 'Transtorno do Espectro Autista (TEA)',
+    text: 'Estudos preliminares sugerem que o CBD pode ajudar a melhorar sintomas como irritabilidade, hiperatividade e problemas de comunicação em alguns pacientes com TEA.',
+    sourceLink: '#', // Add link to study/review
   },
   // Add other conditions like Parkinson, Alzheimer, Insomnia, etc.
 ];
@@ -134,7 +134,7 @@ export default function BeneficiosPage() {
                   <p className="font-inter text-brand-purple/80 text-sm leading-relaxed flex-grow mb-3">
                     {condition.text}
                   </p>
-                  {condition.sourceLink !== "#" && (
+                  {condition.sourceLink !== '#' && (
                     <Link href={condition.sourceLink} target="_blank" rel="noopener noreferrer" className="text-xs font-inter text-brand-hover-purple hover:underline mt-auto">
                       Ver fonte/estudo
                     </Link>

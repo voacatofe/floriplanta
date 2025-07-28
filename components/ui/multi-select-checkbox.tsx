@@ -1,17 +1,17 @@
 'use client';
 
-import * as React from "react";
-import { ChevronsUpDown } from "lucide-react";
+import * as React from 'react';
+import { ChevronsUpDown } from 'lucide-react';
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { ScrollArea } from "@/components/ui/scroll-area"; // Adicionaremos se não existir
+} from '@/components/ui/popover';
+import { ScrollArea } from '@/components/ui/scroll-area'; // Adicionaremos se não existir
 
 export interface MultiSelectOption {
   value: string; // Geralmente o ID
@@ -31,7 +31,7 @@ export function MultiSelectCheckbox({
   options,
   selectedValues,
   onChange,
-  placeholder = "Selecione...",
+  placeholder = 'Selecione...',
   className,
   triggerClassName,
 }: MultiSelectCheckboxProps) {
@@ -55,15 +55,15 @@ export function MultiSelectCheckbox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={cn("w-full justify-between font-normal", triggerClassName)}
+          className={cn('w-full justify-between font-normal', triggerClassName)}
         >
           <span className="truncate">
-            {selectedLabels.length > 0 ? selectedLabels.join(", ") : placeholder}
+            {selectedLabels.length > 0 ? selectedLabels.join(', ') : placeholder}
           </span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className={cn("w-[--trigger-width] p-0", className)}>
+      <PopoverContent className={cn('w-[--trigger-width] p-0', className)}>
         <ScrollArea className="max-h-60">
           <div className="p-1">
             {options.map((option) => (

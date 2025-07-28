@@ -231,7 +231,7 @@ export default async function PostPage({ params }: PageProps) {
                       const text = children?.toString() || '';
                       const id = `heading-${text.toLowerCase().replace(/\s+/g, '-')}`;
                       return <h3 id={id} {...props}>{children}</h3>;
-                    }
+                    },
                   }}
                 >
                   {post.content}

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React from 'react';
 import { Wand2 } from 'lucide-react';
@@ -10,9 +10,9 @@ interface MissionSectionProps {
 }
 
 export default function MissionSection({
-  title = "missão",
-  description = "Nossa missão é construir uma comunidade sólida para democratizar o acesso à informação e o tratamento com o uso da cannabis medicinal, através de um movimento de desobediência civil e pacífica.",
-  bgColor = 'purple'
+  title = 'missão',
+  description = 'Nossa missão é construir uma comunidade sólida para democratizar o acesso à informação e o tratamento com o uso da cannabis medicinal, através de um movimento de desobediência civil e pacífica.',
+  bgColor = 'purple',
 }: MissionSectionProps) {
   
   const getBgColor = () => {

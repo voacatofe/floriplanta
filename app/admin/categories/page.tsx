@@ -31,10 +31,10 @@ export default async function CategoriesPage() {
     include: {
       _count: {
         select: {
-          posts: true
-        }
-      }
-    }
+          posts: true,
+        },
+      },
+    },
   });
 
   async function handleDelete(id: string) {

@@ -1,8 +1,8 @@
-import { type NextRequest, NextResponse } from 'next/server'
-import { getToken } from 'next-auth/jwt'
+import { type NextRequest, NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
+  const { pathname } = request.nextUrl;
   
   // Ocultar rotas /oleos e suas subpáginas
   // Para reativar, comente ou remova este bloco de código.
@@ -14,25 +14,25 @@ export async function middleware(request: NextRequest) {
   if (pathname.startsWith('/admin')) {
     const token = await getToken({ 
       req: request, 
-      secret: process.env.NEXTAUTH_SECRET 
-    })
+      secret: process.env.NEXTAUTH_SECRET, 
+    });
 
     // Se não estiver logado e tentar acessar uma rota /admin (exceto /admin/login e rotas de API de autenticação)
     if (!token && !pathname.startsWith('/admin/login') && !pathname.startsWith('/api/auth')) {
-      const url = request.nextUrl.clone()
-      url.pathname = '/admin/login'
-      return NextResponse.redirect(url)
+      const url = request.nextUrl.clone();
+      url.pathname = '/admin/login';
+      return NextResponse.redirect(url);
     }
 
     // Se estiver logado e tentar acessar /admin/login, redirecionar para /admin
     if (token && pathname === '/admin/login') {
-      const url = request.nextUrl.clone()
-      url.pathname = '/admin'
-      return NextResponse.redirect(url)
+      const url = request.nextUrl.clone();
+      url.pathname = '/admin';
+      return NextResponse.redirect(url);
     }
   }
 
-  return NextResponse.next()
+  return NextResponse.next();
 }
 
 export const config = {
@@ -42,10 +42,8 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * - api/auth (para permitir rotas de autenticação do Supabase, se houver)
-     * Não colocar /api/auth no admin, pois o Supabase usa /auth/v1...
-     * Melhor deixar o matcher mais geral e tratar a lógica no middleware.
+     * - api/auth (rotas de API do Next-Auth)
      */
     '/((?!_next/static|_next/image|favicon.ico).*)',
   ],
-}
+};

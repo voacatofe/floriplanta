@@ -1,18 +1,18 @@
 import React, { ReactNode } from 'react';
 
-import Footer from "@/components/layout/Footer";
+import Footer from '@/components/layout/Footer';
 import { BookOpen, Brain, Atom, Thermometer, Dna, Zap, Leaf, Info, Bomb, Droplet, Flower, LucideIcon } from 'lucide-react'; // Example icons
 
 // Component for the sidebar navigation within the cannabis section
 const CannabisSidebarNav = () => {
   const navItems = [
-    { title: "Visão Geral", href: "/cannabis" },
-    { title: "O que é?", href: "/cannabis/o-que-e" },
-    { title: "Benefícios", href: "/cannabis/beneficios" },
-    { title: "Como Iniciar", href: "/cannabis/como-iniciar" },
-    { title: "Pesquisas", href: "/cannabis/pesquisas" },
-    { title: "Mitos e Verdades", href: "/cannabis/mitos-e-verdades" },
-    { title: "Legislação", href: "/cannabis/legislacao" },
+    { title: 'Visão Geral', href: '/cannabis' },
+    { title: 'O que é?', href: '/cannabis/o-que-e' },
+    { title: 'Benefícios', href: '/cannabis/beneficios' },
+    { title: 'Como Iniciar', href: '/cannabis/como-iniciar' },
+    { title: 'Pesquisas', href: '/cannabis/pesquisas' },
+    { title: 'Mitos e Verdades', href: '/cannabis/mitos-e-verdades' },
+    { title: 'Legislação', href: '/cannabis/legislacao' },
   ];
 
   // Basic sidebar, consider making it sticky or more advanced based on layout needs
@@ -114,61 +114,61 @@ export default function OQueEPage() {
   // Dados de canabinoides
   const canabinoides = [
     {
-      name: "Canabidiol",
-      abbr: "CBD",
-      description: "Não psicoativo, conhecido por suas propriedades ansiolíticas, anti-inflamatórias, anticonvulsivantes e neuroprotetoras. É o canabinoide mais estudado para fins medicinais.",
+      name: 'Canabidiol',
+      abbr: 'CBD',
+      description: 'Não psicoativo, conhecido por suas propriedades ansiolíticas, anti-inflamatórias, anticonvulsivantes e neuroprotetoras. É o canabinoide mais estudado para fins medicinais.',
       icon: Droplet,
-      highlight: true
+      highlight: true,
     },
     {
-      name: "Tetrahidrocanabinol",
-      abbr: "THC",
+      name: 'Tetrahidrocanabinol',
+      abbr: 'THC',
       description: "Principal composto psicoativo, responsável pela sensação de 'euforia', mas também com importantes propriedades analgésicas, antieméticas (contra náuseas) e estimulantes de apetite.",
       icon: Bomb,
-      highlight: true
+      highlight: true,
     },
     {
-      name: "Canabigerol",
-      abbr: "CBG",
+      name: 'Canabigerol',
+      abbr: 'CBG',
       description: "Não psicoativo, estudado por potenciais efeitos anti-inflamatórios, antibacterianos e neuroprotetores. Considerado o 'canabinoide mãe'.",
       icon: Dna,
-      highlight: false
+      highlight: false,
     },
     {
-      name: "Canabinol",
-      abbr: "CBN",
-      description: "Levemente psicoativo, associado a efeitos sedativos e relaxantes. É formado pela degradação do THC e mais comum em plantas envelhecidas.",
+      name: 'Canabinol',
+      abbr: 'CBN',
+      description: 'Levemente psicoativo, associado a efeitos sedativos e relaxantes. É formado pela degradação do THC e mais comum em plantas envelhecidas.',
       icon: Flower,
-      highlight: false
-    }
+      highlight: false,
+    },
   ];
 
   // Dados de terpenos
   const terpenos = [
     {
-      name: "Mirceno",
-      aroma: "Terroso, amendoado, herbal",
-      effects: "Relaxante, sedativo, analgésico",
-      icon: Leaf
+      name: 'Mirceno',
+      aroma: 'Terroso, amendoado, herbal',
+      effects: 'Relaxante, sedativo, analgésico',
+      icon: Leaf,
     },
     {
-      name: "Limoneno",
-      aroma: "Cítrico, limão, refrescante",
-      effects: "Elevação do humor, anti-ansiedade",
-      icon: Zap
+      name: 'Limoneno',
+      aroma: 'Cítrico, limão, refrescante',
+      effects: 'Elevação do humor, anti-ansiedade',
+      icon: Zap,
     },
     {
-      name: "Pineno",
-      aroma: "Pinho, refrescante, bosque",
-      effects: "Alerta mental, anti-inflamatório",
-      icon: Thermometer
+      name: 'Pineno',
+      aroma: 'Pinho, refrescante, bosque',
+      effects: 'Alerta mental, anti-inflamatório',
+      icon: Thermometer,
     },
     {
-      name: "Linalol",
-      aroma: "Floral, lavanda, doce",
-      effects: "Relaxante, ansiolítico, sedativo",
-      icon: Flower
-    }
+      name: 'Linalol',
+      aroma: 'Floral, lavanda, doce',
+      effects: 'Relaxante, ansiolítico, sedativo',
+      icon: Flower,
+    },
   ];
 
   return (

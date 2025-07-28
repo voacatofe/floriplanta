@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useEffect, useState } from 'react';
 
@@ -23,7 +23,7 @@ export default function TableOfContents() {
           collected.push({
             id: element.id,
             text: element.textContent,
-            level: element.tagName === 'H2' ? 2 : 3
+            level: element.tagName === 'H2' ? 2 : 3,
           });
         }
       });
@@ -49,8 +49,8 @@ export default function TableOfContents() {
       },
       {
         rootMargin: '-100px 0% -70% 0%',
-        threshold: 0
-      }
+        threshold: 0,
+      },
     );
 
     // Observar todos os headings
@@ -78,7 +78,7 @@ export default function TableOfContents() {
 
       window.scrollTo({
         top: offsetPosition,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     }
   };
