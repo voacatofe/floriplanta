@@ -65,3 +65,4 @@ build.tar.gz
 
 # Arquivos com chaves de API
 .cursor/mcp.json 
+/lib/generated/prisma

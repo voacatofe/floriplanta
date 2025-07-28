@@ -1,39 +1,38 @@
 import Link from 'next/link';
-import { logout } from './actions';
-import { Button } from '@/components/ui/button';
-import { LogOut, Home, FileText, FolderOpen, Tag, MessageSquare, Settings, BarChart, BookOpen } from 'lucide-react';
-// import { AdminProviders } from './providers'; // Temporariamente comentado
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/auth';
+import { redirect } from 'next/navigation';
+import type { Session } from 'next-auth';
+import { Home, FileText, FolderOpen, Tag, BookOpen, MessageSquare, BarChart, Settings } from 'lucide-react';
 import { Toaster } from 'sonner';
-import { createSupabaseServerClient } from '@/app/lib/supabase/server';
+import SignOutButton from './_components/SignOutButton';
+
 
 export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const session = await getServerSession(authOptions) as Session | null;
 
-  // Se não estiver logado, renderiza somente o conteúdo (ex.: página de login)
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center p-4">
-        {children}
-        <Toaster position="top-right" richColors />
-      </div>
-    );
+  // Se não estiver logado (e não estiver na página de login), redireciona para o login
+  // A verificação do pathname é necessária para evitar um loop infinito de redirect
+  // Esta lógica será melhorada com o middleware. Por enquanto, é uma guarda básica.
+  if (!session) {
+    // Para simplificar, o middleware cuidará do redirecionamento.
+    // A página de login será renderizada pelo {children} se a rota for /admin/login
+    // Qualquer outra rota /admin/* sem sessão será pega pelo middleware.
+    // No entanto, como uma proteção extra, podemos redirecionar aqui.
+    redirect('/admin/login');
   }
 
   return (
-    // <AdminProviders> // Temporariamente comentado
     <div className="admin-layout-wrapper flex h-screen bg-gray-100 dark:bg-gray-900">
       {/* Sidebar */}
       <aside className="w-64 bg-gray-800 dark:bg-gray-900 text-white flex flex-col p-4 flex-shrink-0 border-r border-gray-700">
         <div className="mb-8">
           <h2 className="text-xl font-semibold">Admin Floriplanta</h2>
-          <p className="text-xs text-gray-400 mt-1">Painel de Controle</p>
+          <p className="text-xs text-gray-400 mt-1">Bem-vindo, {session.user?.name || 'Admin'}</p>
         </div>
         
         <nav className="flex-grow space-y-1">
@@ -115,15 +114,7 @@ export default async function AdminLayout({
         </nav>
         
         <div className="mt-auto pt-4 border-t border-gray-700">
-          <form action={logout}>
-            <Button 
-              variant="ghost" 
-              className="w-full justify-start text-left hover:bg-red-700 dark:hover:bg-red-900 hover:text-white dark:hover:text-white"
-            >
-              <LogOut size={18} className="mr-3" />
-              <span>Sair</span>
-            </Button>
-          </form>
+          <SignOutButton />
         </div>
       </aside>
 
@@ -136,6 +127,5 @@ export default async function AdminLayout({
       
       <Toaster position="top-right" richColors />
     </div>
-    // </AdminProviders> // Temporariamente comentado
   );
-} 
+}

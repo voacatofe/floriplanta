@@ -1,10 +1,14 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { cookies } from "next/headers";
-import { createServerClient } from "@supabase/ssr";
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/auth';
+import type { Session } from 'next-auth';
+import { PrismaClient } from '@/lib/generated/prisma';
 import { type Category, type Tag, getAllCategories, getAllTags } from "@/app/lib/blog-data";
 import { MAX_TITLE_LENGTH, MAX_SLUG_LENGTH } from "@/app/lib/constants";
+
+const prisma = new PrismaClient();
 
 export interface PostCreationData {
   title: string;
@@ -19,33 +23,9 @@ export interface PostCreationData {
 }
 
 export async function createPostAction(data: PostCreationData) {
-  const cookieStore = await cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            );
-          } catch {
-            // The `setAll` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing
-            // user sessions.
-          }
-        },
-      },
-    }
-  );
+  const session = await getServerSession(authOptions) as Session | null;
 
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
-
-  if (userError || !user) {
+  if (!session || !session.user) {
     return { error: "Usuário não autenticado." };
   }
 
@@ -76,19 +56,18 @@ export async function createPostAction(data: PostCreationData) {
   }
   
   // Verificar se o slug já existe
-  const { data: existingPost, error: slugCheckError } = await supabase
-    .from("posts")
-    .select("id")
-    .eq("slug", trimmedSlug)
-    .single();
+  try {
+    const existingPost = await prisma.post.findUnique({
+      where: { slug: trimmedSlug },
+      select: { id: true }
+    });
     
-  if (slugCheckError && slugCheckError.code !== 'PGRST116') {
-    console.error("Erro ao verificar slug existente:", slugCheckError);
+    if (existingPost) {
+      return { error: "Este slug já está em uso. Escolha outro." };
+    }
+  } catch (error) {
+    console.error("Erro ao verificar slug existente:", error);
     return { error: "Erro ao verificar disponibilidade do slug." };
-  }
-  
-  if (existingPost) {
-    return { error: "Este slug já está em uso. Escolha outro." };
   }
   
   // Validar status
@@ -96,66 +75,43 @@ export async function createPostAction(data: PostCreationData) {
     return { error: "Status inválido." };
   }
 
-  const author_id = user.id;
+  // Cast session.user to include id property
+  const author_id = (session.user as { id: string }).id;
 
-  const { title, slug, excerpt, body, cover_image_url, status, category_ids, tag_ids, published_at } = {
+  const { title, slug, body, cover_image_url, status, category_ids, tag_ids } = {
     ...data,
     title: trimmedTitle,
-    slug: trimmedSlug,
-    excerpt: data.excerpt?.trim() || null
+    slug: trimmedSlug
   };
 
-  const { data: postData, error: postError } = await supabase
-    .from("posts")
-    .insert({
-      title,
-      slug,
-      excerpt,
-      body,
-      cover_image_url,
-      author_id,
-      status,
-      published_at,
-    })
-    .select("id")
-    .single();
+  try {
+    const postData = await prisma.post.create({
+      data: {
+        title,
+        slug,
+        content: body || '',
+        imageUrl: cover_image_url,
+        published: status === 'published',
+        authorId: author_id,
+        categories: category_ids ? {
+          connect: category_ids.map(id => ({ id: id.toString() }))
+        } : undefined,
+        tags: tag_ids ? {
+          connect: tag_ids.map(id => ({ id: id.toString() }))
+        } : undefined
+      },
+      select: { id: true }
+    });
 
-  if (postError) {
-    console.error("Erro ao inserir post:", postError);
-    return { error: postError.message };
-  }
+    revalidatePath("/admin/posts");
+    revalidatePath("/blog");
+    revalidatePath(`/blog/${slug}`);
 
-  const postId = postData.id;
-
-  if (category_ids && category_ids.length > 0) {
-    const postCategories = category_ids.map((category_id) => ({
-      post_id: postId,
-      category_id: category_id,
-    }));
-    const { error: catError } = await supabase.from("post_categories").insert(postCategories);
-    if (catError) {
-      console.error("Erro ao inserir categorias do post:", catError);
-      return { error: `Post criado, mas falha ao associar categorias: ${catError.message}` };
-    }
-  }
-
-  if (tag_ids && tag_ids.length > 0) {
-    const postTags = tag_ids.map((tag_id) => ({
-      post_id: postId,
-      tag_id: tag_id,
-    }));
-    const { error: tagError } = await supabase.from("post_tags").insert(postTags);
-    if (tagError) {
-      console.error("Erro ao inserir tags do post:", tagError);
-      return { error: `Post criado, mas falha ao associar tags: ${tagError.message}` };
-    }
-  }
-
-  revalidatePath("/admin/posts");
-  revalidatePath("/blog");
-  revalidatePath(`/blog/${slug}`);
-
-  return { error: null, data: { postId } }; 
+    return { error: null, data: { postId: postData.id } };
+  } catch (error) {
+    console.error("Erro ao criar post:", error);
+    return { error: "Erro interno do servidor ao criar o post." };
+  } 
 }
 
 export async function getCategoriesForAdmin(): Promise<Category[]> {
@@ -184,108 +140,37 @@ export async function deletePostAction(postId: number) {
     return { error: "ID do post inválido." };
   }
 
-  const cookieStore = await cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            );
-          } catch {
-            // The `setAll` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing
-            // user sessions.
-          }
-        },
-      },
-    }
-  );
-
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
-
-  if (userError || !user) {
+  const session = await getServerSession(authOptions) as Session | null;
+  if (!session?.user) {
     return { error: "Usuário não autenticado." };
   }
 
-  // Primeiro, buscar o post para verificar se existe e obter o slug
-  const { data: postData, error: fetchError } = await supabase
-    .from("posts")
-    .select("id, slug, title")
-    .eq("id", postId)
-    .single();
+  try {
+    // Primeiro, buscar o post para verificar se existe e obter o slug
+    const postData = await prisma.post.findUnique({
+      where: { id: postId.toString() },
+      select: { id: true, slug: true, title: true }
+    });
 
-  if (fetchError || !postData) {
-    return { error: "Post não encontrado." };
+    if (!postData) {
+      return { error: "Post não encontrado." };
+    }
+
+    // Remover o post (Prisma irá lidar com as relações automaticamente devido ao cascade)
+    await prisma.post.delete({
+      where: { id: postId.toString() }
+    });
+
+    // Revalidar as páginas relevantes
+    revalidatePath("/admin/posts");
+    revalidatePath("/blog");
+    revalidatePath(`/blog/${postData.slug}`);
+
+    return { error: null, data: { deletedPost: postData } };
+  } catch (error) {
+    console.error("Erro ao excluir post:", error);
+    return { error: "Erro interno do servidor ao excluir o post." };
   }
-
-  // Remover associações de categorias
-  const { error: categoriesError } = await supabase
-    .from("post_categories")
-    .delete()
-    .eq("post_id", postId);
-
-  if (categoriesError) {
-    console.error("Erro ao remover categorias do post:", categoriesError);
-    return { error: `Erro ao remover categorias: ${categoriesError.message}` };
-  }
-
-  // Remover associações de tags
-  const { error: tagsError } = await supabase
-    .from("post_tags")
-    .delete()
-    .eq("post_id", postId);
-
-  if (tagsError) {
-    console.error("Erro ao remover tags do post:", tagsError);
-    return { error: `Erro ao remover tags: ${tagsError.message}` };
-  }
-
-  // Remover comentários anônimos associados
-  const { error: anonymousCommentsError } = await supabase
-    .from("anonymous_comments")
-    .delete()
-    .eq("post_id", postId);
-
-  if (anonymousCommentsError) {
-    console.error("Erro ao remover comentários anônimos:", anonymousCommentsError);
-    return { error: `Erro ao remover comentários: ${anonymousCommentsError.message}` };
-  }
-
-  // Remover comentários de usuários autenticados
-  const { error: commentsError } = await supabase
-    .from("comments")
-    .delete()
-    .eq("post_id", postId);
-
-  if (commentsError) {
-    console.error("Erro ao remover comentários:", commentsError);
-    return { error: `Erro ao remover comentários: ${commentsError.message}` };
-  }
-
-  // Finalmente, remover o post
-  const { error: deleteError } = await supabase
-    .from("posts")
-    .delete()
-    .eq("id", postId);
-
-  if (deleteError) {
-    console.error("Erro ao excluir post:", deleteError);
-    return { error: deleteError.message };
-  }
-
-  // Revalidar as páginas relevantes
-  revalidatePath("/admin/posts");
-  revalidatePath("/blog");
-  revalidatePath(`/blog/${postData.slug}`);
-
-  return { error: null, data: { deletedPost: postData } };
 }
 
-// Você pode precisar adicionar outras actions aqui, como updatePostAction, deletePostAction, etc. 
+// Você pode precisar adicionar outras actions aqui, como updatePostAction, deletePostAction, etc.

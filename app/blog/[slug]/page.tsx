@@ -331,10 +331,10 @@ export default async function PostPage({ params }: PageProps) {
                   href={`/blog/${relatedPost.slug}`}
                   className="group bg-[#f8f5f0] rounded-lg md:rounded-xl lg:rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                 >
-                  {relatedPost.cover_image_url && (
+                  {relatedPost.imageUrl && (
                     <div className="aspect-video overflow-hidden">
                       <Image
-                        src={relatedPost.cover_image_url}
+                        src={relatedPost.imageUrl}
                         alt={relatedPost.title}
                         width={400}
                         height={225}
@@ -353,13 +353,13 @@ export default async function PostPage({ params }: PageProps) {
                       {relatedPost.title}
                     </h3>
                     <p className="text-gray-600 text-xs md:text-sm line-clamp-2 mb-3 md:mb-4">
-                      {relatedPost.excerpt}
+                      {relatedPost.content.substring(0, 150)}...
                     </p>
                     <div className="flex items-center justify-between text-xs text-gray-500">
-                      <span>{new Date(relatedPost.published_at || '').toLocaleDateString('pt-BR')}</span>
+                      <span>{new Date(relatedPost.createdAt).toLocaleDateString('pt-BR')}</span>
                       <span className="flex items-center gap-1">
                         <Clock size={12} className="md:w-3.5 md:h-3.5" />
-                        {Math.ceil((relatedPost.body?.split(/\s+/).length || 0) / 200)} min
+                        {Math.ceil((relatedPost.content?.split(/\s+/).length || 0) / 200)} min
                       </span>
                     </div>
                   </div>
@@ -386,4 +386,4 @@ export default async function PostPage({ params }: PageProps) {
       <Footer />
     </main>
   );
-} 
+}

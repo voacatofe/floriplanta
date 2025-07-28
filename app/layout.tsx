@@ -7,8 +7,9 @@ import { Toaster } from '@/components/ui/sonner';
 import ConditionalMenu from '@/components/layout/ConditionalMenu';
 import GTMInitializer from '@/components/GTMInitializer';
 import HydrationWarningSupressor from '@/components/HydrationWarningSupressor';
-// import { Analytics } from '@vercel/analytics/react';
-// import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from "@vercel/speed-insights/next"
+import AuthProvider from './context/AuthProvider'; // Adicionado
 
 // Definições das fontes já estão em app/styles/fonts.ts
 // const inter = Inter({
@@ -96,12 +97,14 @@ export default function RootLayout({
       <body className={`${inter.variable} ${futuru.variable} ${behindTheNineties.variable} antialiased bg-brand-bege text-brand-text`}>
         <HydrationWarningSupressor />
         <GTMInitializer />
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
         <Toaster />
         {/* Menu condicional - só aparece se não for rota de admin */}
         <ConditionalMenu />
-        {/* <Analytics /> */}
-        {/* <SpeedInsights /> */}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

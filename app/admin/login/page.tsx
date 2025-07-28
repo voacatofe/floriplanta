@@ -1,13 +1,20 @@
 'use client';
 
 import { useState } from 'react';
-import { login } from './actions';
+import { signIn } from 'next-auth/react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 export default function AdminLoginPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/admin';
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -15,13 +22,32 @@ export default function AdminLoginPage() {
     event.preventDefault();
     setIsLoading(true);
     setError(null);
-    const formData = new FormData(event.currentTarget);
-    const result = await login(formData);
-    setIsLoading(false);
-    if (result?.error) {
-      setError(result.error);
+
+    try {
+      const result = await signIn('credentials', {
+        redirect: false, // Nós mesmos faremos o redirect
+        email,
+        password,
+        callbackUrl,
+      });
+
+      if (result?.error) {
+        // Mapeia o erro genérico para uma mensagem mais amigável
+        if (result.error === 'CredentialsSignin') {
+            setError('Credenciais inválidas. Verifique seu email e senha.');
+        } else {
+            setError('Ocorreu um erro ao tentar fazer login. Tente novamente.');
+        }
+        setIsLoading(false);
+      } else {
+        // Redirecionamento em caso de sucesso
+        router.push(callbackUrl);
+      }
+    } catch (error) {
+        console.error("Erro inesperado no login:", error);
+        setError('Ocorreu um erro inesperado.');
+        setIsLoading(false);
     }
-    // O redirecionamento em caso de sucesso é tratado pela action e pelo middleware
   };
 
   return (
@@ -43,6 +69,8 @@ export default function AdminLoginPage() {
                 placeholder="seu@email.com" 
                 required 
                 disabled={isLoading}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="space-y-2">
@@ -53,6 +81,8 @@ export default function AdminLoginPage() {
                 type="password" 
                 required 
                 disabled={isLoading}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
             {error && (

@@ -2,6 +2,18 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { Post } from '@/app/lib/blog-data';
 
+interface Category {
+  id: string
+  name: string
+  slug: string
+}
+
+interface Tag {
+  id: string
+  name: string
+  slug: string
+}
+
 interface PostCardProps {
   post: Post;
 }
@@ -49,14 +61,14 @@ export default function PostCard({ post }: PostCardProps) {
 
         {(post.categories.length > 0 || post.tags.length > 0) && (
           <div className="mt-3 space-x-2">
-            {post.categories.map(category => (
+            {post.categories.map((category: Category) => (
               <Link key={category.id} href={`/blog/categoria/${category.slug}`} passHref>
                 <span className="inline-block rounded bg-brand-light-green px-2 py-1 text-xs font-medium text-brand-green hover:bg-brand-green hover:text-white">
                   {category.name}
                 </span>
               </Link>
             ))}
-            {post.tags.map(tag => (
+            {post.tags.map((tag: Tag) => (
               <Link key={tag.id} href={`/blog/tag/${tag.slug}`} passHref>
                 <span className="inline-block rounded bg-gray-200 px-2 py-1 text-xs font-medium text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200">
                   #{tag.name}
@@ -81,4 +93,4 @@ export default function PostCard({ post }: PostCardProps) {
       </div>
     </article>
   );
-} 
+}

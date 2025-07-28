@@ -1,4 +1,4 @@
-import { createSupabaseServerClient } from '@/app/lib/supabase/server';
+import { PrismaClient, Prisma } from '@/lib/generated/prisma';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { PlusCircle, Trash2 } from 'lucide-react';
@@ -13,14 +13,31 @@ import {
 } from '@/components/ui/table';
 import { revalidatePath } from 'next/cache';
 
-export default async function CategoriesPage() {
-  const supabase = await createSupabaseServerClient();
-  const { data: categories } = await supabase
-    .from('categories')
-    .select('*')
-    .order('created_at', { ascending: false });
+type CategoryWithCount = Prisma.CategoryGetPayload<{
+  include: {
+    _count: {
+      select: {
+        posts: true
+      }
+    }
+  }
+}>
 
-  async function handleDelete(id: number) {
+const prisma = new PrismaClient();
+
+export default async function CategoriesPage() {
+  const categories = await prisma.category.findMany({
+    orderBy: { name: 'asc' },
+    include: {
+      _count: {
+        select: {
+          posts: true
+        }
+      }
+    }
+  });
+
+  async function handleDelete(id: string) {
     'use server';
     await deleteCategoryAction(id);
     revalidatePath('/admin/categories');
@@ -44,19 +61,20 @@ export default async function CategoriesPage() {
               <TableRow>
                 <TableHead>Nome</TableHead>
                 <TableHead>Slug</TableHead>
-                <TableHead>Descrição</TableHead>
+                <TableHead>Posts</TableHead>
                 <TableHead className="text-right">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {categories.map((cat: any) => (
+              {categories.map((cat: CategoryWithCount) => (
                 <TableRow key={cat.id}>
                   <TableCell className="font-medium">{cat.name}</TableCell>
                   <TableCell>{cat.slug}</TableCell>
-                  <TableCell>{cat.description || '-'}</TableCell>
+                  <TableCell>{cat._count.posts}</TableCell>
                   <TableCell className="text-right">
                     <form action={async () => await handleDelete(cat.id)}>
                       <Button variant="ghost" size="sm" type="submit" title="Excluir">
+
                         <Trash2 className="h-4 w-4 text-red-600" />
                       </Button>
                     </form>
