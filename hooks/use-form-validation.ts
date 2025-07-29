@@ -125,8 +125,8 @@ export function useFormValidation<T extends Record<string, any>>({
         await onSave(dataToSave);
         setLastSaved(new Date());
         setIsDirty(false);
-      } catch (error) {
-        console.error('Auto-save failed:', error);
+      } catch {
+        // Silently fail on auto-save to avoid interrupting user flow
       } finally {
         setIsSaving(false);
       }
@@ -186,8 +186,8 @@ export function useFormValidation<T extends Record<string, any>>({
       setLastSaved(new Date());
       setIsDirty(false);
       return true;
-    } catch (error) {
-      console.error('Save failed:', error);
+    } catch {
+      // Return false to indicate failure
       return false;
     } finally {
       setIsSaving(false);
