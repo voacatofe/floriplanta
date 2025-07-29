@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -19,10 +20,22 @@ import { FormField } from '@/components/admin/form-field';
 import { ImageUploader } from '@/components/admin/image-uploader';
 import { TagSelector } from '@/components/admin/tag-selector';
 import { useFormValidation } from '@/hooks/use-form-validation';
-import EditorJSComponent from '@/components/admin/EditorJSComponent';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import type { OutputData } from '@editorjs/editorjs';
+
+const EditorJSComponent = dynamic(
+  () => import('@/components/admin/EditorJSComponent'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center p-4 border rounded-lg min-h-[200px]">
+        <Loader2 className="h-6 w-6 animate-spin" />
+        <span className="ml-2">Carregando editor...</span>
+      </div>
+    ),
+  }
+);
 
 interface Category {
   id: string;
@@ -65,12 +78,12 @@ function normalizeError(error: string | null | undefined): string | undefined {
 }
 
 interface EditPostPageProps {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }
 
 export default function EditPostPage({ params }: EditPostPageProps) {
   const router = useRouter();
-  const [postId, setPostId] = useState<string>('');
+  const [postId, setPostId] = useState<string>(params.id); // Inicializar diretamente
   const [categories, setCategories] = useState<Category[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -115,17 +128,15 @@ export default function EditPostPage({ params }: EditPostPageProps) {
   useEffect(() => {
     async function initializeData() {
       try {
-        const resolvedParams = await params;
-        const id = resolvedParams.id;
-        setPostId(id);
-
-
+        const id = params.id; // Usar diretamente
 
         const [postResult, categoriesResult, tagsResult] = await Promise.all([
           getPostForEdit(id),
           getCategoriesForAdmin(),
           getTagsForAdmin(),
         ]);
+
+        console.log('1. Resultado de getPostForEdit:', postResult);
 
         if (postResult.error) {
           toast.error('Erro ao carregar post: ' + postResult.error);
@@ -138,6 +149,12 @@ export default function EditPostPage({ params }: EditPostPageProps) {
 
         // Carregar dados do post
         const post = postResult.data!;
+        
+        console.log('2. Conteúdo do post (antes do parse):', {
+          type: typeof post.content,
+          content: post.content,
+        });
+
         const postData = {
           title: post.title,
           slug: post.slug,
@@ -151,9 +168,12 @@ export default function EditPostPage({ params }: EditPostPageProps) {
           meta_description: '', // Campo não existe no schema, usar valor padrão
         };
 
+        console.log('3. Dados finais para o formulário:', postData);
+
         updateFields(postData);
         setIsScheduled(!!postData.published_at && postData.published_at > new Date());
-      } catch {
+      } catch (error) {
+        console.error("Erro no bloco initializeData:", error);
         toast.error('Erro ao carregar dados do post');
       } finally {
         setIsLoading(false);
@@ -161,7 +181,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
     }
 
     void initializeData();
-  }, [params, router, updateFields]);
+  }, [params.id, router, updateFields]); // Depender de params.id
 
   const handleTitleChange = (title: string) => {
     updateFields({
@@ -205,8 +225,8 @@ export default function EditPostPage({ params }: EditPostPageProps) {
         cover_image_url: coverImageUrl,
         status: data.status,
         published_at: data.published_at ? data.published_at.toISOString() : null,
-        category_ids: data.category_ids.map(id => parseInt(id, 10)),
-        tag_ids: data.tag_ids.map(id => parseInt(id, 10)),
+        category_ids: data.category_ids,
+        tag_ids: data.tag_ids,
       });
 
       if (result.error) {

@@ -17,8 +17,8 @@ export interface PostCreationData {
   body: string | null;
   cover_image_url: string | null;
   status: 'draft' | 'published';
-  category_ids?: number[];
-  tag_ids?: number[];
+  category_ids?: string[];
+  tag_ids?: string[];
   published_at: string | null;
 }
 
@@ -94,10 +94,10 @@ export async function createPostAction(data: PostCreationData) {
         published: status === 'published',
         authorId: author_id,
         categories: category_ids ? {
-          connect: category_ids.map(id => ({ id: id.toString() })),
+          connect: category_ids.map(id => ({ id })),
         } : undefined,
         tags: tag_ids ? {
-          connect: tag_ids.map(id => ({ id: id.toString() })),
+          connect: tag_ids.map(id => ({ id })),
         } : undefined,
       },
       select: { id: true },
@@ -213,8 +213,8 @@ export interface PostUpdateData {
   body: string | null;
   cover_image_url: string | null;
   status: 'draft' | 'published';
-  category_ids?: number[];
-  tag_ids?: number[];
+  category_ids?: string[];
+  tag_ids?: string[];
   published_at: string | null;
 }
 
@@ -302,11 +302,11 @@ export async function updatePostAction(postId: string, data: PostUpdateData) {
         published: status === 'published',
         categories: {
           set: [], // Remove todas as categorias
-          connect: category_ids ? category_ids.map(id => ({ id: id.toString() })) : [],
+          connect: category_ids ? category_ids.map(id => ({ id })) : [],
         },
         tags: {
           set: [], // Remove todas as tags
-          connect: tag_ids ? tag_ids.map(id => ({ id: id.toString() })) : [],
+          connect: tag_ids ? tag_ids.map(id => ({ id })) : [],
         },
       },
       select: { id: true, slug: true },

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -19,10 +20,22 @@ import { FormField } from '@/components/admin/form-field';
 import { ImageUploader } from '@/components/admin/image-uploader';
 import { TagSelector } from '@/components/admin/tag-selector';
 import { useFormValidation } from '@/hooks/use-form-validation';
-import EditorJSComponent from '@/components/admin/EditorJSComponent';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import type { OutputData } from '@editorjs/editorjs';
+
+const EditorJSComponent = dynamic(
+  () => import('@/components/admin/EditorJSComponent'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center p-4 border rounded-lg min-h-[200px]">
+        <Loader2 className="h-6 w-6 animate-spin" />
+        <span className="ml-2">Carregando editor...</span>
+      </div>
+    ),
+  }
+);
 
 interface Category {
   id: string;
@@ -165,8 +178,8 @@ export default function NewPostPage() {
         body: data.content ? JSON.stringify(data.content) : null,
         cover_image_url: coverImageUrl,
         published_at: data.published_at ? data.published_at.toISOString() : null,
-        category_ids: data.category_ids.map(id => parseInt(id, 10)),
-        tag_ids: data.tag_ids.map(id => parseInt(id, 10)),
+        category_ids: data.category_ids,
+        tag_ids: data.tag_ids,
       });
 
       if (result.error) {
