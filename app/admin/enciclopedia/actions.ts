@@ -86,8 +86,7 @@ export async function createTermAction(data: TermCreationData) {
         return { error: 'Este slug já está em uso.' };
       }
     }
-  } catch (error) {
-    console.error('Erro ao verificar termo existente:', error);
+  } catch {
     return { error: 'Erro ao verificar disponibilidade do termo.' };
   }
   
@@ -123,8 +122,7 @@ export async function createTermAction(data: TermCreationData) {
     revalidatePath(`/enciclopedia/${slug}`);
 
     return { error: null, data: { termId: termData.id, slug: termData.slug } };
-  } catch (error) {
-    console.error('Erro ao criar termo:', error);
+  } catch {
     return { error: 'Erro interno do servidor ao criar o termo.' };
   }
 }
@@ -156,8 +154,7 @@ export async function getTermForEdit(termId: string) {
     };
 
     return { error: null, data: convertedTerm };
-  } catch (error) {
-    console.error('Erro ao buscar termo para edição:', error);
+  } catch {
     return { error: 'Erro interno do servidor ao buscar o termo.' };
   }
 }
@@ -229,8 +226,7 @@ export async function updateTermAction(termId: string, data: TermUpdateData) {
         return { error: 'Este slug já está em uso.' };
       }
     }
-  } catch (error) {
-    console.error('Erro ao verificar termo existente:', error);
+  } catch {
     return { error: 'Erro ao verificar disponibilidade do termo.' };
   }
   
@@ -278,8 +274,7 @@ export async function updateTermAction(termId: string, data: TermUpdateData) {
     revalidatePath(`/enciclopedia/${updatedTerm.slug}`); // Slug novo
 
     return { error: null, data: { termId: updatedTerm.id, slug: updatedTerm.slug } };
-  } catch (error) {
-    console.error('Erro ao atualizar termo:', error);
+  } catch {
     return { error: 'Erro interno do servidor ao atualizar o termo.' };
   }
 }
@@ -317,8 +312,7 @@ export async function deleteTermAction(termId: string) {
     revalidatePath(`/enciclopedia/${termData.slug}`);
 
     return { error: null, data: { deletedTerm: termData } };
-  } catch (error) {
-    console.error('Erro ao excluir termo:', error);
+  } catch {
     return { error: 'Erro interno do servidor ao excluir o termo.' };
   }
 }
@@ -365,8 +359,7 @@ export async function toggleTermStatusAction(termId: string) {
         message: updatedTerm.is_active ? 'Termo ativado com sucesso.' : 'Termo desativado com sucesso.',
       }, 
     };
-  } catch (error) {
-    console.error('Erro ao alterar status do termo:', error);
+  } catch {
     return { error: 'Erro interno do servidor ao alterar status do termo.' };
   }
 }
@@ -390,8 +383,7 @@ export async function getAllTermsForAdmin() {
     });
 
     return { error: null, data: terms };
-  } catch (error) {
-    console.error('Erro ao buscar termos para admin:', error);
+  } catch {
     return { error: 'Erro interno do servidor ao buscar termos.' };
   }
 }

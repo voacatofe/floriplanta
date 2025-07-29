@@ -79,12 +79,10 @@ export default function ContatoPage() {
       } else {
         const errorResult = await response.json().catch(() => ({}));
         toast.error(errorResult.message || 'Ocorreu um erro ao enviar sua mensagem.');
-        console.error('Form submission error:', response.statusText, errorResult);
         setSubmitStatus('error');
       }
-    } catch (error) {
+    } catch {
       toast.error('Não foi possível conectar ao servidor. Tente novamente mais tarde.');
-      console.error('Form submission error (catch):', error);
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);

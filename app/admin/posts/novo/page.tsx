@@ -21,6 +21,7 @@ import { TagSelector } from '@/components/admin/tag-selector';
 import { useFormValidation } from '@/hooks/use-form-validation';
 import EditorJSComponent from '@/components/admin/EditorJSComponent';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 import type { OutputData } from '@editorjs/editorjs';
 
 interface Category {
@@ -115,8 +116,8 @@ export default function NewPostPage() {
 
         setCategories(categories);
         setTags(tags);
-      } catch (error) {
-        console.error('Erro ao carregar dados:', error);
+      } catch {
+        toast.error('Erro ao carregar dados de categorias e tags');
       } finally {
         setIsLoading(false);
       }
@@ -176,7 +177,8 @@ export default function NewPostPage() {
         router.push('/admin/posts');
       }
     } catch (error) {
-      console.error('Erro ao salvar post:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Ocorreu um erro desconhecido';
+      toast.error(`Erro ao salvar post: ${errorMessage}`);
       throw error;
     }
   };

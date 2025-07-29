@@ -140,7 +140,6 @@ export default function EditTermPage({ params }: { params: Promise<{ id: string 
         // Carregar termos disponíveis para relacionados
         const termsResult = await getAllTermsForAdmin();
         if (termsResult.error) {
-          console.error('Erro ao carregar termos:', termsResult.error);
           toast.error('Erro ao carregar termos disponíveis');
         } else if (termsResult.data) {
           // Filtrar o termo atual da lista
@@ -149,7 +148,6 @@ export default function EditTermPage({ params }: { params: Promise<{ id: string 
           setFilteredTerms(filtered);
         }
       } catch (err) {
-        console.error('Erro ao carregar dados:', err);
         toast.error('Erro ao carregar dados do termo');
       } finally {
         setIsLoading(false);
@@ -214,7 +212,6 @@ export default function EditTermPage({ params }: { params: Promise<{ id: string 
         router.push('/admin/enciclopedia');
       }
     } catch (error) {
-      console.error('Erro ao salvar termo:', error);
       toast.error('Erro ao salvar termo');
       throw error;
     }

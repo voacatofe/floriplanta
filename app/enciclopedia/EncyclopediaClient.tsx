@@ -179,8 +179,8 @@ export default function EncyclopediaClient({
       } else {
         setHasMore(false);
       }
-    } catch (error) {
-      console.error('Erro ao carregar mais termos:', error);
+    } catch {
+      // setError('Falha ao carregar mais termos.'); // Original had this line commented out
     } finally {
       setLoading(false);
     }
@@ -228,8 +228,9 @@ export default function EncyclopediaClient({
 
       const totalPages = Math.ceil(data.totalCount / termsPerPage);
       setHasMore(totalPages > 1);
-    } catch (error) {
-      console.error('Erro ao buscar termos:', error);
+
+    } catch {
+      // setError('Falha ao buscar termos.'); // Original had this line commented out
     } finally {
       setLoading(false);
     }
