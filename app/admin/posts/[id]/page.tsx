@@ -153,8 +153,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
 
         updateFields(postData);
         setIsScheduled(!!postData.published_at && postData.published_at > new Date());
-      } catch (error) {
-        console.error('Erro ao carregar dados:', error);
+      } catch {
         toast.error('Erro ao carregar dados do post');
       } finally {
         setIsLoading(false);
@@ -219,10 +218,8 @@ export default function EditPostPage({ params }: EditPostPageProps) {
       if (redirect) {
         router.push('/admin/posts');
       }
-    } catch (error) {
-      console.error('Erro ao salvar post:', error);
+    } catch {
       toast.error('Erro ao salvar post');
-      throw error;
     }
   };
 

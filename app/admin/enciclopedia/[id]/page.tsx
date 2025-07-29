@@ -147,7 +147,7 @@ export default function EditTermPage({ params }: { params: Promise<{ id: string 
           setAvailableTerms(filtered);
           setFilteredTerms(filtered);
         }
-      } catch (err) {
+      } catch {
         toast.error('Erro ao carregar dados do termo');
       } finally {
         setIsLoading(false);

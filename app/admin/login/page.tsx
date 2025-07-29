@@ -43,8 +43,7 @@ export default function AdminLoginPage() {
         // Redirecionamento em caso de sucesso
         router.push(callbackUrl);
       }
-    } catch (error) {
-      console.error('Erro inesperado no login:', error);
+    } catch {
       setError('Ocorreu um erro inesperado.');
       setIsLoading(false);
     }
