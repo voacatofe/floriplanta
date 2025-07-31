@@ -62,39 +62,11 @@ export default async function AdminPostsPage({ searchParams }: AdminPostsPagePro
           <>
             <Table>
               <TableCaption>Exibindo {posts.length} de {totalCount} posts.</TableCaption>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[35%]">Título</TableHead>
-                  <TableHead>Autor</TableHead>
-                  <TableHead>Categoria</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Data</TableHead> {/* Alterado de "Publicado em" para "Data" */}
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
+              <TableHeader><TableRow><TableHead className="w-[35%]">Título</TableHead><TableHead>Autor</TableHead><TableHead>Categoria</TableHead><TableHead>Status</TableHead><TableHead>Data</TableHead><TableHead className="text-right">Ações</TableHead></TableRow></TableHeader>
               <TableBody>
                 {posts.map((post: PostWithRelations) => (
                   <TableRow key={post.id}>
-                    <TableCell className="font-medium">{post.title}</TableCell>
-                    <TableCell>{post.author?.name || 'N/A'}</TableCell>
-                    <TableCell>{post.categories?.[0]?.name || 'N/A'}</TableCell>
-                    <TableCell>
-                      <Badge 
-                        variant={post.published ? 'default' : 'secondary'}
-                        className={
-                          post.published ? 'bg-green-100 text-green-700' :
-                          'bg-yellow-100 text-yellow-700'
-                        }
-                      >
-                        {post.published ? 'Publicado' : 'Rascunho'}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{formatDate(post.published ? post.createdAt.toISOString() : post.updatedAt.toISOString())}</TableCell>
-                    <TableCell className="text-right space-x-1">
-                      <Button variant="ghost" size="sm" asChild title="Ver Post"><Link href={`/blog/${post.slug}`} target="_blank"><Eye className="h-4 w-4" /></Link></Button>
-                      <Button variant="ghost" size="sm" asChild title="Editar Post"><Link href={`/admin/posts/${post.id}`}><Edit className="h-4 w-4" /></Link></Button>
-                      <DeletePostButton postId={post.id} postTitle={post.title} />
-                    </TableCell>
+                    <TableCell className="font-medium">{post.title}</TableCell><TableCell>{post.author?.name || 'N/A'}</TableCell><TableCell>{post.categories?.[0]?.name || 'N/A'}</TableCell><TableCell><Badge variant={post.published ? 'default' : 'secondary'} className={post.published ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}>{post.published ? 'Publicado' : 'Rascunho'}</Badge></TableCell><TableCell>{formatDate(post.published ? post.createdAt.toISOString() : post.updatedAt.toISOString())}</TableCell><TableCell className="text-right space-x-1"><Link href={`/blog/${post.slug}`} target="_blank" title="Ver Post"><Button variant="ghost" size="sm"><Eye className="h-4 w-4" /></Button></Link><Link href={`/admin/posts/${post.id}`} title="Editar Post"><Button variant="ghost" size="sm"><Edit className="h-4 w-4" /></Button></Link><DeletePostButton postId={post.id} postTitle={post.title} /></TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -103,25 +75,37 @@ export default async function AdminPostsPage({ searchParams }: AdminPostsPagePro
             {/* Paginação */}
             {totalPages > 1 && (
               <div className="flex items-center justify-end space-x-2 py-4">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={currentPage <= 1}
-                  asChild
+                <Link 
+                  href={`/admin/posts?page=${currentPage - 1}`}
+                  className={currentPage <= 1 ? "pointer-events-none" : ""}
+                  aria-disabled={currentPage <= 1}
+                  tabIndex={currentPage <= 1 ? -1 : undefined}
                 >
-                  <Link href={`/admin/posts?page=${currentPage - 1}`}>Anterior</Link>
-                </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={currentPage <= 1}
+                  >
+                    Anterior
+                  </Button>
+                </Link>
                 <span className="text-sm text-gray-600">
                   Página {currentPage} de {totalPages}
                 </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={currentPage >= totalPages}
-                  asChild
+                <Link 
+                  href={`/admin/posts?page=${currentPage + 1}`}
+                  className={currentPage >= totalPages ? "pointer-events-none" : ""}
+                  aria-disabled={currentPage >= totalPages}
+                  tabIndex={currentPage >= totalPages ? -1 : undefined}
                 >
-                  <Link href={`/admin/posts?page=${currentPage + 1}`}>Próxima</Link>
-                </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={currentPage >= totalPages}
+                  >
+                    Próxima
+                  </Button>
+                </Link>
               </div>
             )}
           </>

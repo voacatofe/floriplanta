@@ -1,28 +1,57 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Save, Eye, Calendar as CalendarIcon, Loader2, Clock } from 'lucide-react';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Save, Eye, Calendar as CalendarIcon, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-
-import { createPostAction } from '../actions';
-import { getCategoriesAction } from '../../categorias/actions';
-import { getTagsAction } from '../../tags/actions';
-import { AdminFormLayout, SidebarCard } from '@/components/admin/admin-form-layout';
+import { toast } from 'sonner';
+import {
+  createPostAction,
+  getCategoriesForAdmin,
+  getTagsForAdmin,
+} from '../actions';
+import {
+  AdminFormLayout,
+  SidebarCard,
+} from '@/components/admin/admin-form-layout';
 import { FormField } from '@/components/admin/form-field';
 import { ImageUploader } from '@/components/admin/image-uploader';
 import { TagSelector } from '@/components/admin/tag-selector';
 import { useFormValidation } from '@/hooks/use-form-validation';
-import EditorJSComponent from '@/components/admin/EditorJSComponent';
 import { cn } from '@/lib/utils';
+import type { OutputData } from '@editorjs/editorjs';
+
+const EditorJSComponent = dynamic(
+  () => import('@/components/admin/EditorJSComponent'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center p-4 border rounded-lg min-h-[200px]">
+        <Loader2 className="h-6 w-6 animate-spin" />
+        <span className="ml-2">Carregando editor...</span>
+      </div>
+    ),
+  },
+);
 
 interface Category {
   id: string;
@@ -39,7 +68,7 @@ interface Tag {
 interface PostFormData {
   title: string;
   slug: string;
-  content: object | null;
+  content: OutputData | null;
   excerpt: string;
   cover_image_url: string;
   status: 'draft' | 'published';
@@ -59,6 +88,10 @@ function normalizeSlug(text: string): string {
     .replace(/-+/g, '-');
 }
 
+function normalizeError(error: string | null | undefined): string | undefined {
+  return error ?? undefined;
+}
+
 export default function NewPostPage() {
   const router = useRouter();
   const [categories, setCategories] = useState<Category[]>([]);
@@ -73,9 +106,10 @@ export default function NewPostPage() {
     errors,
     updateField,
     updateFields,
+    save,
     isSaving,
     isDirty,
-    lastSaved
+    lastSaved,
   } = useFormValidation<PostFormData>({
     initialData: {
       title: '',
@@ -87,50 +121,46 @@ export default function NewPostPage() {
       published_at: null,
       category_ids: [],
       tag_ids: [],
-      meta_description: ''
+      meta_description: '',
     },
     validationRules: {
       title: { required: true, minLength: 3, maxLength: 200 },
       slug: { required: true, minLength: 3, maxLength: 200 },
       content: { required: true },
-      excerpt: { maxLength: 500 }
+      excerpt: { maxLength: 500 },
     },
     onSave: async (data) => {
       await handleSave(data, false);
     },
-    autoSaveDelay: 3000
+    autoSaveDelay: 3000,
   });
 
   useEffect(() => {
     async function initializeData() {
       try {
-
-
         const [categoriesResult, tagsResult] = await Promise.all([
-          getCategoriesAction(),
-          getTagsAction()
+          getCategoriesForAdmin(),
+          getTagsForAdmin(),
         ]);
-
-        if (categoriesResult.data) setCategories(categoriesResult.data);
-        if (tagsResult.data) setTags(tagsResult.data);
+        setCategories(categoriesResult);
+        setTags(tagsResult);
       } catch (error) {
-        console.error('Erro ao carregar dados:', error);
+        toast.error('Erro ao carregar dados para o novo post.');
       } finally {
         setIsLoading(false);
       }
     }
-
-    initializeData();
+    void initializeData();
   }, []);
 
   const handleTitleChange = (title: string) => {
     updateFields({
       title,
-      slug: normalizeSlug(title)
+      slug: normalizeSlug(title),
     });
   };
 
-  const handleImageUpload = async (file: File): Promise<string> => {
+  const handleImageUpload = useCallback(async (file: File): Promise<string> => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('folder', 'posts');
@@ -141,36 +171,44 @@ export default function NewPostPage() {
     });
 
     if (!response.ok) {
-      throw new Error('Erro no upload da imagem');
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Erro no upload da imagem');
     }
 
     const { url } = await response.json();
     return url;
-  };
+  }, []);
 
   const handleSave = async (data: PostFormData, redirect = true) => {
     try {
       let coverImageUrl = data.cover_image_url;
-      
       if (selectedFile) {
         coverImageUrl = await handleImageUpload(selectedFile);
         setSelectedFile(null);
+        updateField('cover_image_url', coverImageUrl);
       }
 
       const result = await createPostAction({
         ...data,
-        cover_image_url: coverImageUrl
+        body: data.content ? JSON.stringify(data.content) : null,
+        cover_image_url: coverImageUrl,
+        published_at: data.published_at
+          ? data.published_at.toISOString()
+          : null,
       });
 
       if (result.error) {
         throw new Error(result.error);
       }
 
+      toast.success('Post criado com sucesso!');
       if (redirect) {
-        router.push('/admin/posts');
+        router.push(`/admin/posts/${result.data!.id}`);
       }
     } catch (error) {
-      console.error('Erro ao salvar post:', error);
+      toast.error(
+        error instanceof Error ? error.message : 'Erro ao salvar post',
+      );
       throw error;
     }
   };
@@ -179,11 +217,10 @@ export default function NewPostPage() {
     const publishData = {
       ...formData,
       status: 'published' as const,
-      published_at: isScheduled ? formData.published_at : new Date()
+      published_at: isScheduled ? formData.published_at : new Date(),
     };
-    
     updateFields(publishData);
-    await handleSave(publishData);
+    await save(publishData);
   };
 
   const handleScheduleToggle = (checked: boolean) => {
@@ -196,7 +233,10 @@ export default function NewPostPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin" />
+        <div className="flex items-center space-x-2">
+          <Loader2 className="h-6 w-6 animate-spin" />
+          <span>Carregando...</span>
+        </div>
       </div>
     );
   }
@@ -207,175 +247,184 @@ export default function NewPostPage() {
       description="Crie um novo post para o blog"
       backUrl="/admin/posts"
       actions={
-        <div className="flex items-center gap-2">
-          {isDirty && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Clock className="h-4 w-4" />
-              {lastSaved ? (
-                <span>Salvo {format(lastSaved, 'HH:mm', { locale: ptBR })}</span>
-              ) : (
-                <span>Não salvo</span>
-              )}
-            </div>
+        <div className="flex items-center space-x-2">
+          {lastSaved && (
+            <span className="text-sm text-muted-foreground">
+              Salvo {format(lastSaved, 'HH:mm', { locale: ptBR })}
+            </span>
           )}
-          
-          <Button variant="outline" size="sm">
-            <Eye className="h-4 w-4 mr-2" />
-            Preview
-          </Button>
-          
-          <Button 
-            onClick={handlePublish}
-            disabled={isSaving || Object.keys(errors).length > 0}
-            size="sm"
+          <Button
+            variant="outline"
+            onClick={() => save()}
+            disabled={isSaving || !isDirty}
           >
             {isSaving ? (
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin mr-2" />
             ) : (
               <Save className="h-4 w-4 mr-2" />
             )}
-            {formData.status === 'published' ? 'Atualizar' : 'Publicar'}
+            {isSaving ? 'Salvando...' : 'Salvar Rascunho'}
+          </Button>
+          <Button onClick={handlePublish} disabled={isSaving}>
+            Publicar
           </Button>
         </div>
       }
       sidebar={
-        <>
-          {/* Status e Publicação */}
-          <SidebarCard title="Publicação">
-            <FormField label="Status">
-              <Select
-                value={formData.status}
-                onValueChange={(value: 'draft' | 'published') => updateField('status', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="draft">Rascunho</SelectItem>
-                  <SelectItem value="published">Publicado</SelectItem>
-                </SelectContent>
-              </Select>
-            </FormField>
-
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="schedule"
-                checked={isScheduled}
-                onCheckedChange={handleScheduleToggle}
-              />
-              <label htmlFor="schedule" className="text-sm font-medium">
-                Agendar publicação
-              </label>
-            </div>
-
-            {isScheduled && (
-              <FormField label="Data de publicação">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        'w-full justify-start text-left font-normal',
-                        !formData.published_at && 'text-muted-foreground'
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {formData.published_at ? (
-                        format(formData.published_at, 'PPP', { locale: ptBR })
-                      ) : (
-                        'Selecionar data'
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={formData.published_at || undefined}
-                      onSelect={(date) => updateField('published_at', date)}
-                      disabled={(date) => date < new Date()}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
+        <div className="space-y-6">
+          <SidebarCard title="Publicação" icon={Eye}>
+            <div className="space-y-4">
+              <FormField label="Status">
+                <Select
+                  value={formData.status}
+                  onValueChange={(value: 'draft' | 'published') =>
+                    updateField('status', value)
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="draft">Rascunho</SelectItem>
+                    <SelectItem value="published">Publicado</SelectItem>
+                  </SelectContent>
+                </Select>
               </FormField>
-            )}
+
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="schedule"
+                  checked={isScheduled}
+                  onCheckedChange={handleScheduleToggle}
+                />
+                <label htmlFor="schedule" className="text-sm font-medium">
+                  Agendar publicação
+                </label>
+              </div>
+
+              {isScheduled && (
+                <FormField label="Data de publicação">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          'w-full justify-start text-left font-normal',
+                          !formData.published_at && 'text-muted-foreground',
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {formData.published_at
+                          ? format(formData.published_at, "PPP 'às' HH:mm", {
+                            locale: ptBR,
+                          })
+                          : 'Selecionar data'}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={formData.published_at || undefined}
+                        onSelect={(date) =>
+                          updateField('published_at', date || null)
+                        }
+                        disabled={(date) => date < new Date()}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </FormField>
+              )}
+            </div>
           </SidebarCard>
 
-          {/* Organização */}
           <SidebarCard title="Organização">
-            <FormField label="Categorias">
+            <div className="space-y-4">
               <TagSelector
-                selectedValues={formData.category_ids}
-                onChange={(values) => updateField('category_ids', values)}
-                options={categories}
-                placeholder="Selecionar categorias..."
-                maxTags={3}
+                label="Categorias"
+                items={categories.map((cat) => ({
+                  id: cat.id,
+                  name: cat.name,
+                }))}
+                selectedIds={formData.category_ids}
+                onChange={(ids) => updateField('category_ids', ids)}
+                placeholder="Selecionar categorias"
+                maxItems={3}
               />
-            </FormField>
 
-            <FormField label="Tags">
               <TagSelector
-                selectedValues={formData.tag_ids}
-                onChange={(values) => updateField('tag_ids', values)}
-                options={tags}
-                placeholder="Selecionar tags..."
+                label="Tags"
+                items={tags.map((tag) => ({ id: tag.id, name: tag.name }))}
+                selectedIds={formData.tag_ids}
+                onChange={(ids) => updateField('tag_ids', ids)}
+                placeholder="Selecionar tags"
                 allowCreate
+                maxItems={10}
               />
-            </FormField>
+            </div>
           </SidebarCard>
 
-          {/* Mídia */}
-          <SidebarCard title="Imagem de Capa">
-            <ImageUploader
-              value={formData.cover_image_url}
-              onChange={(file, url) => {
-                if (file) {
-                  setSelectedFile(file);
-                } else {
-                  updateField('cover_image_url', url || '');
-                }
-              }}
-              onUpload={handleImageUpload}
-            />
-          </SidebarCard>
+          <SidebarCard title="Mídia & Resumo">
+            <div className="space-y-4">
+              <FormField label="Imagem de capa">
+                <ImageUploader
+                  value={formData.cover_image_url}
+                  onChange={(file, url) => {
+                    if (file) {
+                      setSelectedFile(file);
+                    }
+                    updateField('cover_image_url', url || '');
+                  }}
+                  onUpload={handleImageUpload}
+                  maxSize={5}
+                />
+              </FormField>
 
-          {/* SEO */}
-          <SidebarCard title="SEO">
-            <FormField 
-              label="Resumo" 
-              description="Breve descrição do post"
-              error={errors.excerpt}
-            >
-              <Textarea
-                value={formData.excerpt}
-                onChange={(e) => updateField('excerpt', e.target.value)}
-                placeholder="Resumo do post..."
-                rows={3}
-              />
-            </FormField>
+              <FormField
+                label="Resumo"
+                description="Breve descrição do post (máx. 500 caracteres)"
+                error={normalizeError(errors.excerpt)}
+              >
+                <Textarea
+                  value={formData.excerpt}
+                  onChange={(e) => updateField('excerpt', e.target.value)}
+                  placeholder="Escreva um resumo do post..."
+                  rows={3}
+                  maxLength={500}
+                />
+                <div className="text-xs text-muted-foreground mt-1">
+                  {formData.excerpt.length}/500 caracteres
+                </div>
+              </FormField>
 
-            <FormField 
-              label="Meta Descrição" 
-              description="Descrição para mecanismos de busca"
-            >
-              <Textarea
-                value={formData.meta_description}
-                onChange={(e) => updateField('meta_description', e.target.value)}
-                placeholder="Meta descrição..."
-                rows={2}
-              />
-            </FormField>
+              <FormField
+                label="Meta Descrição"
+                description="Descrição para SEO (máx. 160 caracteres)"
+              >
+                <Textarea
+                  value={formData.meta_description}
+                  onChange={(e) =>
+                    updateField('meta_description', e.target.value)
+                  }
+                  placeholder="Meta descrição para SEO..."
+                  rows={2}
+                  maxLength={160}
+                />
+                <div className="text-xs text-muted-foreground mt-1">
+                  {formData.meta_description.length}/160 caracteres
+                </div>
+              </FormField>
+            </div>
           </SidebarCard>
-        </>
+        </div>
       }
     >
       <div className="space-y-6">
-        {/* Título e Slug */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField 
-            label="Título" 
-            required 
-            error={errors.title}
+          <FormField
+            label="Título"
+            required
+            error={normalizeError(errors.title)}
           >
             <Input
               value={formData.title}
@@ -384,10 +433,10 @@ export default function NewPostPage() {
             />
           </FormField>
 
-          <FormField 
-            label="Slug" 
-            required 
-            error={errors.slug}
+          <FormField
+            label="Slug"
+            required
+            error={normalizeError(errors.slug)}
             description="URL amigável do post"
           >
             <Input
@@ -398,17 +447,15 @@ export default function NewPostPage() {
           </FormField>
         </div>
 
-        {/* Editor de Conteúdo */}
-        <FormField 
-          label="Conteúdo" 
-          required 
-          error={errors.content}
+        <FormField
+          label="Conteúdo"
+          required
+          error={normalizeError(errors.content)}
         >
           <div className="border rounded-lg">
             <EditorJSComponent
               value={formData.content}
               onChange={(data) => updateField('content', data)}
-
             />
           </div>
         </FormField>
