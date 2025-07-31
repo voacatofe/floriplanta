@@ -22,7 +22,6 @@ import { useFormValidation } from '@/hooks/use-form-validation';
 import EditorJSComponent from '@/components/admin/EditorJSComponent';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-import type { OutputData } from '@editorjs/editorjs';
 
 interface Category {
   id: string;
@@ -59,11 +58,6 @@ function normalizeSlug(text: string): string {
     .replace(/-+/g, '-');
 }
 
-// Helper function para converter null para undefined em erros
-function normalizeError(error: string | null | undefined): string | undefined {
-  return error ?? undefined;
-}
-
 interface EditPostPageProps {
   params: Promise<{ id: string }>;
 }
@@ -86,7 +80,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
     save,
     isSaving,
     isDirty,
-    lastSaved,
+    lastSaved
   } = useFormValidation<PostFormData>({
     initialData: {
       title: '',
@@ -98,18 +92,18 @@ export default function EditPostPage({ params }: EditPostPageProps) {
       published_at: null,
       category_ids: [],
       tag_ids: [],
-      meta_description: '',
+      meta_description: ''
     },
     validationRules: {
       title: { required: true, minLength: 3, maxLength: 200 },
       slug: { required: true, minLength: 3, maxLength: 200 },
       content: { required: true },
-      excerpt: { maxLength: 500 },
+      excerpt: { maxLength: 500 }
     },
     onSave: async (data) => {
       await handleSave(data, false);
     },
-    autoSaveDelay: 3000,
+    autoSaveDelay: 3000
   });
 
   useEffect(() => {
@@ -124,7 +118,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
         const [postResult, categoriesResult, tagsResult] = await Promise.all([
           getPostForEdit(id),
           getCategoriesForAdmin(),
-          getTagsForAdmin(),
+      getTagsForAdmin()
         ]);
 
         if (postResult.error) {
@@ -133,8 +127,8 @@ export default function EditPostPage({ params }: EditPostPageProps) {
           return;
         }
 
-        setCategories(categoriesResult);
-        setTags(tagsResult);
+        if (categoriesResult.data) setCategories(categoriesResult.data);
+        if (tagsResult.data) setTags(tagsResult.data);
 
         // Carregar dados do post
         const post = postResult.data!;
@@ -142,31 +136,32 @@ export default function EditPostPage({ params }: EditPostPageProps) {
           title: post.title,
           slug: post.slug,
           content: post.content ? JSON.parse(post.content) : null,
-          excerpt: '', // Campo não existe no schema, usar valor padrão
+          excerpt: post.excerpt || '',
           cover_image_url: post.imageUrl || '',
           status: post.published ? 'published' as const : 'draft' as const,
           published_at: post.createdAt ? new Date(post.createdAt) : null,
           category_ids: post.categories?.map(cat => cat.id.toString()) || [],
           tag_ids: post.tags?.map(tag => tag.id.toString()) || [],
-          meta_description: '', // Campo não existe no schema, usar valor padrão
+          meta_description: post.metaDescription || ''
         };
 
         updateFields(postData);
         setIsScheduled(!!postData.published_at && postData.published_at > new Date());
-      } catch {
+      } catch (error) {
+        console.error('Erro ao carregar dados:', error);
         toast.error('Erro ao carregar dados do post');
       } finally {
         setIsLoading(false);
       }
     }
 
-    void initializeData();
+    initializeData();
   }, [params, router, updateFields]);
 
   const handleTitleChange = (title: string) => {
     updateFields({
       title,
-      slug: normalizeSlug(title),
+      slug: normalizeSlug(title)
     });
   };
 
@@ -191,22 +186,16 @@ export default function EditPostPage({ params }: EditPostPageProps) {
   const handleSave = async (data: PostFormData, redirect = true) => {
     try {
       let coverImageUrl = data.cover_image_url;
-
+      
       if (selectedFile) {
         coverImageUrl = await handleImageUpload(selectedFile);
         setSelectedFile(null);
       }
 
       const result = await updatePostAction(postId, {
-        title: data.title,
-        slug: data.slug,
-        excerpt: data.excerpt,
-        body: JSON.stringify(data.content),
+        ...data,
         cover_image_url: coverImageUrl,
-        status: data.status,
-        published_at: data.published_at ? data.published_at.toISOString() : null,
-        category_ids: data.category_ids.map(id => parseInt(id, 10)),
-        tag_ids: data.tag_ids.map(id => parseInt(id, 10)),
+        content: JSON.stringify(data.content)
       });
 
       if (result.error) {
@@ -218,8 +207,10 @@ export default function EditPostPage({ params }: EditPostPageProps) {
       if (redirect) {
         router.push('/admin/posts');
       }
-    } catch {
+    } catch (error) {
+      console.error('Erro ao salvar post:', error);
       toast.error('Erro ao salvar post');
+      throw error;
     }
   };
 
@@ -227,9 +218,9 @@ export default function EditPostPage({ params }: EditPostPageProps) {
     const publishData = {
       ...formData,
       status: 'published' as const,
-      published_at: isScheduled ? formData.published_at : new Date(),
+      published_at: isScheduled ? formData.published_at : new Date()
     };
-
+    
     updateFields(publishData);
     await handleSave(publishData);
   };
@@ -266,7 +257,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
           )}
           <Button
             variant="outline"
-            onClick={() => void save()}
+            onClick={() => save()}
             disabled={isSaving || !isDirty}
           >
             {isSaving ? (
@@ -276,7 +267,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
             )}
             {isSaving ? 'Salvando...' : 'Salvar Rascunho'}
           </Button>
-          <Button onClick={() => void handlePublish()} disabled={isSaving}>
+          <Button onClick={handlePublish} disabled={isSaving}>
             {formData.status === 'published' ? 'Atualizar' : 'Publicar'}
           </Button>
         </div>
@@ -319,8 +310,8 @@ export default function EditPostPage({ params }: EditPostPageProps) {
                       <Button
                         variant="outline"
                         className={cn(
-                          'w-full justify-start text-left font-normal',
-                          !formData.published_at && 'text-muted-foreground',
+                          "w-full justify-start text-left font-normal",
+                          !formData.published_at && "text-muted-foreground"
                         )}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
@@ -350,20 +341,22 @@ export default function EditPostPage({ params }: EditPostPageProps) {
           <SidebarCard title="Organização">
             <div className="space-y-4">
               <TagSelector
-                selectedValues={formData.category_ids}
+                label="Categorias"
+                items={categories.map(cat => ({ id: cat.id, name: cat.name }))}
+                selectedIds={formData.category_ids}
                 onChange={(ids) => updateField('category_ids', ids)}
-                options={categories}
                 placeholder="Selecionar categorias"
-                maxTags={3}
+                maxItems={3}
               />
 
               <TagSelector
-                selectedValues={formData.tag_ids}
+                label="Tags"
+                items={tags.map(tag => ({ id: tag.id, name: tag.name }))}
+                selectedIds={formData.tag_ids}
                 onChange={(ids) => updateField('tag_ids', ids)}
-                options={tags}
                 placeholder="Selecionar tags"
                 allowCreate
-                maxTags={10}
+                maxItems={10}
               />
             </div>
           </SidebarCard>
@@ -373,23 +366,20 @@ export default function EditPostPage({ params }: EditPostPageProps) {
             <div className="space-y-4">
               <FormField label="Imagem de capa">
                 <ImageUploader
-                  value={formData.cover_image_url}
-                  onChange={(file, url) => {
-                    if (file) {
-                      setSelectedFile(file);
-                    } else {
-                      updateField('cover_image_url', url || '');
-                    }
+                  currentImage={formData.cover_image_url}
+                  onImageSelect={setSelectedFile}
+                  onImageRemove={() => {
+                    updateField('cover_image_url', '');
+                    setSelectedFile(null);
                   }}
-                  onUpload={handleImageUpload}
-                  maxSize={5}
+                  maxSize={5 * 1024 * 1024} // 5MB
                 />
               </FormField>
 
-              <FormField
-                label="Resumo"
+              <FormField 
+                label="Resumo" 
                 description="Breve descrição do post (máx. 500 caracteres)"
-                error={normalizeError(errors.excerpt)}
+                error={errors.excerpt}
               >
                 <Textarea
                   value={formData.excerpt}
@@ -403,8 +393,8 @@ export default function EditPostPage({ params }: EditPostPageProps) {
                 </div>
               </FormField>
 
-              <FormField
-                label="Meta Descrição"
+              <FormField 
+                label="Meta Descrição" 
                 description="Descrição para SEO (máx. 160 caracteres)"
               >
                 <Textarea
@@ -426,10 +416,10 @@ export default function EditPostPage({ params }: EditPostPageProps) {
       <div className="space-y-6">
         {/* Título e Slug */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            label="Título"
-            required
-            error={normalizeError(errors.title)}
+          <FormField 
+            label="Título" 
+            required 
+            error={errors.title}
           >
             <Input
               value={formData.title}
@@ -438,10 +428,10 @@ export default function EditPostPage({ params }: EditPostPageProps) {
             />
           </FormField>
 
-          <FormField
-            label="Slug"
-            required
-            error={normalizeError(errors.slug)}
+          <FormField 
+            label="Slug" 
+            required 
+            error={errors.slug}
             description="URL amigável do post"
           >
             <Input
@@ -453,14 +443,14 @@ export default function EditPostPage({ params }: EditPostPageProps) {
         </div>
 
         {/* Editor de Conteúdo */}
-        <FormField
-          label="Conteúdo"
-          required
-          error={normalizeError(errors.content)}
+        <FormField 
+          label="Conteúdo" 
+          required 
+          error={errors.content}
         >
           <div className="border rounded-lg">
             <EditorJSComponent
-              value={formData.content as OutputData}
+              value={formData.content}
               onChange={(data) => updateField('content', data)}
 
             />

@@ -13,7 +13,9 @@ import { Save, Eye, Calendar as CalendarIcon, Loader2, Clock } from 'lucide-reac
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-import { createPostAction, getCategoriesForAdmin, getTagsForAdmin } from '../actions';
+import { createPostAction } from '../actions';
+import { getCategoriesAction } from '../../categorias/actions';
+import { getTagsAction } from '../../tags/actions';
 import { AdminFormLayout, SidebarCard } from '@/components/admin/admin-form-layout';
 import { FormField } from '@/components/admin/form-field';
 import { ImageUploader } from '@/components/admin/image-uploader';
@@ -21,8 +23,6 @@ import { TagSelector } from '@/components/admin/tag-selector';
 import { useFormValidation } from '@/hooks/use-form-validation';
 import EditorJSComponent from '@/components/admin/EditorJSComponent';
 import { cn } from '@/lib/utils';
-import { toast } from 'sonner';
-import type { OutputData } from '@editorjs/editorjs';
 
 interface Category {
   id: string;
@@ -59,11 +59,6 @@ function normalizeSlug(text: string): string {
     .replace(/-+/g, '-');
 }
 
-// Helper function para converter null para undefined em erros
-function normalizeError(error: string | null | undefined): string | undefined {
-  return error ?? undefined;
-}
-
 export default function NewPostPage() {
   const router = useRouter();
   const [categories, setCategories] = useState<Category[]>([]);
@@ -80,7 +75,7 @@ export default function NewPostPage() {
     updateFields,
     isSaving,
     isDirty,
-    lastSaved,
+    lastSaved
   } = useFormValidation<PostFormData>({
     initialData: {
       title: '',
@@ -92,44 +87,46 @@ export default function NewPostPage() {
       published_at: null,
       category_ids: [],
       tag_ids: [],
-      meta_description: '',
+      meta_description: ''
     },
     validationRules: {
       title: { required: true, minLength: 3, maxLength: 200 },
       slug: { required: true, minLength: 3, maxLength: 200 },
       content: { required: true },
-      excerpt: { maxLength: 500 },
+      excerpt: { maxLength: 500 }
     },
     onSave: async (data) => {
       await handleSave(data, false);
     },
-    autoSaveDelay: 3000,
+    autoSaveDelay: 3000
   });
 
   useEffect(() => {
     async function initializeData() {
       try {
-        const [categories, tags] = await Promise.all([
-          getCategoriesForAdmin(),
-          getTagsForAdmin(),
+
+
+        const [categoriesResult, tagsResult] = await Promise.all([
+          getCategoriesAction(),
+          getTagsAction()
         ]);
 
-        setCategories(categories);
-        setTags(tags);
-      } catch {
-        toast.error('Erro ao carregar dados de categorias e tags');
+        if (categoriesResult.data) setCategories(categoriesResult.data);
+        if (tagsResult.data) setTags(tagsResult.data);
+      } catch (error) {
+        console.error('Erro ao carregar dados:', error);
       } finally {
         setIsLoading(false);
       }
     }
 
-    void initializeData();
+    initializeData();
   }, []);
 
   const handleTitleChange = (title: string) => {
     updateFields({
       title,
-      slug: normalizeSlug(title),
+      slug: normalizeSlug(title)
     });
   };
 
@@ -154,7 +151,7 @@ export default function NewPostPage() {
   const handleSave = async (data: PostFormData, redirect = true) => {
     try {
       let coverImageUrl = data.cover_image_url;
-
+      
       if (selectedFile) {
         coverImageUrl = await handleImageUpload(selectedFile);
         setSelectedFile(null);
@@ -162,11 +159,7 @@ export default function NewPostPage() {
 
       const result = await createPostAction({
         ...data,
-        body: data.content ? JSON.stringify(data.content) : null,
-        cover_image_url: coverImageUrl,
-        published_at: data.published_at ? data.published_at.toISOString() : null,
-        category_ids: data.category_ids.map(id => parseInt(id, 10)),
-        tag_ids: data.tag_ids.map(id => parseInt(id, 10)),
+        cover_image_url: coverImageUrl
       });
 
       if (result.error) {
@@ -177,8 +170,7 @@ export default function NewPostPage() {
         router.push('/admin/posts');
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Ocorreu um erro desconhecido';
-      toast.error(`Erro ao salvar post: ${errorMessage}`);
+      console.error('Erro ao salvar post:', error);
       throw error;
     }
   };
@@ -187,9 +179,9 @@ export default function NewPostPage() {
     const publishData = {
       ...formData,
       status: 'published' as const,
-      published_at: isScheduled ? formData.published_at : new Date(),
+      published_at: isScheduled ? formData.published_at : new Date()
     };
-
+    
     updateFields(publishData);
     await handleSave(publishData);
   };
@@ -226,14 +218,14 @@ export default function NewPostPage() {
               )}
             </div>
           )}
-
+          
           <Button variant="outline" size="sm">
             <Eye className="h-4 w-4 mr-2" />
             Preview
           </Button>
-
-          <Button
-            onClick={() => void handlePublish()}
+          
+          <Button 
+            onClick={handlePublish}
             disabled={isSaving || Object.keys(errors).length > 0}
             size="sm"
           >
@@ -284,7 +276,7 @@ export default function NewPostPage() {
                       variant="outline"
                       className={cn(
                         'w-full justify-start text-left font-normal',
-                        !formData.published_at && 'text-muted-foreground',
+                        !formData.published_at && 'text-muted-foreground'
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
@@ -349,10 +341,10 @@ export default function NewPostPage() {
 
           {/* SEO */}
           <SidebarCard title="SEO">
-            <FormField
-              label="Resumo"
+            <FormField 
+              label="Resumo" 
               description="Breve descrição do post"
-              error={normalizeError(errors.excerpt)}
+              error={errors.excerpt}
             >
               <Textarea
                 value={formData.excerpt}
@@ -362,8 +354,8 @@ export default function NewPostPage() {
               />
             </FormField>
 
-            <FormField
-              label="Meta Descrição"
+            <FormField 
+              label="Meta Descrição" 
               description="Descrição para mecanismos de busca"
             >
               <Textarea
@@ -380,10 +372,10 @@ export default function NewPostPage() {
       <div className="space-y-6">
         {/* Título e Slug */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            label="Título"
-            required
-            error={normalizeError(errors.title)}
+          <FormField 
+            label="Título" 
+            required 
+            error={errors.title}
           >
             <Input
               value={formData.title}
@@ -392,10 +384,10 @@ export default function NewPostPage() {
             />
           </FormField>
 
-          <FormField
-            label="Slug"
-            required
-            error={normalizeError(errors.slug)}
+          <FormField 
+            label="Slug" 
+            required 
+            error={errors.slug}
             description="URL amigável do post"
           >
             <Input
@@ -407,14 +399,14 @@ export default function NewPostPage() {
         </div>
 
         {/* Editor de Conteúdo */}
-        <FormField
-          label="Conteúdo"
-          required
-          error={normalizeError(errors.content)}
+        <FormField 
+          label="Conteúdo" 
+          required 
+          error={errors.content}
         >
           <div className="border rounded-lg">
             <EditorJSComponent
-              value={formData.content as OutputData}
+              value={formData.content}
               onChange={(data) => updateField('content', data)}
 
             />

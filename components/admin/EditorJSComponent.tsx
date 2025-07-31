@@ -33,11 +33,11 @@ interface EditorProps {
 
 const EDITOR_HOLDER_ID = 'editorjs-container';
 
-const EditorJSComponent: React.FC<EditorProps> = ({
-  value,
-  onChange,
-  holderId = EDITOR_HOLDER_ID,
-  readOnly = false,
+const EditorJSComponent: React.FC<EditorProps> = ({ 
+  value, 
+  onChange, 
+  holderId = EDITOR_HOLDER_ID, 
+  readOnly = false
 }) => {
   const editorInstanceRef = useRef<EditorJS | null>(null);
 
@@ -51,12 +51,10 @@ const EditorJSComponent: React.FC<EditorProps> = ({
           onReady: () => {
             console.log('Editor.js is ready to work!');
           },
-          onChange: (api) => {
+          onChange: async (api, _event) => {
             if (onChange) {
-              void (async () => {
-                const savedData = await api.saver.save();
-                onChange(savedData);
-              })();
+              const savedData = await api.saver.save();
+              onChange(savedData);
             }
           },
           tools: {
@@ -87,15 +85,15 @@ const EditorJSComponent: React.FC<EditorProps> = ({
                       return { success: 1, file: { url } };
                     } catch (error) {
                       console.error('Erro no upload do Editor.js:', error);
-                      return {
-                        success: 0,
-                        file: { url: '' },
-                        message: error instanceof Error ? error.message : 'Erro desconhecido no upload',
+                      return { 
+                        success: 0, 
+                        file: { url: '' }, 
+                        message: error instanceof Error ? error.message : 'Erro desconhecido no upload'
                       };
                     }
                   },
-                },
-              },
+                }
+              }
             },
             code: CodeTool,
             delimiter: Delimiter,
