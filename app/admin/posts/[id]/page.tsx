@@ -165,8 +165,8 @@ export default function EditPostPage({ params }: EditPostPageProps) {
         if (post.content && typeof post.content === 'string') {
           try {
             parsedContent = JSON.parse(post.content);
-          } catch (e) {
-            console.error('Falha ao parsear conteúdo do post:', e);
+          } catch {
+            // Falha ao parsear conteúdo do post
           }
         } else if (post.content && typeof post.content === 'object') {
           parsedContent = post.content as OutputData;
@@ -189,7 +189,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
         setIsScheduled(
           !!postData.published_at && postData.published_at > new Date(),
         );
-      } catch (error) {
+      } catch {
         toast.error('Erro ao inicializar dados para edição do post.');
       } finally {
         setIsLoading(false);
@@ -302,7 +302,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
           )}
           <Button
             variant="outline"
-            onClick={() => save()}
+            onClick={() => void save()}
             disabled={isSaving || !isDirty}
           >
             {isSaving ? (
@@ -312,7 +312,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
             )}
             {isSaving ? 'Salvando...' : 'Salvar Rascunho'}
           </Button>
-          <Button onClick={handlePublish} disabled={isSaving}>
+          <Button onClick={() => void handlePublish()} disabled={isSaving}>
             {formData.status === 'published' ? 'Atualizar' : 'Publicar'}
           </Button>
         </div>

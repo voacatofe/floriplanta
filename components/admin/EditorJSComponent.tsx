@@ -37,7 +37,7 @@ const EditorJSComponent: React.FC<EditorProps> = ({
   value, 
   onChange, 
   holderId = EDITOR_HOLDER_ID, 
-  readOnly = false
+  readOnly = false,
 }) => {
   const editorInstanceRef = useRef<EditorJS | null>(null);
 
@@ -49,12 +49,14 @@ const EditorJSComponent: React.FC<EditorProps> = ({
           data: value,
           readOnly: readOnly,
           onReady: () => {
-            console.log('Editor.js is ready to work!');
+            // Editor.js is ready to work!
           },
-          onChange: async (api, _event) => {
+          onChange: (api, _event) => {
             if (onChange) {
-              const savedData = await api.saver.save();
-              onChange(savedData);
+              void (async () => {
+                const savedData = await api.saver.save();
+                onChange(savedData);
+              })();
             }
           },
           tools: {
@@ -84,16 +86,16 @@ const EditorJSComponent: React.FC<EditorProps> = ({
                       const { url } = await response.json();
                       return { success: 1, file: { url } };
                     } catch (error) {
-                      console.error('Erro no upload do Editor.js:', error);
+                      // Erro no upload do Editor.js
                       return { 
                         success: 0, 
                         file: { url: '' }, 
-                        message: error instanceof Error ? error.message : 'Erro desconhecido no upload'
+                        message: error instanceof Error ? error.message : 'Erro desconhecido no upload',
                       };
                     }
                   },
-                }
-              }
+                },
+              },
             },
             code: CodeTool,
             delimiter: Delimiter,
