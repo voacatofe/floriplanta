@@ -144,7 +144,7 @@ export default function NewPostPage() {
         ]);
         setCategories(categoriesResult);
         setTags(tagsResult);
-      } catch (error) {
+      } catch {
         toast.error('Erro ao carregar dados para o novo post.');
       } finally {
         setIsLoading(false);
@@ -255,7 +255,7 @@ export default function NewPostPage() {
           )}
           <Button
             variant="outline"
-            onClick={() => save()}
+            onClick={() => void save()}
             disabled={isSaving || !isDirty}
           >
             {isSaving ? (
@@ -265,7 +265,7 @@ export default function NewPostPage() {
             )}
             {isSaving ? 'Salvando...' : 'Salvar Rascunho'}
           </Button>
-          <Button onClick={handlePublish} disabled={isSaving}>
+          <Button onClick={() => void handlePublish()} disabled={isSaving}>
             Publicar
           </Button>
         </div>
